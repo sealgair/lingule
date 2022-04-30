@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: 'Futura', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: rgb(15, 23, 42);
+    color: white;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.Header {
+    width: 100%;
+    margin: 10px;
+    border-bottom: 2px solid white;
+    text-align: center;
+    max-width: 800px;
+    font-size: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.Body {
+    width: 300px;
+}
+
+.WordContainer {
+    margin-top: 1em;
+    text-align: center;
+}
+
+.WordContainer #word {
+    font-size: 50px;
+}
+
+.WordContainer #ipa {
+    font-size: 20px;
+    font-style: italic;
+    color: #ccc;
+}
+
+.WordContainer #meaning {
+    font-size: 15px;
+}
+
+.Guesses {
+    margin-top: 1em;
+}
+
+.Guesses ul {
+    padding: 0;
+    margin: 0;
+}
+
+.Guesses li {
+    list-style: none;
+    background-color: rgb(71, 85, 105);
+}
+.Guess {
+    font-size: 15px;
+    margin: 5px 0;
+    padding: 0;
+    border-radius: 5px;
+    height: 25px;
+    width: 300px;
+}
+
+.Lookup {
+    background-color: rgb(30, 41, 59);
+    color: white;
+    border: 2px white solid;
+    padding: 0 5px;
+    margin: 0;
+    width: 290px;
+}
