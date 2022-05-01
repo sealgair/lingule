@@ -3,43 +3,38 @@ import math
 from django.db import models
 
 
-def compass_bearing(pointA, pointB):
+def get_bearing(start_point, end_point):
     """
     Calculates the bearing between two points.
-    adapted from https://gist.github.com/jeromer/2005586
-    The formulae used is the following:
-        θ = atan2(sin(Δlong).cos(lat2),
-                  cos(lat1).sin(lat2) − sin(lat1).cos(lat2).cos(Δlong))
-    :Parameters:
-      - `pointA: The tuple representing the latitude/longitude for the
-        first point. Latitude and longitude must be in decimal degrees
-      - `pointB: The tuple representing the latitude/longitude for the
-        second point. Latitude and longitude must be in decimal degrees
-    :Returns:
-      The bearing in degrees
-    :Returns Type:
-      float
+
+    Parameters
+    ----------
+    start_point: tuple (lat, long)
+    end_point: tuple (lat, long)
+
+    Returns
+    -------
+    point: int
+        Bearing in degrees between the start and end points.
     """
-    if (type(pointA) != tuple) or (type(pointB) != tuple):
-        raise TypeError("Only tuples are supported as arguments")
+    start_lat = math.radians(start_point[0])
+    start_lng = math.radians(start_point[1])
+    end_lat = math.radians(end_point[0])
+    end_lng = math.radians(end_point[1])
 
-    lat1 = math.radians(pointA[0])
-    lat2 = math.radians(pointB[0])
-    diffLong = math.radians(pointB[1] - pointA[1])
+    d_lng = end_lng - start_lng
+    if abs(d_lng) > math.pi:
+        if d_lng > 0.0:
+            d_lng = -(2.0 * math.pi - d_lng)
+        else:
+            d_lng = (2.0 * math.pi + d_lng)
 
-    x = math.sin(diffLong) * math.cos(lat2)
-    y = math.cos(lat1) * math.sin(lat2) - (math.sin(lat1)
-            * math.cos(lat2) * math.cos(diffLong))
+    tan_start = math.tan(start_lat / 2.0 + math.pi / 4.0)
+    tan_end = math.tan(end_lat / 2.0 + math.pi / 4.0)
+    d_phi = math.log(tan_end / tan_start)
+    bearing = (math.degrees(math.atan2(d_lng, d_phi)) + 360.0) % 360.0
 
-    initial_bearing = math.atan2(x, y)
-
-    # Now we have the initial bearing but math.atan2 return values
-    # from -180° to + 180° which is not what we want for a compass bearing
-    # The solution is to normalize the initial bearing as shown below
-    initial_bearing = math.degrees(initial_bearing)
-    compass_bearing = (initial_bearing + 360) % 360
-
-    return compass_bearing
+    return bearing
 
 
 class Macroarea(models.Model):
@@ -106,13 +101,12 @@ class Language(models.Model):
                 else:
                     result += '⬛'
             result += '⬛'  # language
-        # TODO: direction
         directions = [
             '⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'
         ]
-        bearing = compass_bearing(
-            (other.latitude, other.longitude),
+        bearing = get_bearing(
             (self.latitude, self.longitude),
+            (other.latitude, other.longitude),
         )
         d = round(bearing / 45)
         result += directions[d]
