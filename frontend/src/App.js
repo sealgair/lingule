@@ -143,11 +143,34 @@ class Lookup extends ServerComponent {
     constructor(props) {
         super(props);
         this.languages = [];
-        this.state = {value: ""};
+        this.state = {value: "", selected: 0};
 
+        this.handleKeypress = this.handleKeypress.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.selectLang = this.selectLang.bind(this);
+    }
+
+    handleKeypress(event) {
+        let selected = this.state.selected;
+        let langs = this.filteredLangs();
+        let lcount = langs.length;
+        if (event.code === "ArrowUp") {
+            selected -= 1;
+            if (selected < 0) {
+                selected += lcount;
+            }
+        } else if (event.code === "ArrowDown") {
+            selected += 1;
+            if (selected >= lcount) {
+                selected -= lcount;
+            }
+        }
+        this.setState({selected: selected});
+        if (event.code === "Enter") {
+            let lang = langs[selected];
+            this.selectLang(lang);
+        }
     }
 
     handleChange(event) {
@@ -157,15 +180,13 @@ class Lookup extends ServerComponent {
     }
 
     handleSelect(event) {
-        this.guessId = event.target.value;
-        const name = event.target.textContent;
-        this.setState({value: name});
-        this.props.onSelect({id: this.guessId, name: name});
+        this.selectLang({id: event.target.value, name: event.target.textContent});
     }
 
-    handleSubmit(event) {
-        // TODO: make best guess from filtered?
-        this.setState({value: ""});
+    selectLang(lang) {
+        this.guessId = lang.id;
+        this.setState({value: lang.name});
+        this.props.onSelect(lang);
     }
 
     filteredLangs() {
@@ -179,9 +200,17 @@ class Lookup extends ServerComponent {
     render() {
         let filtered = "";
         if (!this.guessId && this.state.value) {
-            let list = this.filteredLangs().map(lang =>
-                <li className="Lang" key={lang.id} value={lang.id} onClick={this.handleSelect}>{lang.name}</li>
-            );
+            const self = this;
+            let list = this.filteredLangs().map(function (lang, i) {
+                let classes = "Lang";
+                if (i === self.state.selected) {
+                    classes += " Selected";
+                }
+                return (
+                <li className={classes} key={lang.id} value={lang.id} onClick={self.handleSelect}>
+                    {lang.name}
+                </li>);
+            });
             filtered = (
                 <ul className="LangList">
                     {list}
@@ -190,8 +219,9 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <input type="text" className="Guess Lookup" placeholder="What language is it?" value={this.state.value}
-                       onChange={this.handleChange}/>
+                <input type="text" className="Guess Lookup"
+                       placeholder="What language is it?" value={this.state.value}
+                       onChange={this.handleChange} onKeyDown={this.handleKeypress}/>
                 {filtered}
             </div>
         )

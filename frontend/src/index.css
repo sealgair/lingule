@@ -107,6 +107,10 @@ code {
     cursor: pointer;
 }
 
+.Lang.Selected {
+    border: 2px solid cyan;
+}
+
 .MakeGuess {
     background-color: rgb(3, 33, 100);
     color: white;
