@@ -27,7 +27,7 @@ code {
     margin: 10px;
     border-bottom: 2px solid white;
     text-align: center;
-    max-width: 800px;
+    max-width: 600px;
     font-size: 30px;
     font-weight: bold;
     text-transform: uppercase;
@@ -39,7 +39,7 @@ code {
 }
 
 .WordContainer {
-    margin-top: 1em;
+    margin: 1em 0;
     text-align: center;
 }
 
@@ -66,7 +66,7 @@ code {
     margin: 0;
 }
 
-.Guesses li {
+.Guess {
     list-style: none;
     background-color: rgb(71, 85, 105);
 }
@@ -75,7 +75,7 @@ code {
     margin: 5px 0;
     padding: 0;
     border-radius: 5px;
-    height: 25px;
+    height: 30px;
     width: 300px;
 }
 
@@ -85,5 +85,18 @@ code {
     border: 2px white solid;
     padding: 0 5px;
     margin: 0;
-    width: 290px;
+    box-sizing: border-box;
+}
+
+.LangList {
+    background-color: rgb(30, 41, 59);
+}
+
+.Lang {
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    list-style: none;
+    cursor: pointer;
 }

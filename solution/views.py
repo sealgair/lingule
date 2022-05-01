@@ -1,18 +1,10 @@
-from django.conf import settings
-from django.http import JsonResponse, Http404
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views import View
 
 from language.models import Language
+from lingule.utils import ApiView
 from solution.models import Solution
-
-
-class ApiView(View):
-
-    def dispatch(self, request, *args, **kwargs):
-        result = super().dispatch(request, *args, **kwargs)
-        response = JsonResponse(result)
-        return response
 
 
 class WordView(ApiView):

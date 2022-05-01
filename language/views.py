@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from language.models import Language
+from lingule.utils import ApiView
 
-# Create your views here.
+
+class LanguagesView(ApiView):
+    safe = False
+    def get(self, request):
+        return list(Language.objects.values('name', 'id'))
