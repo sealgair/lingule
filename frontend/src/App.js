@@ -1,20 +1,62 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
-    return (
-        <div className="Container">
-            <header className="Header">Lingule</header>
-            <div className="Body">
-                <div className="WordContainer">
-                    <div id="word">lingule</div>
-                    <div id="ipa">ˈlɪŋ.ɡwəl</div>
-                    <div id="meaning">a fun language game</div>
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            word: "lingule",
+            ipa: "ˈlɪŋ.ɡwəl",
+            meaning: "a fun language game",
+        }
+        this.server = "http://localhost:8000"
+    }
+
+    render() {
+        return (
+            <div className="Container">
+                <header className="Header">Lingule</header>
+                <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
+                <div className="Body">
+                    <Guesses/>
                 </div>
-                <Guesses/>
             </div>
-        </div>
-    );
+        );
+    }
+
+    componentDidMount() {
+        fetch(this.server + "/solution/word.json", {
+            crossDomain: true,
+            headers: {'Content-Type': 'application/json'},
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        solution_id: result.id,
+                        word: result.word,
+                        ipa: result.ipa,
+                        meaning: result.meaning,
+                    });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
+    }
+}
+
+class Word extends React.Component {
+
+    render() {
+        return (
+            <div className="WordContainer">
+                <div id="word">{this.props.word}</div>
+                <div id="ipa">{this.props.ipa}</div>
+                <div id="meaning">{this.props.meaning}</div>
+            </div>
+        )
+    }
 }
 
 function Guesses() {
@@ -34,7 +76,7 @@ function Guesses() {
 
 function Lookup() {
     return (
-        <input type="text" class="Guess Lookup" placeholder="Language..."/>
+        <input type="text" className="Guess Lookup" placeholder="Language..."/>
     )
 }
 

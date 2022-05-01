@@ -48,3 +48,30 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+    def compare(self, other):
+        """
+        Return emoji string representing distance between languages
+        """
+        if self == other:
+            return "🟩🟩🟩🟩🟩🏆"
+        else:
+            result = ""
+            for key in ['macroarea_id', 'family_id', 'subfamily_id', 'genus_id']:
+                if getattr(self, key) == getattr(other, key):
+                    result += '🟩'
+                else:
+                    result += '⬛'
+            result += '⬛'  # language
+        # TODO: direction
+        direction_map = {
+            'n': '⬆️',
+            'ne': '↗️️',
+            'e': '➡️️',
+            'se': '↘️️️',
+            's': '⬇️️',
+            'sw': '↙️️️',
+            'w': '⬅️',
+            'se': '↖️️️️',
+        }
+        return result

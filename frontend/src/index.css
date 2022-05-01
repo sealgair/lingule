@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: 'Futura', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -31,6 +31,7 @@ code {
     font-size: 30px;
     font-weight: bold;
     text-transform: uppercase;
+    font-family: 'Futura';
 }
 
 .Body {
