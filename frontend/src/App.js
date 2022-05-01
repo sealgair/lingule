@@ -25,7 +25,7 @@ class App extends ServerComponent {
                 <header className="Header">Lingule</header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
-                    <Guesses server={this.server} solution={this.state.solution}/>
+                    <Guesses server={this.server} wordNumber={this.state.wordNumber} solution={this.state.solution}/>
                 </div>
             </div>
         );
@@ -44,6 +44,7 @@ class App extends ServerComponent {
                         word: result.word,
                         ipa: result.ipa,
                         meaning: result.meaning,
+                        wordNumber: result.order,
                     });
                 },
                 (error) => {
@@ -73,11 +74,13 @@ class Guesses extends ServerComponent {
         this.state = {guess: null, guesses: [], done: false};
         this.onSelect = this.onSelect.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
+        this.shareScore = this.shareScore.bind(this);
     }
 
     onSelect(guess) {
         this.setState({
-            guess: guess
+            guess: guess,
+            done: guess.success,
         });
     }
 
@@ -108,6 +111,15 @@ class Guesses extends ServerComponent {
             );
     }
 
+    shareScore() {
+        let score = this.state.guesses.map(guess => guess.hint);
+        score.splice(0, 0, "#Lingule #"+this.props.wordNumber+": "+this.state.guesses.length+"/6");
+        score.push(document.URL);
+        navigator.clipboard.writeText(score.join("\n")).then(() => {
+            alert("Copied score to clipboard");
+        });
+    }
+
     render() {
         const numbers = [0, 1, 2, 3, 4, 5];
         const self = this;
@@ -124,17 +136,22 @@ class Guesses extends ServerComponent {
                 return (<li className="Guess" key={n} value={n}/>);
             }
         });
-        let guessName = ""
-        if (this.state.guess) {
-            guessName = this.state.guess.name;
+        if (this.state.done) {
+            return (
+                <div className="Guesses">
+                    <ul>{list}</ul>
+                    <button className="Guess Share" onClick={this.shareScore}>Share</button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="Guesses">
+                    <ul>{list}</ul>
+                    <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
+                    <button className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
+                </div>
+            );
         }
-        return (
-            <div className="Guesses">
-                <ul>{list}</ul>
-                <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
-                <button className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
-            </div>
-        );
     }
 }
 

@@ -111,6 +111,12 @@ code {
     border: 2px solid cyan;
 }
 
+button.Guess {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: 'Futura';
+}
+
 .MakeGuess {
     background-color: rgb(3, 33, 100);
     color: white;
@@ -120,4 +126,10 @@ code {
     color: gray;
     border-color: gray;
     cursor: default;
+}
+
+.Share {
+    background-color: rgb(12, 178, 12);
+    color: white;
+    cursor: pointer;
 }
