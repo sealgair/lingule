@@ -108,7 +108,8 @@ class Guesses extends ServerComponent {
                     guesses.push(result);
                     this.setState({
                         guesses: guesses,
-                        done: result.success,
+                        done: result.success || guesses.length >= 6,
+                        success: result.success,
                         guess: null,
                     });
                     this.trigger('submit');
@@ -120,8 +121,9 @@ class Guesses extends ServerComponent {
     }
 
     shareScore() {
+        let guessNum = this.state.success ? this.state.guesses.length : 'X';
         let score = this.state.guesses.map(guess => guess.hint);
-        score.splice(0, 0, "#Lingule #"+this.props.wordNumber+": "+this.state.guesses.length+"/6");
+        score.splice(0, 0, "#Lingule #"+this.props.wordNumber+": "+guessNum+"/6");
         score.push(document.URL);
         navigator.clipboard.writeText(score.join("\n")).then(() => {
             alert("Copied score to clipboard");
@@ -145,10 +147,14 @@ class Guesses extends ServerComponent {
             }
         });
         if (this.state.done) {
+            let shareClass = "Guess Share";
+            if (!self.state.success) {
+                shareClass += " Fail";
+            }
             return (
                 <div className="Guesses">
                     <ul>{list}</ul>
-                    <button tabIndex="0" autoFocus className="Guess Share" onClick={this.shareScore}>Share</button>
+                    <button tabIndex="0" autoFocus className={shareClass} onClick={this.shareScore}>Share</button>
                 </div>
             );
         } else {
@@ -192,7 +198,7 @@ class Lookup extends ServerComponent {
             }
         }
         this.setState({selected: selected});
-        if (event.code === "Enter") {
+        if (event.code === "Enter" && this.state.value) {
             let lang = langs[selected];
             this.selectLang(lang);
         }

@@ -144,3 +144,7 @@ button.Guess {
     color: white;
     cursor: pointer;
 }
+
+.Share.Fail {
+    background-color: rgb(178, 12, 26);
+}
