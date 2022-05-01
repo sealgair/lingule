@@ -1,23 +1,16 @@
 import React from 'react';
 import './App.css';
 
-function getCookie(name) {
-    const cookieMap = Object.assign({}, ...document.cookie.split(';').map(function (cookie) {
-        const unpacked = cookie.split("=");
-        return {[unpacked[0].trim()]: unpacked[1]};
-    }));
-    const value = cookieMap[name]
-    if (value) {
-        try {
-            return JSON.parse(value);
-        } catch {
-            return value;
-        }
-    }
+function setData(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
 }
 
-function setCookie(name, value) {
-    document.cookie = name+'='+JSON.stringify(value)+";SameSite=strict";
+function getData(key) {
+    let value = localStorage.getItem(key);
+    try {
+        value = JSON.parse(value);
+    } catch {}
+    return value;
 }
 
 class ServerComponent extends React.Component {
@@ -43,7 +36,8 @@ class App extends ServerComponent {
                 <header className="Header">Lingule</header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
-                    <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber} solution={this.state.solution}/>
+                    <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber}
+                             solution={this.state.solution}/>
                 </div>
             </div>
         );
@@ -93,10 +87,10 @@ class Guesses extends ServerComponent {
         let success = false;
         let guesses = [];
         if (this.props.wordNumber) {
-            let cookie = getCookie('guesses'+this.props.wordNumber);
-            if (Array.isArray(cookie)) {
-                guesses = cookie;
-                success = guesses[guesses.length-1].success;
+            let data = getData('guesses' + this.props.wordNumber);;
+            if (Array.isArray(data)) {
+                guesses = data;
+                success = guesses[guesses.length - 1].success;
                 done = success || guesses.length >= 6;
             }
         }
@@ -147,7 +141,7 @@ class Guesses extends ServerComponent {
                         guess: null,
                     });
                     if (this.props.wordNumber) {
-                        setCookie('guesses'+this.props.wordNumber, this.state.guesses);
+                        setData('guesses' + this.props.wordNumber, this.state.guesses);
                     }
                 },
                 (error) => {
@@ -159,7 +153,7 @@ class Guesses extends ServerComponent {
     shareScore() {
         let guessNum = this.state.success ? this.state.guesses.length : 'X';
         let score = this.state.guesses.map(guess => guess.hint);
-        score.splice(0, 0, "#Lingule #"+this.props.wordNumber+": "+guessNum+"/6");
+        score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
         navigator.clipboard.writeText(score.join("\n")).then(() => {
             alert("Copied score to clipboard");
@@ -198,7 +192,9 @@ class Guesses extends ServerComponent {
                 <div className="Guesses" onKeyDown={this.handleKey}>
                     <ul>{list}</ul>
                     <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
-                    <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
+                    <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
+                            disabled={!this.state.guess}>Guess
+                    </button>
                 </div>
             );
         }
@@ -274,9 +270,9 @@ class Lookup extends ServerComponent {
                     classes += " Selected";
                 }
                 return (
-                <li className={classes} key={lang.id} value={lang.id} onClick={self.handleSelect}>
-                    {lang.name}
-                </li>);
+                    <li className={classes} key={lang.id} value={lang.id} onClick={self.handleSelect}>
+                        {lang.name}
+                    </li>);
             });
             filtered = (
                 <ul className="LangList">
