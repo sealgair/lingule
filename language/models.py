@@ -1,4 +1,5 @@
 from django.db import models
+from geographiclib.geodesic import Geodesic
 
 
 class Macroarea(models.Model):
@@ -66,14 +67,15 @@ class Language(models.Model):
                     result += '⬛'
             result += '⬛'  # language
         # TODO: direction
-        direction_map = {
-            'n': '⬆️',
-            'ne': '↗️️',
-            'e': '➡️️',
-            'se': '↘️️️',
-            's': '⬇️️',
-            'sw': '↙️️️',
-            'w': '⬅️',
-            'se': '↖️️️️',
-        }
+        directions = [
+            '⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'
+        ]
+        bearing = Geodesic.WGS84.Inverse(
+            other.latitude, other.longitude,
+            self.latitude, self.longitude,
+        )['azi1']
+        if bearing < 0:
+            bearing += 360  # normalize to all positive
+        d = round(bearing/45)
+        result += directions[d]
         return result
