@@ -73,6 +73,7 @@ class Guesses extends ServerComponent {
         super(props, context);
         this.state = {guess: null, guesses: [], done: false};
         this.onSelect = this.onSelect.bind(this);
+        this.handleKey = this.handleKey.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
         this.shareScore = this.shareScore.bind(this);
     }
@@ -82,6 +83,13 @@ class Guesses extends ServerComponent {
             guess: guess,
             done: guess.success,
         });
+    }
+
+    handleKey(event) {
+        if (this.state.guess && event.code === "Enter" && event.target.classList.contains("Lookup")) {
+            this.makeGuess();
+            event.preventDefault();
+        }
     }
 
     makeGuess() {
@@ -140,15 +148,15 @@ class Guesses extends ServerComponent {
             return (
                 <div className="Guesses">
                     <ul>{list}</ul>
-                    <button className="Guess Share" onClick={this.shareScore}>Share</button>
+                    <button tabIndex="0" autoFocus className="Guess Share" onClick={this.shareScore}>Share</button>
                 </div>
             );
         } else {
             return (
-                <div className="Guesses">
+                <div className="Guesses" onKeyDown={this.handleKey}>
                     <ul>{list}</ul>
                     <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
-                    <button className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
+                    <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
                 </div>
             );
         }
@@ -236,7 +244,7 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <input type="text" className="Guess Lookup"
+                <input type="text" className="Guess Lookup" autoFocus
                        placeholder="What language is it?" value={this.state.value}
                        onChange={this.handleChange} onKeyDown={this.handleKeypress}/>
                 {filtered}

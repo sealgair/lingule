@@ -35,7 +35,7 @@ code {
 }
 
 .Body {
-    width: 300px;
+    width: 400px;
 }
 
 .WordContainer {
@@ -71,18 +71,28 @@ code {
     background-color: rgb(71, 85, 105);
     font-size: 15px;
     margin: 5px 0;
-    padding: 0 1em;
     border-radius: 5px;
     height: 30px;
-    width: 300px;
+    width: 400px;
     box-sizing: border-box;
 }
+
 .Guess.Tried {
     background-color: black;
     border: 1px solid white;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.Guess.Tried span {
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 1em;
+}
+
+.Guess.Tried .Hint {
+    flex-shrink: 0;
 }
 
 .Lookup {
@@ -122,6 +132,7 @@ button.Guess {
     color: white;
     cursor: pointer;
 }
+
 .MakeGuess:disabled {
     color: gray;
     border-color: gray;
