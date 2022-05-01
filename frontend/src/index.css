@@ -69,14 +69,20 @@ code {
 .Guess {
     list-style: none;
     background-color: rgb(71, 85, 105);
-}
-.Guess {
     font-size: 15px;
     margin: 5px 0;
-    padding: 0;
+    padding: 0 1em;
     border-radius: 5px;
     height: 30px;
     width: 300px;
+    box-sizing: border-box;
+}
+.Guess.Tried {
+    background-color: black;
+    border: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .Lookup {
@@ -99,4 +105,15 @@ code {
     margin: 5px;
     list-style: none;
     cursor: pointer;
+}
+
+.MakeGuess {
+    background-color: rgb(3, 33, 100);
+    color: white;
+    cursor: pointer;
+}
+.MakeGuess:disabled {
+    color: gray;
+    border-color: gray;
+    cursor: default;
 }

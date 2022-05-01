@@ -58,7 +58,9 @@ class Language(models.Model):
         else:
             result = ""
             for key in ['macroarea_id', 'family_id', 'subfamily_id', 'genus_id']:
-                if getattr(self, key) == getattr(other, key):
+                l = getattr(self, key)
+                r = getattr(other, key)
+                if l and r and l == r:
                     result += '🟩'
                 else:
                     result += '⬛'

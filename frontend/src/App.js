@@ -25,7 +25,7 @@ class App extends ServerComponent {
                 <header className="Header">Lingule</header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
-                    <Guesses server={this.server}/>
+                    <Guesses server={this.server} solution={this.state.solution}/>
                 </div>
             </div>
         );
@@ -40,7 +40,7 @@ class App extends ServerComponent {
             .then(
                 (result) => {
                     this.setState({
-                        solution_id: result.id,
+                        solution: result.id,
                         word: result.word,
                         ipa: result.ipa,
                         meaning: result.meaning,
@@ -66,18 +66,73 @@ class Word extends React.Component {
     }
 }
 
-class Guesses extends React.Component {
+class Guesses extends ServerComponent {
+
+    constructor(props, context) {
+        super(props, context);
+        this.state = {guess: null, guesses: [], done: false};
+        this.onSelect = this.onSelect.bind(this);
+        this.makeGuess = this.makeGuess.bind(this);
+    }
+
+    onSelect(guess) {
+        this.setState({
+            guess: guess
+        });
+    }
+
+    makeGuess() {
+        const params = new URLSearchParams({
+            language: this.state.guess.id,
+            solution: this.props.solution,
+        }).toString();
+        fetch(this.server + "/solution/guess.json?" + params, {
+            crossDomain: true,
+            headers: {'Content-Type': 'application/json'},
+        })
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    let guesses = this.state.guesses;
+                    guesses.push(result);
+                    this.setState({
+                        guesses: guesses,
+                        done: result.success,
+                    });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+    }
+
     render() {
-        const numbers = [1, 2, 3, 4, 5, 6];
-        const list = numbers.map((n) =>
-            <li className="Guess" key={n} value={n}/>
-        );
+        const numbers = [0, 1, 2, 3, 4, 5];
+        const self = this;
+        const list = numbers.map(function (n) {
+            const guess = self.state.guesses[n];
+            if (guess) {
+                return (
+                    <li className="Guess Tried" key={n} value={n}>
+                        <span className="Language">{guess.language}</span>
+                        <span className="Hint">{guess.hint}</span>
+                    </li>
+                );
+            } else {
+                return (<li className="Guess" key={n} value={n}/>);
+            }
+        });
+        let guessName = ""
+        if (this.state.guess) {
+            guessName = this.state.guess.name;
+        }
         return (
             <div className="Guesses">
                 <ul>
                     {list}
                 </ul>
-                <Lookup server={this.server}/>
+                <Lookup server={this.server} value={guessName} onSelect={this.onSelect}/>
+                <button className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
             </div>
         );
     }
@@ -88,31 +143,43 @@ class Lookup extends ServerComponent {
     constructor(props) {
         super(props);
         this.languages = {};
-        this.state = {value: ''};
+        this.state = {value: props.value};
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
+        this.guessId = null;
         this.setState({value: event.target.value});
+        this.props.onSelect();
+    }
+
+    handleSelect(event) {
+        this.guessId = event.target.value;
+        const name = event.target.textContent;
+        this.setState({value: name});
+        this.props.onSelect({id: this.guessId, name: name});
     }
 
     handleSubmit(event) {
-        // TODO
+        // TODO: make best guess from filtered?
+    }
+
+    filteredLangs() {
+        const patterns = this.state.value.split(" ").map(t => new RegExp('\\b' + t, 'gi'));
+        return this.languages.filter(lang => patterns.reduce(
+            (p, pat) => p && lang.name.match(pat),
+            true
+        ));
     }
 
     render() {
         let filtered = "";
-        if (this.state.value !== "") {
-            const patterns = this.state.value.split(" ").map(t => new RegExp('\\b'+t, 'gi'));
-            console.log(patterns);
-            const matches = this.languages.filter(lang => patterns.reduce(
-                (p, pat) => p && lang.name.match(pat),
-                true
-            ));
-            let list = matches.map(lang =>
-                <li className="Lang" key={lang.id} value={lang.id}>{lang.name}</li>
+        if (!this.guessId && this.state.value) {
+            let list = this.filteredLangs().map(lang =>
+                <li className="Lang" key={lang.id} value={lang.id} onClick={this.handleSelect}>{lang.name}</li>
             );
             filtered = (
                 <ul className="LangList">
@@ -122,7 +189,8 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <input type="text" className="Guess Lookup" placeholder="What language is it?" onChange={this.handleChange}/>
+                <input type="text" className="Guess Lookup" placeholder="What language is it?" value={this.state.value}
+                       onChange={this.handleChange}/>
                 {filtered}
             </div>
         )
@@ -141,7 +209,7 @@ class Lookup extends ServerComponent {
                 (error) => {
                     console.log(error);
                 }
-            )
+            );
     }
 }
 

@@ -1,6 +1,5 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.views import View
 
 from language.models import Language
 from lingule.utils import ApiView
@@ -21,8 +20,12 @@ class WordView(ApiView):
         }
 
 
-class GuessView(View):
-    def post(self, request):
-        guess = get_object_or_404(Language, id=request.POST.get('language_id', None))
-        solution = get_object_or_404(Solution, id=request.POST.get('solution_id', None))
-        return guess.compare(solution.language)
+class GuessView(ApiView):
+    def get(self, request):
+        guess = get_object_or_404(Language, id=request.GET.get('language', None))
+        solution = get_object_or_404(Solution, id=request.GET.get('solution', None))
+        return {
+            'success': guess == solution.language,
+            'language': guess.name,
+            'hint': guess.compare(solution.language),
+        }
