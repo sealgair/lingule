@@ -1,6 +1,24 @@
 import React from 'react';
 import './App.css';
 
+function getCookie(name) {
+    const cookieMap = Object.assign({}, ...document.cookie.split(';').map(function (cookie) {
+        const unpacked = cookie.split("=");
+        return {[unpacked[0].trim()]: unpacked[1]};
+    }));
+    const value = cookieMap[name]
+    if (value) {
+        try {
+            return JSON.parse(value);
+        } catch {
+            return value;
+        }
+    }
+}
+
+function setCookie(name, value) {
+    document.cookie = name+'='+JSON.stringify(value)+";SameSite=strict";
+}
 
 class ServerComponent extends React.Component {
     constructor(props) {
@@ -25,7 +43,7 @@ class App extends ServerComponent {
                 <header className="Header">Lingule</header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
-                    <Guesses server={this.server} wordNumber={this.state.wordNumber} solution={this.state.solution}/>
+                    <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber} solution={this.state.solution}/>
                 </div>
             </div>
         );
@@ -71,7 +89,23 @@ class Guesses extends ServerComponent {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {guess: null, guesses: [], done: false};
+        let done = false;
+        let success = false;
+        let guesses = [];
+        if (this.props.wordNumber) {
+            let cookie = getCookie('guesses'+this.props.wordNumber);
+            if (Array.isArray(cookie)) {
+                guesses = cookie;
+                success = guesses[guesses.length-1].success;
+                done = success || guesses.length >= 6;
+            }
+        }
+        this.state = {
+            guess: null,
+            guesses: guesses,
+            done: done,
+            success: success,
+        };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
@@ -81,7 +115,7 @@ class Guesses extends ServerComponent {
     onSelect(guess) {
         this.setState({
             guess: guess,
-            done: guess.success,
+            done: guess ? guess.success : false,
         });
     }
 
@@ -112,7 +146,9 @@ class Guesses extends ServerComponent {
                         success: result.success,
                         guess: null,
                     });
-                    this.trigger('submit');
+                    if (this.props.wordNumber) {
+                        setCookie('guesses'+this.props.wordNumber, this.state.guesses);
+                    }
                 },
                 (error) => {
                     console.log(error);
