@@ -98,7 +98,9 @@ class Guesses extends ServerComponent {
                     this.setState({
                         guesses: guesses,
                         done: result.success,
+                        guess: null,
                     });
+                    this.trigger('submit');
                 },
                 (error) => {
                     console.log(error);
@@ -128,10 +130,8 @@ class Guesses extends ServerComponent {
         }
         return (
             <div className="Guesses">
-                <ul>
-                    {list}
-                </ul>
-                <Lookup server={this.server} value={guessName} onSelect={this.onSelect}/>
+                <ul>{list}</ul>
+                <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
                 <button className="MakeGuess Guess" onClick={this.makeGuess} disabled={!this.state.guess}>Guess</button>
             </div>
         );
@@ -142,8 +142,8 @@ class Lookup extends ServerComponent {
 
     constructor(props) {
         super(props);
-        this.languages = {};
-        this.state = {value: props.value};
+        this.languages = [];
+        this.state = {value: ""};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
@@ -165,6 +165,7 @@ class Lookup extends ServerComponent {
 
     handleSubmit(event) {
         // TODO: make best guess from filtered?
+        this.setState({value: ""});
     }
 
     filteredLangs() {
@@ -194,6 +195,10 @@ class Lookup extends ServerComponent {
                 {filtered}
             </div>
         )
+    }
+
+    componentWillUnmount() {
+        this.languages = [];
     }
 
     componentDidMount() {
