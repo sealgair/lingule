@@ -374,13 +374,26 @@ class Statistics extends React.Component {
             let c = self.scores[s] || 0;
             self.scores[s] = c + 1;
             self.maxScore = Math.max(self.maxScore, self.scores[s]);
-            if (s != 'X') {
+            if (s !== 'X') {
                 self.wins += 1;
             }
         });
-        // TODO: streaks
+
+        // Calculate streaks
+        let minWord = Math.min(...Object.keys(scores));
+        let maxWord = Math.max(...Object.keys(scores));
         this.cStreak = 0;
         this.mStreak = 0;
+        let prev = null;
+        for (let i = minWord-1; i<=maxWord; i++) {
+            prev = scores[i];
+            if (prev && prev !== 'X') {
+                this.cStreak += 1;
+            } else {
+                this.cStreak = 0;
+            }
+            this.mStreak = Math.max(this.cStreak, this.mStreak);
+        }
 
         this.onClick = this.onClick.bind(this);
     }
