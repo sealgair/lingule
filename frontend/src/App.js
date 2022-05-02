@@ -9,7 +9,8 @@ function getData(key) {
     let value = localStorage.getItem(key);
     try {
         value = JSON.parse(value);
-    } catch {}
+    } catch {
+    }
     return value;
 }
 
@@ -27,18 +28,39 @@ class App extends ServerComponent {
             word: "lingule",
             ipa: "ˈlɪŋ.ɡwəl",
             meaning: "a fun language game",
+            stats: false,
         }
+
+        this.openStats = this.openStats.bind(this);
+        this.closeStats = this.closeStats.bind(this);
+    }
+
+    openStats() {
+        this.setState({stats: true});
+    }
+
+    closeStats() {
+        this.setState({stats: false});
     }
 
     render() {
+        let stats = ""
+        if (this.state.stats) {
+            stats = <Statistics onClose={this.closeStats}/>;
+        }
         return (
             <div className="Container">
-                <header className="Header">Lingule</header>
+                <header className="Header">
+                    <span className="Help Icon">❓</span>
+                    <h1>Lingule</h1>
+                    <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                </header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
                     <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber}
                              solution={this.state.solution}/>
                 </div>
+                {stats}
             </div>
         );
     }
@@ -87,7 +109,8 @@ class Guesses extends ServerComponent {
         let success = false;
         let guesses = [];
         if (this.props.wordNumber) {
-            let data = getData('guesses' + this.props.wordNumber);;
+            let data = getData('guesses' + this.props.wordNumber);
+            ;
             if (Array.isArray(data)) {
                 guesses = data;
                 success = guesses[guesses.length - 1].success;
@@ -134,14 +157,24 @@ class Guesses extends ServerComponent {
                 (result) => {
                     let guesses = this.state.guesses;
                     guesses.push(result);
+                    let done = result.success || guesses.length >= 6;
                     this.setState({
                         guesses: guesses,
-                        done: result.success || guesses.length >= 6,
+                        done: done,
                         success: result.success,
                         guess: null,
                     });
                     if (this.props.wordNumber) {
                         setData('guesses' + this.props.wordNumber, this.state.guesses);
+                        if (done) {
+                            let scores = getData('scores') || {};
+                            if (result.success) {
+                                scores[this.props.wordNumber] = guesses.length;
+                            } else {
+                                scores[this.props.wordNumber] = 'X';
+                            }
+                            setData('scores', scores);
+                        }
                     }
                 },
                 (error) => {
@@ -308,6 +341,69 @@ class Lookup extends ServerComponent {
                     console.log(error);
                 }
             );
+    }
+}
+
+class Statistics extends React.Component {
+
+    constructor(props, context) {
+        super(props, context);
+        const scores = getData('scores') || {};
+        this.games = Object.keys(scores).length;
+        this.wins = 0;
+        this.scores = {};
+        const self = this;
+        Object.values(scores).forEach(function (s) {
+            let c = self.scores[s] || 0;
+            self.scores[s] = c + 1;
+            if (s != 'X') {
+                self.wins += 1;
+            }
+        });
+        // TODO: streaks
+        this.cStreak = 0;
+        this.mStreak = 0;
+
+        this.onClick = this.onClick.bind(this);
+    }
+
+    onClick(event) {
+        if (event.target.classList.contains("Close") || event.target.classList.contains("StatsOverlay")) {
+            this.props.onClose(event);
+        }
+    }
+
+    render() {
+        let distribution = <h4>No Data</h4>;
+        return (
+            <div className="StatsOverlay" onClick={this.onClick}>
+                <div className="StatsContainer" onClick={e => e.preventDefault()}>
+                    <h1>Statistics</h1> <span className="Close">Ⓧ</span>
+                    <hr/>
+                    <div className="StatsList">
+                        <div className="StatBox">
+                            <span className="Stat">{this.games}</span>
+                            <span className="StatLabel">Games</span>
+                        </div>
+                        <div className="StatBox">
+                            <span className="Stat">{this.wins}</span>
+                            <span className="StatLabel">Wins</span>
+                        </div>
+                        <div className="StatBox">
+                            <span className="Stat">{this.cStreak}</span>
+                            <span className="StatLabel">Current Streak</span>
+                        </div>
+                        <div className="StatBox">
+                            <span className="Stat">{this.mStreak}</span>
+                            <span className="StatLabel">Max Streak</span>
+                        </div>
+                    </div>
+                    <h2>Guess Distribution</h2>
+                    <hr/>
+                    {distribution}
+                </div>
+            </div>
+        )
     }
 }
 

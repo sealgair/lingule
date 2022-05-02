@@ -93,10 +93,11 @@ class Language(models.Model):
             return "🟩🟩🟩🟩🟩🏆"
         else:
             result = ""
-            for key in ['macroarea_id', 'family_id', 'subfamily_id', 'genus_id']:
-                l = getattr(self, key)
-                r = getattr(other, key)
-                if l and r and l == r:
+            keys = ['macroarea_id', 'family_id', 'subfamily_id', 'genus_id']
+            if self.family.name in ['', 'other']:
+                keys = ['macroarea_id', 'id', 'id', 'id']
+            for key in keys:
+                if getattr(self, key) == getattr(other, key):
                     result += '🟩'
                 else:
                     result += '⬛'
