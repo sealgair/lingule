@@ -44,7 +44,7 @@ class App extends ServerComponent {
     }
 
     render() {
-        let stats = ""
+        let stats = "";
         if (this.state.stats) {
             stats = <Statistics onClose={this.closeStats}/>;
         }
@@ -58,7 +58,7 @@ class App extends ServerComponent {
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
                     <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber}
-                             solution={this.state.solution}/>
+                             solution={this.state.solution} answer={this.state.answer}/>
                 </div>
                 {stats}
             </div>
@@ -79,6 +79,7 @@ class App extends ServerComponent {
                         ipa: result.ipa,
                         meaning: result.meaning,
                         wordNumber: result.order,
+                        answer: result.answer,
                     });
                 },
                 (error) => {
@@ -110,7 +111,6 @@ class Guesses extends ServerComponent {
         let guesses = [];
         if (this.props.wordNumber) {
             let data = getData('guesses' + this.props.wordNumber);
-            ;
             if (Array.isArray(data)) {
                 guesses = data;
                 success = guesses[guesses.length - 1].success;
@@ -163,6 +163,7 @@ class Guesses extends ServerComponent {
                         done: done,
                         success: result.success,
                         guess: null,
+                        sid: result.sid,
                     });
                     if (this.props.wordNumber) {
                         setData('guesses' + this.props.wordNumber, this.state.guesses);
@@ -211,12 +212,16 @@ class Guesses extends ServerComponent {
         });
         if (this.state.done) {
             let shareClass = "Guess Share";
+            let lookup = "";
             if (!self.state.success) {
+                lookup = <Solution answer={this.props.answer}/>
                 shareClass += " Fail";
             }
+
             return (
                 <div className="Guesses">
                     <ul>{list}</ul>
+                    {lookup}
                     <button tabIndex="0" autoFocus className={shareClass} onClick={this.shareScore}>Share</button>
                 </div>
             );
@@ -231,6 +236,17 @@ class Guesses extends ServerComponent {
                 </div>
             );
         }
+    }
+}
+
+class Solution extends ServerComponent {
+
+    render() {
+        return (
+            <div className="LookupWrapper">
+                <input type="text" className="Guess Lookup" disabled value={this.props.answer}/>
+            </div>
+        )
     }
 }
 

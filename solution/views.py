@@ -18,6 +18,7 @@ class WordView(ApiView):
             'ipa': solution.ipa,
             'meaning': solution.english,
             'order': solution.order,
+            'answer': solution.language.name,
         }
 
 

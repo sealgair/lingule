@@ -97,7 +97,7 @@ class Language(models.Model):
             if self.family.name in ['', 'other']:
                 keys = ['macroarea_id', 'id', 'id', 'id']
             for key in keys:
-                if getattr(self, key) == getattr(other, key):
+                if getattr(self, key) and getattr(self, key) == getattr(other, key):
                     result += '🟩'
                 else:
                     result += '⬛'
