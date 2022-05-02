@@ -213,6 +213,17 @@ button.Guess {
     font-size: 15px;
     text-align: center;
 }
+.Distribution li {
+    margin: 8px 0;
+    font-weight: bold;
+    background-color: rebeccapurple;
+    padding: 2px;
+    padding-right: 0.5em;
+    min-width: 1em;
+}
+.GraphLabel {
+    text-align: right;
+}
 
 .Close {
     position: absolute;

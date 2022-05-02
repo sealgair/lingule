@@ -367,11 +367,13 @@ class Statistics extends React.Component {
         const scores = getData('scores') || {};
         this.games = Object.keys(scores).length;
         this.wins = 0;
+        this.maxScore = 0;
         this.scores = {};
         const self = this;
         Object.values(scores).forEach(function (s) {
             let c = self.scores[s] || 0;
             self.scores[s] = c + 1;
+            self.maxScore = Math.max(self.maxScore, self.scores[s]);
             if (s != 'X') {
                 self.wins += 1;
             }
@@ -391,6 +393,20 @@ class Statistics extends React.Component {
 
     render() {
         let distribution = <h4>No Data</h4>;
+        if (this.scores) {
+            const scores = [1, 2, 3, 4, 5, 6]
+                .map(s => this.scores[s] || 0)
+                .map((s, i) =>
+                    <li style={{width: (s/this.maxScore * 100) + '%'}} key={i}>
+                        <div className="GraphLabel">{s}</div>
+                    </li>
+                );
+            distribution = (
+                <ol className="Distribution">
+                    {scores}
+                </ol>
+            )
+        }
         return (
             <div className="StatsOverlay" onClick={this.onClick}>
                 <div className="StatsContainer" onClick={e => e.preventDefault()}>
