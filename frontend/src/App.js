@@ -303,7 +303,7 @@ class Lookup extends ServerComponent {
 
     handleChange(event) {
         this.guessId = null;
-        this.setState({value: event.target.value});
+        this.setState({value: event.target.value, selected: 0});
         this.props.onSelect();
     }
 

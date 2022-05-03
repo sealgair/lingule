@@ -5,21 +5,39 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: rgb(15, 23, 42);
-    color: white;
 
     height: 100vh;
     width: 100vw;
+
+    --bg-color: #150326;
+    --text-color: #f6efff;
+    --dim-text-color: #a19bb2;
+    --choice-color: #74697c;
+    --guess-color: #5f259a;
+    --share-color: #319a25;
+    --wrong-color: #9a2525;
+    --link-color: #bb6bff;
+    --graph-color: #881bf8;
+    --input-bg-color: #301b44;
+
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+a {
+    color: var(--link-color);
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 #root {
     width: 100%;
     height: 100%;
 }
+
 .Container {
     display: flex;
     flex-direction: column;
@@ -49,7 +67,7 @@ h1, h2, h3, h4 {
     font-size: 20px;
     width: 100%;
     margin: 10px;
-    border-bottom: 2px solid white;
+    border-bottom: 2px solid var(--text-color);
     text-align: center;
     max-width: 600px;
     font-weight: bold;
@@ -79,7 +97,7 @@ h1, h2, h3, h4 {
 .WordContainer #ipa {
     font-size: 20px;
     font-style: italic;
-    color: #ccc;
+    color: var(--dim-text-color);
 }
 
 .WordContainer #meaning {
@@ -97,7 +115,7 @@ h1, h2, h3, h4 {
 
 .Guess {
     list-style: none;
-    background-color: rgb(71, 85, 105);
+    background-color: var(--choice-color);
     font-size: 15px;
     margin: 5px 0;
     border-radius: 5px;
@@ -108,7 +126,7 @@ h1, h2, h3, h4 {
 
 .Guess.Tried {
     background-color: black;
-    border: 1px solid white;
+    border: 1px solid var(--text-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -125,20 +143,21 @@ h1, h2, h3, h4 {
 }
 
 .Lookup {
-    background-color: rgb(30, 41, 59);
-    color: white;
-    border: 2px white solid;
+    background-color: var(--input-bg-color);
+    color: var(--text-color);
+    border: 2px var(--text-color) solid;
     padding: 0 5px;
     margin: 0;
     box-sizing: border-box;
 }
 
+
 .LangList {
-    background-color: rgb(30, 41, 59);
+    background-color: var(--input-bg-color);
 }
 
 .Lang {
-    border: 1px solid white;
+    border: 1px solid var(--text-color);
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
@@ -147,7 +166,7 @@ h1, h2, h3, h4 {
 }
 
 .Lang.Selected {
-    border: 2px solid cyan;
+    border: 2px solid var(--link-color);
 }
 
 button.Guess {
@@ -157,8 +176,8 @@ button.Guess {
 }
 
 .MakeGuess {
-    background-color: rgb(3, 33, 100);
-    color: white;
+    background-color: var(--guess-color);
+    color: var(--text-color);
     cursor: pointer;
 }
 
@@ -169,13 +188,13 @@ button.Guess {
 }
 
 .Share {
-    background-color: rgb(12, 178, 12);
-    color: white;
+    background-color: var(--share-color);
+    color: var(--text-color);
     cursor: pointer;
 }
 
 .Share.Fail {
-    background-color: rgb(178, 12, 26);
+    background-color: var(--wrong-color);
 }
 
 .Overlay {
@@ -184,7 +203,7 @@ button.Guess {
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -196,13 +215,15 @@ button.Guess {
     margin: auto;
     max-width: 500px;
     border: 4px solid #AAA;
-    background-color: black;
+    background-color: var(--bg-color);
     padding: 1em 2em 2em;
     border-radius: 1em;
 }
+
 .StatsList {
     display: flex;
 }
+
 .StatBox {
     display: flex;
     flex-direction: column;
@@ -211,23 +232,27 @@ button.Guess {
     margin: 10px;
     flex: 1;
 }
+
 .Stat {
     font-size: 40px;
     font-weight: bold;
     font-family: Futura;
 }
+
 .StatLabel {
     font-size: 15px;
     text-align: center;
 }
+
 .Distribution li {
     margin: 8px 0;
     font-weight: bold;
-    background-color: rebeccapurple;
+    background-color: var(--graph-color);
     padding: 2px;
     padding-right: 0.5em;
     min-width: 1em;
 }
+
 .GraphLabel {
     text-align: right;
 }
@@ -244,6 +269,7 @@ button.Guess {
     list-style-type: '🟩';
     padding-left: 1em;
 }
+
 .HelpList li {
     padding: 2px 5px;
 }
