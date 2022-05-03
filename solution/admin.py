@@ -19,7 +19,7 @@ class SolutionAdmin(admin.ModelAdmin):
             )
         }),
     )
-    list_display = ['word', 'english', 'language', 'date', 'order']
+    list_display = ['word', 'ipa', 'english', 'language', 'date', 'order']
     list_editable = ['date']
     formfield_overrides = {
         models.TextField: {'widget': TextInput},

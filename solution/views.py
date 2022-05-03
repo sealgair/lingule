@@ -1,3 +1,5 @@
+from datetime import timezone, timedelta, date, datetime
+
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
@@ -8,8 +10,11 @@ from solution.models import Solution
 
 class WordView(ApiView):
     def get(self, request):
+        tzoff = request.GET.get('tz', 0)
+        tz = timezone(timedelta(minutes=-int(tzoff)))
+        date = datetime.now(tz).date()
         try:
-            solution = Solution.objects.today()
+            solution = Solution.objects.get(date=date)
         except Solution.DoesNotExist:
             raise Http404()
         return {

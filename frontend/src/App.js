@@ -82,7 +82,7 @@ class App extends ServerComponent {
     }
 
     componentDidMount() {
-        fetch(this.server + "/solution/word.json", {
+        fetch(this.server + "/solution/word.json?tz="+new Date().getTimezoneOffset(), {
             crossDomain: true,
             headers: {'Content-Type': 'application/json'},
         })
