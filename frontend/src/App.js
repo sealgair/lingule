@@ -17,7 +17,40 @@ function getData(key) {
 class ServerComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.server = props.server || "http://localhost:8000"
+        if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+            // development build code
+            this.server = props.server || "http://localhost:8000";
+            this.crossDomain = true;
+        } else {
+            // production build code
+            this.server = props.server || "";
+            this.crossDomain = false;
+        }
+        this.fetch = this.fetch.bind(this);
+    }
+
+    fetch(url, success, fail) {
+        let headers = {};
+        if (this.crossDomain) {
+            headers = {
+                crossDomain: true,
+                headers: {'Content-Type': 'application/json'},
+            };
+        }
+        fetch(this.server + url, headers)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    success(result)
+                },
+                (error) => {
+                    if (fail) {
+                        fail(error);
+                    } else {
+                        console.log(error);
+                    }
+                }
+            );
     }
 }
 
@@ -72,7 +105,7 @@ class App extends ServerComponent {
                 </header>
                 <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
                 <div className="Body">
-                    <Guesses server={this.server} wordNumber={this.state.wordNumber} key={this.state.wordNumber}
+                    <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
                              solution={this.state.solution} answer={this.state.answer}/>
                 </div>
                 {stats}
@@ -82,26 +115,18 @@ class App extends ServerComponent {
     }
 
     componentDidMount() {
-        fetch(this.server + "/solution/word.json?tz="+new Date().getTimezoneOffset(), {
-            crossDomain: true,
-            headers: {'Content-Type': 'application/json'},
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        solution: result.id,
-                        word: result.word,
-                        ipa: result.ipa,
-                        meaning: result.meaning,
-                        wordNumber: result.order,
-                        answer: result.answer,
-                    });
-                },
-                (error) => {
-                    console.log(error);
-                }
-            )
+        this.fetch("/solution/word.json?tz=" + new Date().getTimezoneOffset(),
+            (result) => {
+
+                this.setState({
+                    solution: result.id,
+                    word: result.word,
+                    ipa: result.ipa,
+                    meaning: result.meaning,
+                    wordNumber: result.order,
+                    answer: result.answer,
+                });
+            });
     }
 }
 
@@ -164,40 +189,32 @@ class Guesses extends ServerComponent {
             language: this.state.guess.id,
             solution: this.props.solution,
         }).toString();
-        fetch(this.server + "/solution/guess.json?" + params, {
-            crossDomain: true,
-            headers: {'Content-Type': 'application/json'},
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    let guesses = this.state.guesses;
-                    guesses.push(result);
-                    let done = result.success || guesses.length >= 6;
-                    this.setState({
-                        guesses: guesses,
-                        done: done,
-                        success: result.success,
-                        guess: null,
-                        sid: result.sid,
-                    });
-                    if (this.props.wordNumber) {
-                        setData('guesses' + this.props.wordNumber, this.state.guesses);
-                        if (done) {
-                            let scores = getData('scores') || {};
-                            if (result.success) {
-                                scores[this.props.wordNumber] = guesses.length;
-                            } else {
-                                scores[this.props.wordNumber] = 'X';
-                            }
-                            setData('scores', scores);
+        this.fetch("/solution/guess.json?" + params,
+            (result) => {
+                let guesses = this.state.guesses;
+                guesses.push(result);
+                let done = result.success || guesses.length >= 6;
+                this.setState({
+                    guesses: guesses,
+                    done: done,
+                    success: result.success,
+                    guess: null,
+                    sid: result.sid,
+                });
+                if (this.props.wordNumber) {
+                    setData('guesses' + this.props.wordNumber, this.state.guesses);
+                    if (done) {
+                        let scores = getData('scores') || {};
+                        if (result.success) {
+                            scores[this.props.wordNumber] = guesses.length;
+                        } else {
+                            scores[this.props.wordNumber] = 'X';
                         }
+                        setData('scores', scores);
                     }
-                },
-                (error) => {
-                    console.log(error);
                 }
-            );
+            },
+        );
     }
 
     shareScore() {
@@ -252,7 +269,7 @@ class Guesses extends ServerComponent {
             return (
                 <div className="Guesses" onKeyDown={this.handleKey}>
                     <ul>{list}</ul>
-                    <Lookup server={this.server} onSelect={this.onSelect} key={this.state.guesses.length}/>
+                    <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>
                     <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
                             disabled={!this.state.guess}>Guess
                     </button>
@@ -367,19 +384,11 @@ class Lookup extends ServerComponent {
     }
 
     componentDidMount() {
-        fetch(this.server + "/language/all.json", {
-            crossDomain: true,
-            headers: {'Content-Type': 'application/json'},
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.languages = result;
-                },
-                (error) => {
-                    console.log(error);
-                }
-            );
+        this.fetch("/language/all.json",
+            (result) => {
+                this.languages = result;
+            }
+        );
     }
 }
 
