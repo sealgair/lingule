@@ -12,17 +12,34 @@ body {
     --bg-color: #150326;
     --text-color: #f6efff;
     --dim-text-color: #a19bb2;
+    --guess-text-color: #f6efff;
+    --disabled-text-color: #807e88;
     --choice-color: #74697c;
     --guess-color: #5f259a;
     --share-color: #319a25;
-    --wrong-color: #9a2525;
+    --wrong-color: #c42626;
     --link-color: #bb6bff;
     --graph-color: #881bf8;
     --input-bg-color: #301b44;
+    --guess-bg-color: black;
 
     background: var(--bg-color);
     color: var(--text-color);
 }
+
+@media (prefers-color-scheme: light) {
+    body {
+        --bg-color: #f6efff;
+        --text-color: #150326;
+        --dim-text-color: #7c7a81;
+        --guess-bg-color: white;
+        --choice-color: #c8c0cc;
+        --input-bg-color: #f6efff;
+        --link-color: #881bf8;
+        --graph-color: #ae5eff;
+    }
+}
+
 
 a {
     color: var(--link-color);
@@ -47,7 +64,7 @@ code {
 }
 
 .Title {
-    font-family: Futura;
+    font-family: 'Futura';
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -128,7 +145,7 @@ h1, h2, h3, h4 {
 }
 
 .Guess.Tried {
-    background-color: black;
+    background-color: var(--guess-bg-color);
     border: 1px solid var(--text-color);
     display: flex;
     justify-content: space-between;
@@ -180,19 +197,19 @@ button.Guess {
 
 .MakeGuess {
     background-color: var(--guess-color);
-    color: var(--text-color);
+    color: var(--guess-text-color);
     cursor: pointer;
 }
 
 .MakeGuess:disabled {
-    color: gray;
-    border-color: gray;
+    color: var(--disabled-text-color);
+    border-color: var(--disabled-text-color);
     cursor: default;
 }
 
 .Share {
     background-color: var(--share-color);
-    color: var(--text-color);
+    color: var(--guess-text-color);
     cursor: pointer;
 }
 
