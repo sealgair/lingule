@@ -81,9 +81,17 @@ class Language(models.Model):
 
     class Meta:
         db_table = 'language'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
+
+    @property
+    def subfamily_cmp(self):
+        """
+        fall back to family if there is no subfamily
+        """
+        return self.subfamily_id or self.family_id
 
     def compare(self, other):
         """
@@ -93,15 +101,14 @@ class Language(models.Model):
             return "🟩🟩🟩🟩🟩🏆"
         else:
             result = ""
-            keys = ['macroarea_id', 'family_id', 'subfamily_id', 'genus_id']
+            keys = ['macroarea_id', 'family_id', 'subfamily_cmp', 'genus_id', 'id']
             if self.family.name in ['', 'other']:
-                keys = ['macroarea_id', 'id', 'id', 'id']
+                keys = ['macroarea_id', 'id', 'id', 'id', 'id']
             for key in keys:
-                if getattr(self, key) and getattr(self, key) == getattr(other, key):
+                if getattr(self, key) == getattr(other, key):
                     result += '🟩'
                 else:
                     result += '⬛'
-            result += '⬛'  # language
         directions = [
             '⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'
         ]

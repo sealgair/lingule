@@ -7,13 +7,15 @@ from solution.models import Solution
 
 @admin.register(Solution)
 class SolutionAdmin(admin.ModelAdmin):
+    readonly_fields = ['order']
     fieldsets = (
         (None, {
             'fields': (
-                ('word', 'ipa'),
+                'word',
+                'ipa',
                 'english',
                 'language',
-                'date',
+                ('date', 'order',),
             )
         }),
     )

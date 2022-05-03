@@ -28,6 +28,12 @@ code {
     height: 100%;
 }
 
+.Title {
+    font-family: Futura;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 h1, h2, h3, h4 {
     font-family: 'Futura';
     text-transform: uppercase;
@@ -172,7 +178,7 @@ button.Guess {
     background-color: rgb(178, 12, 26);
 }
 
-.StatsOverlay {
+.Overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -184,10 +190,11 @@ button.Guess {
     align-items: center;
 }
 
-.StatsContainer {
+.ModalContainer {
     position: relative;
     width: auto;
     margin: auto;
+    max-width: 500px;
     border: 4px solid #AAA;
     background-color: black;
     padding: 1em 2em 2em;
@@ -231,4 +238,20 @@ button.Guess {
     left: calc(100% - 30px);
     font-size: 20px;
     cursor: pointer;
+}
+
+.HelpList {
+    list-style-type: '🟩';
+    padding-left: 1em;
+}
+.HelpList li {
+    padding: 2px 5px;
+}
+
+.HelpList .Black {
+    list-style-type: '⬛️';
+}
+
+.HelpList .Direction {
+    list-style-type: '↗️';
 }

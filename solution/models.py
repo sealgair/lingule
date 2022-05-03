@@ -26,7 +26,7 @@ class Solution(models.Model):
 
     def save(self, *args, **kwargs):
         if self.order is None and self.date is not None:
-            self.order = Solution.objects.aggregate(o=models.Max('order')).get('o', 0) + 1
+            self.order = (Solution.objects.aggregate(o=models.Max('order')).get('o') or 0) + 1
         super().save(*args, **kwargs)
 
     def __str__(self):

@@ -53,6 +53,7 @@ class Command(BaseCommand):
                         macroarea=macroarea,
                         family=family,
                         subfamily=subfamily,
+                        genus=genus,
                     ))
         with transaction.atomic():
             print("langfile parsed, saving languages")

@@ -29,14 +29,25 @@ class App extends ServerComponent {
             ipa: "ˈlɪŋ.ɡwəl",
             meaning: "a fun language game",
             stats: false,
+            help: false,
         }
 
         this.openStats = this.openStats.bind(this);
         this.closeStats = this.closeStats.bind(this);
+        this.openHelp = this.openHelp.bind(this);
+        this.closeHelp = this.closeHelp.bind(this);
+    }
+
+    openHelp() {
+        this.setState({help: true, stats: false});
+    }
+
+    closeHelp() {
+        this.setState({help: false});
     }
 
     openStats() {
-        this.setState({stats: true});
+        this.setState({stats: true, help: false});
     }
 
     closeStats() {
@@ -48,10 +59,14 @@ class App extends ServerComponent {
         if (this.state.stats) {
             stats = <Statistics onClose={this.closeStats}/>;
         }
+        let help = "";
+        if (this.state.help) {
+            help = <HowTo onClose={this.closeHelp}/>;
+        }
         return (
             <div className="Container">
                 <header className="Header">
-                    <span className="Help Icon">❓</span>
+                    <span className="Help Icon" onClick={this.openHelp}>❓</span>
                     <h1>Lingule</h1>
                     <span className="Stats Icon" onClick={this.openStats}>📊</span>
                 </header>
@@ -61,6 +76,7 @@ class App extends ServerComponent {
                              solution={this.state.solution} answer={this.state.answer}/>
                 </div>
                 {stats}
+                {help}
             </div>
         );
     }
@@ -360,11 +376,83 @@ class Lookup extends ServerComponent {
     }
 }
 
-class Statistics extends React.Component {
+class ModalComponent extends React.Component {
+    constructor(props, context) {
+        super(props, context);
+        this.title = "Modal"
+        this.onClick = this.onClick.bind(this);
+        this.contents = this.contents.bind(this);
+    }
+
+    onClick(event) {
+        if (event.target.classList.contains("Close") || event.target.classList.contains("Overlay")) {
+            this.props.onClose(event);
+        }
+    }
+
+    render() {
+        return (
+            <div className="Overlay" onClick={this.onClick}>
+                <div className="ModalContainer">
+                    <h1>{this.title}</h1> <span className="Close">Ⓧ</span>
+                    <hr/>
+                    {this.contents()}
+                </div>
+            </div>
+        )
+    }
+
+    contents() {
+    }
+}
+
+class HowTo extends ModalComponent {
+    constructor(props, context) {
+        super(props, context);
+        this.title = "How To Play";
+    }
+
+    contents() {
+        return (
+            <div>
+                <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
+                <div className="WordContainer">
+                    <div id="word" title="mystery word">target word</div>
+                    <div id="ipa" title="ipa pronunciation guide">ipa pronunciation</div>
+                    <div id="meaning" title="english translation">english translation</div>
+                </div>
+                <p>After each guess, you'll see how close you got in 6 squares:</p>
+                <ul className="HelpList">
+                    <li>Macro-area (e.g. "North America" or "Eurasia")</li>
+                    <li>Language Family (e.g. "Indo-European" or "Afro-Asiatic")</li>
+                    <li>Language Sub-Family (e.g. "Eastern Malayo-Polynesian" or "Benue-Congo")</li>
+                    <li>Language Genus (e.g. "Semitic" or "Romance")</li>
+                    <li className="Black">Language (Will only be green on the correct answer)</li>
+                    <li className="Direction">Direction to target language</li>
+                </ul>
+                <p>
+                    Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the
+                    classifications other languages except in macro-area.
+                </p>
+                <p>
+                    Direction is based on the (approximate) point of origin of a language, even if it is widely
+                    spoken. For example, the location for English is England, and Spanish is Spain.
+                </p>
+                <p>
+                    All language data is supplied by <a href="https://wals.info/languoid" target="_new">The World
+                    Atlas of Language Structures</a>
+                </p>
+            </div>
+        )
+    }
+}
+
+class Statistics extends ModalComponent {
 
     constructor(props, context) {
         super(props, context);
         const scores = getData('scores') || {};
+        this.title = "Statistics"
         this.games = Object.keys(scores).length;
         this.wins = 0;
         this.maxScore = 0;
@@ -385,7 +473,7 @@ class Statistics extends React.Component {
         this.cStreak = 0;
         this.mStreak = 0;
         let prev = null;
-        for (let i = minWord-1; i<=maxWord; i++) {
+        for (let i = minWord - 1; i <= maxWord; i++) {
             prev = scores[i];
             if (prev && prev !== 'X') {
                 this.cStreak += 1;
@@ -398,19 +486,13 @@ class Statistics extends React.Component {
         this.onClick = this.onClick.bind(this);
     }
 
-    onClick(event) {
-        if (event.target.classList.contains("Close") || event.target.classList.contains("StatsOverlay")) {
-            this.props.onClose(event);
-        }
-    }
-
-    render() {
+    contents() {
         let distribution = <h4>No Data</h4>;
         if (this.scores) {
             const scores = [1, 2, 3, 4, 5, 6]
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
-                    <li style={{width: (s/this.maxScore * 100) + '%'}} key={i}>
+                    <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}>
                         <div className="GraphLabel">{s}</div>
                     </li>
                 );
@@ -421,32 +503,28 @@ class Statistics extends React.Component {
             )
         }
         return (
-            <div className="StatsOverlay" onClick={this.onClick}>
-                <div className="StatsContainer" onClick={e => e.preventDefault()}>
-                    <h1>Statistics</h1> <span className="Close">Ⓧ</span>
-                    <hr/>
-                    <div className="StatsList">
-                        <div className="StatBox">
-                            <span className="Stat">{this.games}</span>
-                            <span className="StatLabel">Games</span>
-                        </div>
-                        <div className="StatBox">
-                            <span className="Stat">{this.wins}</span>
-                            <span className="StatLabel">Wins</span>
-                        </div>
-                        <div className="StatBox">
-                            <span className="Stat">{this.cStreak}</span>
-                            <span className="StatLabel">Current Streak</span>
-                        </div>
-                        <div className="StatBox">
-                            <span className="Stat">{this.mStreak}</span>
-                            <span className="StatLabel">Max Streak</span>
-                        </div>
+            <div>
+                <div className="StatsList">
+                    <div className="StatBox">
+                        <span className="Stat">{this.games}</span>
+                        <span className="StatLabel">Games</span>
                     </div>
-                    <h2>Guess Distribution</h2>
-                    <hr/>
-                    {distribution}
+                    <div className="StatBox">
+                        <span className="Stat">{this.wins}</span>
+                        <span className="StatLabel">Wins</span>
+                    </div>
+                    <div className="StatBox">
+                        <span className="Stat">{this.cStreak}</span>
+                        <span className="StatLabel">Current Streak</span>
+                    </div>
+                    <div className="StatBox">
+                        <span className="Stat">{this.mStreak}</span>
+                        <span className="StatLabel">Max Streak</span>
+                    </div>
                 </div>
+                <h2>Guess Distribution</h2>
+                <hr/>
+                {distribution}
             </div>
         )
     }
