@@ -201,13 +201,20 @@ class Guesses extends ServerComponent {
     }
 
     shareScore() {
-        let guessNum = this.state.success ? this.state.guesses.length : 'X';
+        const guessNum = this.state.success ? this.state.guesses.length : 'X';
         let score = this.state.guesses.map(guess => guess.hint);
         score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
-        navigator.clipboard.writeText(score.join("\n")).then(() => {
-            alert("Copied score to clipboard");
-        });
+        const data = score.join("\n");
+        try {
+            navigator.share(data).then(
+                r => alert("shared")
+            );
+        } catch {
+            navigator.clipboard.writeText(data).then(() => {
+                alert("Copied score to clipboard");
+            });
+        }
     }
 
     render() {
