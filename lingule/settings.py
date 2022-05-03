@@ -81,6 +81,14 @@ STATICFILES_DIRS = [
 
 WSGI_APPLICATION = 'lingule.wsgi.application'
 
+CACHES = {
+    'locmem': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+CACHES['default'] = CACHES['locmem']
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
