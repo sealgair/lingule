@@ -15,13 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.staticfiles.views import serve
-from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
+from django.urls import path, include, re_path
+
+
+def static_root(request, *args, **kwargs):
+    path = request.path if request.path.strip('/') else 'index.html'
+    return serve(request, path)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('solution/', include('solution.urls')),
     path('language/', include('language.urls')),
-    path('', serve, kwargs={'path': 'index.html'}),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    re_path('.*', static_root),
+]
