@@ -152,18 +152,53 @@ h1, h2, h3, h4 {
 }
 
 .Guess.Tried span {
-    overflow: hidden;
     white-space: nowrap;
     padding: 0 1em;
+}
+
+.Guess.Tried .Language {
+    overflow: hidden;
 }
 
 .Guess.Tried .Hint {
     flex-shrink: 0;
 }
+
 .Guess.Tried .HintBlock {
     margin: 0;
     padding: 0;
     cursor: default;
+}
+
+.ToolTip {
+    position: relative;
+}
+
+.ToolTip[data-tip]:before {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(50% - 45px);
+    left: -2em;
+    margin-left: 15px;
+
+    padding: 5px;
+    border: 1px solid var(--text-color);
+    border-radius: 10px;
+    background: var(--guess-bg-color) !important;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 12px;
+
+    display: none;
+    white-space: nowrap;
+}
+.ToolTip.Side[data-tip]:before {
+    top: calc(50% - 12px);
+    left: calc(50% + 30px);
+}
+
+.ToolTip:hover:before {
+    display: block;
 }
 
 .Lookup {

@@ -138,9 +138,9 @@ class Word extends React.Component {
     render() {
         return (
             <div className="WordContainer">
-                <div id="word" title="mystery word">{this.props.word}</div>
-                <div id="ipa" title="ipa pronunciation guide">{this.props.ipa}</div>
-                <div id="meaning" title="english translation">{this.props.meaning}</div>
+                <div id="word" className="ToolTip Side" data-tip="mystery word">{this.props.word}</div>
+                <div id="ipa" className="ToolTip Side" data-tip="ipa pronunciation guide">{this.props.ipa}</div>
+                <div id="meaning" className="ToolTip Side" data-tip="english translation">{this.props.meaning}</div>
             </div>
         )
     }
@@ -244,7 +244,7 @@ class Guesses extends ServerComponent {
             const guess = self.state.guesses[n];
             if (guess) {
                 let hints = Array(...guess.hint).map((h, i) =>
-                    <span className="HintBlock" key={i} title={guess[hintkeys[i]]}>{h}</span>
+                    <span className="HintBlock ToolTip" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
                 );
                 return (
                     <li className="Guess Tried" key={n} value={n}>
@@ -438,11 +438,7 @@ class HowTo extends ModalComponent {
         return (
             <div>
                 <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
-                <div className="WordContainer">
-                    <div id="word" title="mystery word">target word</div>
-                    <div id="ipa" title="ipa pronunciation guide">ipa pronunciation</div>
-                    <div id="meaning" title="english translation">english translation</div>
-                </div>
+                <Word word="target word" ipa="ipa pronunciation" meaning="english translation"/>
                 <p>After each guess, you'll see how close you got in 6 squares:</p>
                 <ul className="HelpList">
                     <li>Macro-area (e.g. "North America" or "Eurasia")</li>
