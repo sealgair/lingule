@@ -110,6 +110,9 @@ class App extends ServerComponent {
                 </div>
                 {stats}
                 {help}
+                <footer className="Footer">
+                    <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
+                </footer>
             </div>
         );
     }

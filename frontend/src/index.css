@@ -6,9 +6,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    height: 100vh;
-    width: 100vw;
-
     --bg-color: #150326;
     --text-color: #f6efff;
     --dim-text-color: #a19bb2;
@@ -56,11 +53,12 @@ code {
 }
 
 .Container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
 }
 
 .Title {
@@ -103,6 +101,7 @@ h1, h2, h3, h4 {
     max-width: 400px;
     padding: 0 1em;
     box-sizing: border-box;
+    margin-bottom: 3em;
 }
 
 .WordContainer {
@@ -300,4 +299,13 @@ button.Guess {
 
 .HelpList .Direction {
     list-style-type: '↗️';
+}
+
+.Footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1em;
+    box-sizing: border-box;
 }
