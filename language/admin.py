@@ -13,7 +13,10 @@ class LanguageAdmin(admin.ModelAdmin):
         'genus',
         'latitude',
         'longitude',
+        'hidden',
     ]
+    list_editable = ['hidden']
+    list_filter = ['hidden']
     search_fields = [
         'name',
         'family__name',

@@ -9,4 +9,4 @@ class LanguagesView(ApiView):
         return 60*60*24*5
 
     def get(self, request):
-        return list(Language.objects.values('name', 'id'))
+        return list(Language.objects.exclude(hidden=True).values('name', 'id'))

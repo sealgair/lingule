@@ -79,6 +79,8 @@ class Language(models.Model):
     subfamily = models.ForeignKey(Subfamily, null=True, on_delete=models.CASCADE)
     genus = models.ForeignKey(Genus, null=True, on_delete=models.CASCADE)
 
+    hidden = models.BooleanField(default=False)
+
     class Meta:
         db_table = 'language'
         ordering = ['name']
