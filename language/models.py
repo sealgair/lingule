@@ -102,17 +102,17 @@ class Language(models.Model):
         Return emoji string representing distance between languages
         """
         if self == other:
-            return "🟩🟩🟩🟩🟩🏆"
+            return ["🟩", "🟩", "🟩", "🟩", "🟩", "🏆"]
         else:
-            result = ""
+            result = []
             keys = ['macroarea_id', 'family_id', 'subfamily_cmp', 'genus_id', 'id']
             if self.family.name in ['', 'other']:
                 keys = ['macroarea_id', 'id', 'id', 'id', 'id']
             for key in keys:
                 if getattr(self, key) == getattr(other, key):
-                    result += '🟩'
+                    result.append('🟩')
                 else:
-                    result += '⬛'
+                    result.append('⬛')
         directions = [
             '⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'
         ]
@@ -121,7 +121,7 @@ class Language(models.Model):
             (other.latitude, other.longitude),
         )
         d = round(bearing / 45)
-        result += directions[d]
+        result.append(directions[d])
         return result
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

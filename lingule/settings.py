@@ -28,6 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'lingule.herokuapp.com',
     'lingule.xyz',
+    'localhost',
+    '0.0.0.0',
 ]
 
 # Application definition

@@ -222,17 +222,15 @@ class Guesses extends ServerComponent {
 
     shareScore() {
         const guessNum = this.state.success ? this.state.guesses.length : 'X';
-        let score = this.state.guesses.map(guess => guess.hint);
+        let score = this.state.guesses.map(guess => guess.hint.join(""));
         score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
         const data = score.join("\n");
-        try {
-            navigator.share(data).then(r => alert("shared"));
-        } catch {
-            navigator.clipboard.writeText(data).then(() => {
-                alert("Copied score to clipboard");
-            });
-        }
+        // TODO: figure out how to do this
+        // navigator.share(data).then(r => alert("shared"));
+        navigator.clipboard.writeText(data).then(() => {
+            alert("Copied score to clipboard");
+        });
     }
 
     render() {
@@ -243,7 +241,7 @@ class Guesses extends ServerComponent {
         const list = numbers.map(function (n) {
             const guess = self.state.guesses[n];
             if (guess) {
-                let hints = Array(...guess.hint).map((h, i) =>
+                let hints = guess.hint.map((h, i) =>
                     <span className="HintBlock ToolTip" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
                 );
                 return (
