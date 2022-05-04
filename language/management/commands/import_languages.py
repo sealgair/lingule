@@ -12,6 +12,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--file', '-f', dest='langfile', type=str)
+        parser.add_argument('--limit', '-l', dest='limit', type=int)
 
     def handle(self, *args, **options):
         langfile = options.get('langfile')
@@ -20,6 +21,7 @@ class Command(BaseCommand):
             dir = os.path.dirname(dir)  # management/
             dir = os.path.dirname(dir)  # language/
             langfile = os.path.join(dir, 'languages.csv')
+        limit = options.get('limit', None)
 
         languages = []
 
@@ -28,6 +30,8 @@ class Command(BaseCommand):
             with open(langfile) as file:
                 reader = csv.DictReader(file)
                 for r, row in enumerate(reader):
+                    if limit is not None and r > limit:
+                        break;
                     print(f'row {r}' + ' '*8, end='\r')
                     macroarea, _ = Macroarea.objects.get_or_create(name=row['Macroarea'])
                     family, _ = Family.objects.get_or_create(name=row['Family'])

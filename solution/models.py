@@ -19,14 +19,22 @@ class Solution(models.Model):
 
     def save(self, *args, **kwargs):
         if self.date is None:
-            latest = Solution.objects.aggregate(d=models.Max('date')).get('d')
-            if latest:
-                self.date = latest + timedelta(days=1)
-            else:
-                self.date = date.today()
-        if self.order is None:
-            self.order = (Solution.objects.aggregate(o=models.Max('order')).get('o') or 0) + 1
+            today = date.today()
+            upcoming = set(Solution.objects.filter(date__gte=today).values_list('date', flat=True))
+            td = 0
+            while today + timedelta(days=td) in upcoming:
+                td += 1
+            self.date = today + timedelta(days=td)
+            self.order = None
         super().save(*args, **kwargs)
+        if self.order is None:
+            try:
+                order = Solution.objects.filter(date__lt=self.date).latest('date').order
+            except Solution.DoesNotExist:
+                order = 0
+            for s in Solution.objects.filter(date__gte=self.date).order_by('date'):
+                order += 1
+                Solution.objects.filter(id=s.id).update(order=order)  # skip save method
 
     def __str__(self):
         return self.word
