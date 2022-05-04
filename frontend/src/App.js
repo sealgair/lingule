@@ -227,9 +227,7 @@ class Guesses extends ServerComponent {
         score.push(document.URL);
         const data = score.join("\n");
         try {
-            navigator.share(data).then(
-                r => alert("shared")
-            );
+            navigator.share(data).then(r => alert("shared"));
         } catch {
             navigator.clipboard.writeText(data).then(() => {
                 alert("Copied score to clipboard");
@@ -240,13 +238,18 @@ class Guesses extends ServerComponent {
     render() {
         const numbers = [0, 1, 2, 3, 4, 5];
         const self = this;
+        const hintkeys = ['macroarea', 'family', 'subfamily', 'genus', 'language'];
+
         const list = numbers.map(function (n) {
             const guess = self.state.guesses[n];
             if (guess) {
+                let hints = Array(...guess.hint).map((h, i) =>
+                    <span className="HintBlock" key={i} title={guess[hintkeys[i]]}>{h}</span>
+                );
                 return (
                     <li className="Guess Tried" key={n} value={n}>
                         <span className="Language">{guess.language}</span>
-                        <span className="Hint">{guess.hint}</span>
+                        <span className="Hint">{hints}</span>
                     </li>
                 );
             } else {
@@ -451,7 +454,7 @@ class HowTo extends ModalComponent {
                 </ul>
                 <p>
                     Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the
-                    classifications other languages except in macro-area.
+                    other languages except in macro-area.
                 </p>
                 <p>
                     Direction is based on the (approximate) point of origin of a language, even if it is widely

@@ -39,7 +39,7 @@ class WordView(ApiView):
 class GuessView(ApiView):
     def cache_vary(self, request, *args, **kwargs):
         return [
-            request.GET.get('solution', 'None'),
+            request.GET.get('solution', 'None„'),
             request.GET.get('language', 'None')
         ]
 
@@ -49,5 +49,9 @@ class GuessView(ApiView):
         return {
             'success': guess == solution.language,
             'language': guess.name,
+            'macroarea': guess.macroarea.name,
+            'family': guess.family.name,
+            'subfamily': guess.subfamily.name if guess.subfamily else "(None)",
+            'genus': guess.genus.name if guess.genus else "(None)",
             'hint': guess.compare(solution.language),
         }

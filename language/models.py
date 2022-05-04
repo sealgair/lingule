@@ -1,6 +1,8 @@
 import math
 
+from django.core.cache import cache
 from django.db import models
+from django.urls import reverse
 
 
 def get_bearing(start_point, end_point):
@@ -121,3 +123,9 @@ class Language(models.Model):
         d = round(bearing / 45)
         result += directions[d]
         return result
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        # clear cache
+        cache.delete(reverse('all_languages'))
+

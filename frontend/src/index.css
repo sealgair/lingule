@@ -160,6 +160,11 @@ h1, h2, h3, h4 {
 .Guess.Tried .Hint {
     flex-shrink: 0;
 }
+.Guess.Tried .HintBlock {
+    margin: 0;
+    padding: 0;
+    cursor: default;
+}
 
 .Lookup {
     background-color: var(--input-bg-color);
