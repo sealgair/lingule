@@ -37,7 +37,6 @@ body {
     }
 }
 
-
 a {
     color: var(--link-color);
 }
@@ -192,6 +191,7 @@ h1, h2, h3, h4 {
     display: none;
     white-space: nowrap;
 }
+
 .ToolTip.Side[data-tip]:before {
     top: calc(50% - 12px);
     left: calc(50% + 30px);
@@ -199,6 +199,10 @@ h1, h2, h3, h4 {
 
 .ToolTip:hover:before {
     display: block;
+}
+
+.LookupWrapper {
+    position: relative;
 }
 
 .Lookup {
@@ -213,13 +217,18 @@ h1, h2, h3, h4 {
 
 .LangList {
     background-color: var(--input-bg-color);
+    display: flex;
+    flex-direction: column-reverse;
+    position: absolute;
+    width: 100%;
+    bottom: 100%;
 }
 
 .Lang {
     border: 1px solid var(--text-color);
     border-radius: 5px;
     padding: 5px;
-    margin: 5px;
+    margin: 3px 0;
     list-style: none;
     cursor: pointer;
 }

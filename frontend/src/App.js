@@ -311,12 +311,12 @@ class Lookup extends ServerComponent {
         let selected = this.state.selected;
         let langs = this.filteredLangs();
         let lcount = langs.length;
-        if (event.code === "ArrowUp") {
+        if (event.code === "ArrowDown") {
             selected -= 1;
             if (selected < 0) {
                 selected += lcount;
             }
-        } else if (event.code === "ArrowDown") {
+        } else if (event.code === "ArrowUp") {
             selected += 1;
             if (selected >= lcount) {
                 selected -= lcount;
