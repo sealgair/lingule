@@ -438,7 +438,7 @@ class HowTo extends ModalComponent {
         return (
             <div>
                 <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
-                <Word word="target word" ipa="ipa pronunciation" meaning="english translation"/>
+                <Word word="target word" ipa="/ipa pronunciation/" meaning="english translation"/>
                 <p>After each guess, you'll see how close you got in 6 squares:</p>
                 <ul className="HelpList">
                     <li>Macro-area (e.g. "North America" or "Eurasia")</li>
@@ -446,15 +446,15 @@ class HowTo extends ModalComponent {
                     <li>Language Sub-Family (e.g. "Eastern Malayo-Polynesian" or "Benue-Congo")</li>
                     <li>Language Genus (e.g. "Semitic" or "Romance")</li>
                     <li className="Black">Language (Will only be green on the correct answer)</li>
-                    <li className="Direction">Direction to target language</li>
+                    <li className="Direction">Geographical direction to target language</li>
                 </ul>
                 <p>
                     Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the
                     other languages except in macro-area.
                 </p>
                 <p>
-                    Direction is based on the (approximate) point of origin of a language, even if it is widely
-                    spoken. For example, the location for English is England, and Spanish is Spain.
+                    Direction is based on the (approximate) geographical point of origin of a language, even if
+                    it is widely spoken. For example, the location for English is England, and Spanish is Spain.
                 </p>
                 <p>
                     All language data is supplied by <a href="https://wals.info/languoid" target="_new">The World
@@ -506,7 +506,7 @@ class Statistics extends ModalComponent {
 
     contents() {
         let distribution = <h4>No Data</h4>;
-        if (this.scores) {
+        if (this.scores.length > 0) {
             const scores = [1, 2, 3, 4, 5, 6]
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
