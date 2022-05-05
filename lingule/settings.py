@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)!2%bvk2!2@z)@t%otlo-lh6l3k7+!ren=%1(pj8zmbfxdgwjf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'lingule.herokuapp.com',
@@ -61,11 +61,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-if DEBUG:
-    CORS_ALLOWED_ORIGIN_REGEXES = [
-        r"^http:\/\/localhost:\d+$",
-        r"^https?:\/\/.*\.local:\d+$",
-    ]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http:\/\/localhost:\d+$",
+    r"^https?:\/\/.*\.local:\d+$",
+]
 
 ROOT_URLCONF = 'lingule.urls'
 
