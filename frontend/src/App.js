@@ -240,7 +240,7 @@ class Guesses extends ServerComponent {
         const numbers = [0, 1, 2, 3, 4, 5];
         const hintkeys = ['macroarea', 'family', 'subfamily', 'genus', 'language'];
 
-        const guesses = this.state.guesses;
+        const guesses = new Array(...this.state.guesses);
         const list = numbers.map(function (n) {
             const guess = guesses[n];
             if (guess) {
