@@ -228,7 +228,7 @@ class Guesses extends ServerComponent {
         score.push(document.URL);
         const data = score.join("\n");
         if (navigator.share) {
-            navigator.share(data).then(r => alert("shared"));
+            navigator.share({text: data}).then(r => alert("shared"));
         } else if (navigator.clipboard) {
             navigator.clipboard.writeText(data).then(r => alert("Copied score to clipboard"));
         } else {
