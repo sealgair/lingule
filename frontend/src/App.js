@@ -240,9 +240,8 @@ class Guesses extends ServerComponent {
         const numbers = [0, 1, 2, 3, 4, 5];
         const hintkeys = ['macroarea', 'family', 'subfamily', 'genus', 'language'];
 
-        const guesses = new Array(...this.state.guesses);
-        const list = numbers.map(function (n) {
-            const guess = guesses[n];
+        const guesses = numbers.map(n => this.state.guesses[n] || false);
+        const list = guesses.map(function (guess, n) {
             if (guess) {
                 let hints = guess.hint.map((h, i) =>
                     <span className="HintBlock ToolTip" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
