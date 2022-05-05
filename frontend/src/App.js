@@ -228,7 +228,10 @@ class Guesses extends ServerComponent {
         score.push(document.URL);
         const data = score.join("\n");
         if (navigator.share) {
-            navigator.share({text: data}).then(r => alert("shared"));
+            navigator.share({
+                title: "Lingule",
+                text: data,
+            });
         } else if (navigator.clipboard) {
             navigator.clipboard.writeText(data).then(r => alert("Copied score to clipboard"));
         } else {
@@ -268,7 +271,8 @@ class Guesses extends ServerComponent {
                 <div className="Guesses">
                     <ul>{list}</ul>
                     {lookup}
-                    <button tabIndex="0" autoFocus className={shareClass} onClick={this.shareScore}>Share</button>
+                    <button tabIndex="0" autoFocus className={shareClass}
+                            onClick={this.shareScore}>Share</button>
                 </div>
             );
         } else {
