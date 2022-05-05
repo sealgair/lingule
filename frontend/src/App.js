@@ -238,11 +238,11 @@ class Guesses extends ServerComponent {
 
     render() {
         const numbers = [0, 1, 2, 3, 4, 5];
-        const self = this;
         const hintkeys = ['macroarea', 'family', 'subfamily', 'genus', 'language'];
 
+        const guesses = this.state.guesses;
         const list = numbers.map(function (n) {
-            const guess = self.state.guesses[n];
+            const guess = guesses[n];
             if (guess) {
                 let hints = guess.hint.map((h, i) =>
                     <span className="HintBlock ToolTip" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
@@ -260,7 +260,7 @@ class Guesses extends ServerComponent {
         if (this.state.done) {
             let shareClass = "Guess Share";
             let lookup = "";
-            if (!self.state.success) {
+            if (!this.state.success) {
                 lookup = <Solution answer={this.props.answer}/>
                 shareClass += " Fail";
             }
