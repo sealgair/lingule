@@ -19,7 +19,7 @@ class ServerComponent extends React.Component {
         super(props);
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             // development build code
-            this.server = props.server || "http://localhost:8000";
+            this.server = props.server || "http://" + window.location.host.split(':')[0] + ":8000";
             this.crossDomain = true;
         } else {
             // production build code
@@ -98,21 +98,23 @@ class App extends ServerComponent {
         }
         return (
             <div className="Container">
-                <header className="Header">
-                    <span className="Help Icon" onClick={this.openHelp}>❓</span>
-                    <h1>Lingule</h1>
-                    <span className="Stats Icon" onClick={this.openStats}>📊</span>
-                </header>
-                <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
-                <div className="Body">
-                    <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
-                             solution={this.state.solution} answer={this.state.answer}/>
+                <div className="MainColumn">
+                    <header className="Header">
+                        <span className="Help Icon" onClick={this.openHelp}>❓</span>
+                        <h1>Lingule</h1>
+                        <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                    </header>
+                    <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
+                    <div className="Body">
+                        <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
+                                 solution={this.state.solution} answer={this.state.answer}/>
+                    </div>
+                    {stats}
+                    {help}
+                    <footer className="Footer">
+                        <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
+                    </footer>
                 </div>
-                {stats}
-                {help}
-                <footer className="Footer">
-                    <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
-                </footer>
             </div>
         );
     }
@@ -120,7 +122,6 @@ class App extends ServerComponent {
     componentDidMount() {
         this.fetch("/solution/word.json?tz=" + new Date().getTimezoneOffset(),
             (result) => {
-
                 this.setState({
                     solution: result.id,
                     word: result.word,
@@ -305,6 +306,7 @@ class Lookup extends ServerComponent {
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
         this.selectLang = this.selectLang.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
     handleKeypress(event) {
@@ -337,6 +339,9 @@ class Lookup extends ServerComponent {
 
     handleSelect(event) {
         this.selectLang({id: event.target.value, name: event.target.textContent});
+    }
+
+    handleBlur(event) {
     }
 
     selectLang(lang) {
@@ -377,6 +382,7 @@ class Lookup extends ServerComponent {
             <div className="LookupWrapper">
                 <input type="text" className="Guess Lookup" autoFocus
                        placeholder="What language is it?" value={this.state.value}
+                       onBlur={this.handleBlur}
                        onChange={this.handleChange} onKeyDown={this.handleKeypress}/>
                 {filtered}
             </div>

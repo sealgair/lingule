@@ -22,6 +22,10 @@ body {
 
     background: var(--bg-color);
     color: var(--text-color);
+
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
 }
 
 @media (prefers-color-scheme: light) {
@@ -46,18 +50,20 @@ code {
     monospace;
 }
 
-#root {
-    width: 100%;
-    height: 100%;
+.Container {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
 }
 
-.Container {
+.MainColumn {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
     min-height: 100vh;
+    max-width: 30em;
+    width: 100%;
 }
 
 .Title {
@@ -82,7 +88,6 @@ h1, h2, h3, h4 {
     width: 100%;
     margin: 10px;
     border-bottom: 2px solid var(--text-color);
-    max-width: 600px;
     font-weight: bold;
 }
 
@@ -97,10 +102,9 @@ h1, h2, h3, h4 {
 
 .Body {
     width: 100%;
-    max-width: 400px;
-    padding: 0 1em;
+    flex-grow: 1;
+    padding: 1em;
     box-sizing: border-box;
-    margin-bottom: 3em;
 }
 
 .WordContainer {
@@ -134,7 +138,7 @@ h1, h2, h3, h4 {
 .Guess {
     list-style: none;
     background-color: var(--choice-color);
-    font-size: 15px;
+    font-size: 16px;
     margin: 5px 0;
     border-radius: 5px;
     height: 30px;
@@ -281,7 +285,6 @@ button.Guess {
     position: relative;
     width: auto;
     margin: auto;
-    max-width: 500px;
     border: 4px solid #AAA;
     background-color: var(--bg-color);
     padding: 1em 2em 2em;
@@ -351,10 +354,5 @@ button.Guess {
 }
 
 .Footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
     padding: 1em;
-    box-sizing: border-box;
 }
