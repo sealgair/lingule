@@ -245,6 +245,7 @@ button.Guess {
     font-weight: bold;
     text-transform: uppercase;
     font-family: 'Futura';
+    height: 2.5em;
 }
 
 .MakeGuess {

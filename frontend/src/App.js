@@ -227,11 +227,13 @@ class Guesses extends ServerComponent {
         score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
         const data = score.join("\n");
-        // TODO: figure out how to do this
-        // navigator.share(data).then(r => alert("shared"));
-        navigator.clipboard.writeText(data).then(() => {
-            alert("Copied score to clipboard");
-        });
+        if (navigator.share) {
+            navigator.share(data).then(r => alert("shared"));
+        } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(data).then(r => alert("Copied score to clipboard"));
+        } else {
+            alert("Could not copy to clipboard, copy manually here:\n\n" + data);
+        }
     }
 
     render() {
