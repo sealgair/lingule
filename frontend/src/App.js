@@ -167,11 +167,13 @@ class Guesses extends ServerComponent {
             guesses: guesses,
             done: done,
             success: success,
+            shareName: "Share",
         };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
         this.shareScore = this.shareScore.bind(this);
+        this.alertShare = this.alertShare.bind(this);
     }
 
     onSelect(guess) {
@@ -221,6 +223,11 @@ class Guesses extends ServerComponent {
         );
     }
 
+    alertShare(newName) {
+        this.setState({shareName: newName});
+        setTimeout(() => this.setState({shareName: "Share"}), 3000);
+    }
+
     shareScore() {
         const guessNum = this.state.success ? this.state.guesses.length : 'X';
         let score = this.state.guesses.map(guess => guess.hint.join(""));
@@ -231,9 +238,9 @@ class Guesses extends ServerComponent {
             navigator.share({
                 title: "Lingule",
                 text: data,
-            });
+            }).then(r => this.alertShare("Shared"));
         } else if (navigator.clipboard) {
-            navigator.clipboard.writeText(data).then(r => alert("Copied score to clipboard"));
+            navigator.clipboard.writeText(data).then(r => this.alertShare("Copied"));
         } else {
             alert("Could not copy to clipboard, copy manually here:\n\n" + data);
         }
@@ -272,7 +279,7 @@ class Guesses extends ServerComponent {
                     <ul>{list}</ul>
                     {lookup}
                     <button tabIndex="0" autoFocus className={shareClass}
-                            onClick={this.shareScore}>Share</button>
+                            onClick={this.shareScore}>{this.state.shareName}</button>
                 </div>
             );
         } else {
@@ -515,7 +522,7 @@ class Statistics extends ModalComponent {
 
     contents() {
         let distribution = <h4>No Data</h4>;
-        if (this.scores.length > 0) {
+        if (Object.keys(this.scores).length > 0) {
             const scores = [1, 2, 3, 4, 5, 6]
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
