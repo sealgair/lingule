@@ -54,17 +54,24 @@ code {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
+    height: 100vh;
 }
 
 .MainColumn {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     min-height: 100vh;
     max-width: 30em;
     width: 100%;
-    /*overflow-y: scroll;*/
+    overflow-y: auto;
+}
+.ContentWrapper {
+}
+
+.Buffer {
+    flex-grow: 1;
 }
 
 .Title {
@@ -363,4 +370,5 @@ button.Guess {
 
 .Footer {
     padding: 1em;
+    text-align: center;
 }

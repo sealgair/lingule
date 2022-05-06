@@ -99,19 +99,22 @@ class App extends ServerComponent {
         return (
             <div className="Container">
                 <div className="MainColumn">
-                    <header className="Header">
-                        <span className="Help Icon" onClick={this.openHelp}>❓</span>
-                        <h1>Lingule</h1>
-                        <span className="Stats Icon" onClick={this.openStats}>📊</span>
-                    </header>
-                    <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
-                    <div className="Body">
-                        <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
-                                 solution={this.state.solution} answer={this.state.answer}/>
+                    <div className="Buffer"/>
+                    <div className="ContentWrapper">
+                        <header className="Header">
+                            <span className="Help Icon" onClick={this.openHelp}>❓</span>
+                            <h1>Lingule</h1>
+                            <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                        </header>
+                        <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
+                        <div className="Body">
+                            <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
+                                     solution={this.state.solution} answer={this.state.answer}/>
+                        </div>
+                        <footer className="Footer">
+                            <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
+                        </footer>
                     </div>
-                    <footer className="Footer">
-                        <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
-                    </footer>
                 </div>
                 {stats}
                 {help}
