@@ -1,15 +1,29 @@
 {
   "files": {
-    "main.css": "/static/css/main.182df78f.css",
+<<<<<<< HEAD
+    "main.css": "/static/css/main.3cf1b189.css",
+    "main.js": "/static/js/main.93148fd6.js",
+    "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
+    "index.html": "/index.html",
+    "main.3cf1b189.css.map": "/static/css/main.3cf1b189.css.map",
+    "main.93148fd6.js.map": "/static/js/main.93148fd6.js.map",
+    "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3cf1b189.css",
+    "static/js/main.93148fd6.js"
+=======
+    "main.css": "/static/css/main.46959e9f.css",
     "main.js": "/static/js/main.23763ebf.js",
     "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
     "index.html": "/index.html",
-    "main.182df78f.css.map": "/static/css/main.182df78f.css.map",
+    "main.46959e9f.css.map": "/static/css/main.46959e9f.css.map",
     "main.23763ebf.js.map": "/static/js/main.23763ebf.js.map",
     "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.182df78f.css",
+    "static/css/main.46959e9f.css",
     "static/js/main.23763ebf.js"
+>>>>>>> parent of ac459cd (fix scrolling in modals on mobile)
   ]
 }

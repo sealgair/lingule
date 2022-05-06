@@ -288,15 +288,24 @@ button.Guess {
     margin: auto;
     border: 4px solid #AAA;
     background-color: var(--bg-color);
-    padding: 1em 2em 2em;
+    padding: 0 1em 2em 2em;
     border-radius: 1em;
+<<<<<<< HEAD
     max-height: 100%;
     box-sizing: border-box;
     overflow-y: scroll;
 }
 
-.ModalContainer .Close {
-    position: fixed;
+.Close {
+    position: sticky;
+    top: 5px;
+    left: calc(100% - 15px);
+    font-size: 25px;
+    cursor: pointer;
+    height: 0;
+    display: inline-block;
+=======
+>>>>>>> parent of ac459cd (fix scrolling in modals on mobile)
 }
 
 .StatsList {
@@ -334,14 +343,6 @@ button.Guess {
 
 .GraphLabel {
     text-align: right;
-}
-
-.Close {
-    position: absolute;
-    top: 10px;
-    left: calc(100% - 30px);
-    font-size: 20px;
-    cursor: pointer;
 }
 
 .HelpList {

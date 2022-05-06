@@ -432,7 +432,8 @@ class ModalComponent extends React.Component {
         return (
             <div className="Overlay" onClick={this.onClick}>
                 <div className="ModalContainer">
-                    <h1>{this.title}</h1> <span className="Close">Ⓧ</span>
+                    <span className="Close">Ⓧ</span>
+                    <h1>{this.title}</h1>
                     <hr/>
                     {this.contents()}
                 </div>
