@@ -474,6 +474,9 @@ class HowTo extends ModalComponent {
                     it is widely spoken. For example, the location for English is England, and Spanish is Spain.
                 </p>
                 <p>
+                    All words will be transcribed in latin characters, using the most precise available method.
+                </p>
+                <p>
                     All language data is supplied by <a href="https://wals.info/languoid" target="_new">The World
                     Atlas of Language Structures</a>
                 </p>
