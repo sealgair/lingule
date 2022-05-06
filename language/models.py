@@ -72,14 +72,14 @@ class Genus(models.Model):
 
 class Language(models.Model):
     name = models.TextField(unique=True)
-    lang_id = models.TextField()
+    lang_id = models.TextField(blank=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
     macroarea = models.ForeignKey(Macroarea, on_delete=models.CASCADE)
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
-    subfamily = models.ForeignKey(Subfamily, null=True, on_delete=models.CASCADE)
-    genus = models.ForeignKey(Genus, null=True, on_delete=models.CASCADE)
+    subfamily = models.ForeignKey(Subfamily, null=True, blank=True, on_delete=models.CASCADE)
+    genus = models.ForeignKey(Genus, null=True, blank=True, on_delete=models.CASCADE)
 
     hidden = models.BooleanField(default=False)
 
