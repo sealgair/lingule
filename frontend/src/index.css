@@ -290,6 +290,13 @@ button.Guess {
     background-color: var(--bg-color);
     padding: 1em 2em 2em;
     border-radius: 1em;
+    max-height: 100%;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+.ModalContainer .Close {
+    position: fixed;
 }
 
 .StatsList {
