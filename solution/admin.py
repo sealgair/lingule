@@ -36,7 +36,7 @@ class SolutionAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                'word',
+                ('word', 'romanization'),
                 'ipa',
                 'english',
                 'language',

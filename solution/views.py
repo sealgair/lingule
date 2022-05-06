@@ -29,6 +29,7 @@ class WordView(ApiView):
         return {
             'id': solution.id,
             'word': solution.word,
+            'romanization': solution.romanization,
             'ipa': solution.ipa,
             'meaning': solution.english,
             'order': solution.order,

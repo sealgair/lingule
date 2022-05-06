@@ -59,6 +59,7 @@ class App extends ServerComponent {
         super(props);
         this.state = {
             word: "lingule",
+            romanization: "",
             ipa: "ˈlɪŋ.ɡwəl",
             meaning: "a fun language game",
             stats: false,
@@ -106,7 +107,8 @@ class App extends ServerComponent {
                             <h1>Lingule</h1>
                             <span className="Stats Icon" onClick={this.openStats}>📊</span>
                         </header>
-                        <Word word={this.state.word} ipa={this.state.ipa} meaning={this.state.meaning}/>
+                        <Word word={this.state.word} romanization={this.state.romanization}
+                              ipa={this.state.ipa} meaning={this.state.meaning}/>
                         <div className="Body">
                             <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
                                      solution={this.state.solution} answer={this.state.answer}/>
@@ -128,6 +130,7 @@ class App extends ServerComponent {
                 this.setState({
                     solution: result.id,
                     word: result.word,
+                    romanization: result.romanization,
                     ipa: result.ipa,
                     meaning: result.meaning,
                     wordNumber: result.order,
@@ -138,11 +141,16 @@ class App extends ServerComponent {
 }
 
 class Word extends React.Component {
-
     render() {
+        let romanization = "";
+        if (this.props.romanization) {
+            romanization = <div id="romanization" className="ToolTip Side"
+                                    data-tip="romanization">{this.props.romanization}</div>;
+        }
         return (
             <div className="WordContainer">
                 <div id="word" className="ToolTip Side" data-tip="mystery word">{this.props.word}</div>
+                {romanization}
                 <div id="ipa" className="ToolTip Side" data-tip="ipa pronunciation guide">{this.props.ipa}</div>
                 <div id="meaning" className="ToolTip Side" data-tip="english translation">{this.props.meaning}</div>
             </div>
@@ -458,7 +466,8 @@ class HowTo extends ModalComponent {
         return (
             <div>
                 <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
-                <Word word="target word" ipa="/ipa pronunciation/" meaning="english translation"/>
+                <Word word="target word" romanization="romanization"
+                      ipa="/ipa pronunciation/" meaning="english translation"/>
                 <p>After each guess, you'll see how close you got in 6 squares:</p>
                 <ul className="HelpList">
                     <li>Macro-area (e.g. "North America" or "Eurasia")</li>
@@ -475,9 +484,6 @@ class HowTo extends ModalComponent {
                 <p>
                     Direction is based on the (approximate) geographical point of origin of a language, even if
                     it is widely spoken. For example, the location for English is England, and Spanish is Spain.
-                </p>
-                <p>
-                    All words will be transcribed in latin characters, using the most precise available method.
                 </p>
                 <p>
                     All language data is supplied by <a href="https://wals.info/languoid" target="_new">The World

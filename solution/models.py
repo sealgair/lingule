@@ -7,8 +7,9 @@ from language.models import Language
 
 class Solution(models.Model):
     word = models.TextField()
-    english = models.TextField()
+    romanization = models.TextField(blank=True)
     ipa = models.TextField()
+    english = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solution')
     date = models.DateField(null=True, blank=True)
