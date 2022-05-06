@@ -45,6 +45,7 @@ class SolutionAdmin(admin.ModelAdmin):
             )
         }),
     )
+    filter_horizontal = ['alternates']
     list_display = ['word', 'ipa', 'english', 'language', 'date', 'order']
     list_editable = ['date']
     list_filter = [UpcomingListFilter]
