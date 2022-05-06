@@ -290,7 +290,6 @@ button.Guess {
     background-color: var(--bg-color);
     padding: 0 1em 2em 2em;
     border-radius: 1em;
-<<<<<<< HEAD
     max-height: 100%;
     box-sizing: border-box;
     overflow-y: scroll;
@@ -304,8 +303,6 @@ button.Guess {
     cursor: pointer;
     height: 0;
     display: inline-block;
-=======
->>>>>>> parent of ac459cd (fix scrolling in modals on mobile)
 }
 
 .StatsList {
