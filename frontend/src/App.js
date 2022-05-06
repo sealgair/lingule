@@ -109,12 +109,12 @@ class App extends ServerComponent {
                         <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
                                  solution={this.state.solution} answer={this.state.answer}/>
                     </div>
-                    {stats}
-                    {help}
                     <footer className="Footer">
                         <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
                     </footer>
                 </div>
+                {stats}
+                {help}
             </div>
         );
     }
