@@ -40,6 +40,7 @@ class SolutionAdmin(admin.ModelAdmin):
                 'ipa',
                 'english',
                 'language',
+                'alternates',
                 ('date', 'order',),
             )
         }),

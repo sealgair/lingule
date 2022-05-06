@@ -46,6 +46,9 @@ class GuessView(ApiView):
     def get(self, request):
         guess = get_object_or_404(Language, id=request.GET.get('language', None))
         solution = get_object_or_404(Solution, id=request.GET.get('solution', None))
+        hint = guess.compare(solution.language)
+        if guess in solution.alternates.all():
+            hint = guess.compare(guess)
         return {
             'success': guess == solution.language,
             'language': guess.name,
@@ -53,5 +56,5 @@ class GuessView(ApiView):
             'family': guess.family.name,
             'subfamily': guess.subfamily.name if guess.subfamily else "(None)",
             'genus': guess.genus.name if guess.genus else "(None)",
-            'hint': guess.compare(solution.language),
+            'hint': hint,
         }

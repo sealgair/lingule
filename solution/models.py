@@ -10,6 +10,7 @@ class Solution(models.Model):
     english = models.TextField()
     ipa = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solution')
     date = models.DateField(null=True, blank=True)
     order = models.PositiveIntegerField(null=True)
 

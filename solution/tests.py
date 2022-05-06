@@ -1,7 +1,9 @@
 from datetime import date, timedelta
+import json
 
 from django.core.management import call_command
 from django.test import TestCase
+from django.urls import reverse
 
 from language.models import Language
 from solution.models import Solution
@@ -64,3 +66,21 @@ class SolutionTestCase(TestCase):
                 ('foo9', 10),
             ]
         )
+
+    def test_alternate_solutions(self):
+        l1, l2, l3 = Language.objects.all()[:3]
+        solution = Solution.objects.create(
+            word=f'foo', ipa='fu', english='bar',
+            language=l1, date=date.today()
+        )
+        solution.alternates.add(l2, l3)
+        for lang in [l1, l2, l3]:
+            view = reverse("guess")+f"?solution={solution.id}&language={lang.id}"
+            response = self.client.get(view)
+            data = json.loads(response.content)
+            self.assertEqual(data.get('hint'), ["🟩", "🟩", "🟩", "🟩", "🟩", "🏆"])
+        for lang in Language.objects.all()[3:6]:
+            view = reverse("guess")+f"?solution={solution.id}&language={lang.id}"
+            response = self.client.get(view)
+            data = json.loads(response.content)
+            self.assertNotEqual(data.get('hint'), ["🟩", "🟩", "🟩", "🟩", "🟩", "🏆"])
