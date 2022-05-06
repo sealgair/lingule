@@ -18,6 +18,7 @@ class Solution(models.Model):
         db_table = 'solution'
 
     def save(self, *args, **kwargs):
+        overwrite = False
         if self.date is None:
             today = date.today()
             upcoming = set(Solution.objects.filter(date__gte=today).values_list('date', flat=True))
@@ -26,6 +27,11 @@ class Solution(models.Model):
                 td += 1
             self.date = today + timedelta(days=td)
             self.order = None
+        else:
+            try:
+                overwrite = Solution.objects.exclude(id=self.id).get(date=self.date)
+            except Solution.DoesNotExist:
+                pass  # no harm, no foul
         super().save(*args, **kwargs)
         if self.order is None:
             try:
@@ -33,6 +39,14 @@ class Solution(models.Model):
             except Solution.DoesNotExist:
                 order = 0
             for s in Solution.objects.filter(date__gte=self.date).order_by('date'):
+                order += 1
+                Solution.objects.filter(id=s.id).update(order=order)  # skip save method
+        if overwrite:
+            today = date.today()
+            order = Solution.objects.get(date=today).order
+            overwrite.date = None
+            overwrite.save()
+            for s in Solution.objects.filter(date__gt=today).order_by('date'):
                 order += 1
                 Solution.objects.filter(id=s.id).update(order=order)  # skip save method
 
