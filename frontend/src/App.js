@@ -151,7 +151,7 @@ class Word extends React.Component {
             <div className="WordContainer">
                 <div id="word" className="ToolTip Side" data-tip="mystery word">{this.props.word}</div>
                 {romanization}
-                <div id="ipa" className="ToolTip Side" data-tip="ipa pronunciation guide">{this.props.ipa}</div>
+                <div id="ipa" className="ToolTip Side" data-tip="ipa pronunciation">{this.props.ipa}</div>
                 <div id="meaning" className="ToolTip Side" data-tip="english translation">{this.props.meaning}</div>
             </div>
         )

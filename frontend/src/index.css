@@ -191,9 +191,9 @@ h1, h2, h3, h4 {
 
 .ToolTip[data-tip]:before {
     content: attr(data-tip);
-    position: relative;
-    left: -50%;
-    left: -2em;
+    position: absolute;
+    left: -3em;
+    top: -2.5em;
     margin-left: 15px;
 
     padding: 5px;
@@ -206,11 +206,12 @@ h1, h2, h3, h4 {
 
     display: none;
     white-space: nowrap;
+    z-index: 100;
 }
 
 .ToolTip.Side[data-tip]:before {
-    top: calc(50% - 12px);
-    left: calc(50% + 30px);
+    top: calc(50% - 15px);
+    left: calc(50% + 20px);
 }
 
 .ToolTip:hover:before {
