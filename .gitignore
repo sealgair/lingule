@@ -2,3 +2,5 @@
 .idea/*
 static/*
 *.sqlite3
+/fonts/Subset/
+.DS_Store

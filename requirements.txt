@@ -5,3 +5,4 @@ django-cors-headers
 whitenoise
 dj-database-url
 django-bmemcached
+fonttools

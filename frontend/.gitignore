@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+# build
+/build/fonts
 
 # misc
 .DS_Store

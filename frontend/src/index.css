@@ -122,15 +122,19 @@ h1, h2, h3, h4 {
 
 .WordContainer #word {
     font-size: 50px;
+    font-family: "NotoSans";
+    margin: -.4em;
 }
 
 .WordContainer #romanization {
     font-size: 35px;
+    font-family: "NotoSerif";
+    margin: -.3em;
 }
 
 .WordContainer #ipa {
     font-size: 20px;
-    font-style: italic;
+    font-family: "NotoSerif Italic";
     color: var(--dim-text-color);
 }
 
@@ -187,8 +191,8 @@ h1, h2, h3, h4 {
 
 .ToolTip[data-tip]:before {
     content: attr(data-tip);
-    position: absolute;
-    top: calc(50% - 45px);
+    position: relative;
+    left: -50%;
     left: -2em;
     margin-left: 15px;
 
