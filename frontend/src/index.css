@@ -123,13 +123,14 @@ h1, h2, h3, h4 {
 .WordContainer #word {
     font-size: 50px;
     font-family: "NotoSans";
-    margin: -.4em;
+    /*margin: -.4em;*/
+    line-height: 60px;
 }
 
 .WordContainer #romanization {
     font-size: 35px;
+    line-height: 40px;
     font-family: "NotoSerif";
-    margin: -.3em;
 }
 
 .WordContainer #ipa {
