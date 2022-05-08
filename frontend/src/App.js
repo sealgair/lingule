@@ -59,7 +59,6 @@ class App extends ServerComponent {
         super(props);
         this.state = {
             word: "lingule",
-            romanization: "",
             ipa: "ˈlɪŋ.ɡwəl",
             meaning: "a fun language game",
             stats: false,
@@ -97,8 +96,19 @@ class App extends ServerComponent {
         if (this.state.help) {
             help = <HowTo onClose={this.closeHelp}/>;
         }
+        let font = "";
+        if (this.state.font) {
+            let fontFace = [
+                "@font-face {",
+                "font-family: \"NotoSans Script\";",
+                "src: url(\"" + this.state.font + "\")",
+                "}"
+            ]
+            font = <style>{fontFace.join("\n")}</style>
+        }
         return (
             <div className="Container">
+                {font}
                 <div className="MainColumn">
                     <div className="Buffer"/>
                     <div className="ContentWrapper">
@@ -131,6 +141,7 @@ class App extends ServerComponent {
                     solution: result.id,
                     word: result.word,
                     romanization: result.romanization,
+                    font: result.font,
                     ipa: result.ipa,
                     meaning: result.meaning,
                     wordNumber: result.order,

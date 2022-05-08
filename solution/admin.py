@@ -3,6 +3,7 @@ from datetime import date
 from django.contrib import admin
 from django.db import models
 from django.forms import TextInput
+from django.utils.html import format_html
 
 from solution.models import Solution
 
@@ -39,6 +40,7 @@ class SolutionAdmin(admin.ModelAdmin):
                 ('word', 'romanization'),
                 'ipa',
                 'english',
+                'font',
                 'language',
                 'alternates',
                 ('date', 'order',),
@@ -46,10 +48,24 @@ class SolutionAdmin(admin.ModelAdmin):
         }),
     )
     filter_horizontal = ['alternates']
-    list_display = ['word', 'ipa', 'english', 'language', 'date', 'order']
+    list_display = ['font_word', 'ipa', 'english', 'language', 'date', 'order']
     list_editable = ['date']
     list_filter = [UpcomingListFilter]
     actions = [shuffle_solutions]
     formfield_overrides = {
         models.TextField: {'widget': TextInput},
     }
+
+    def font_word(self, obj):
+        if obj.font:
+            return format_html("""
+            <style>
+                @font-face {{
+                    font-family: "Noto{id}";
+                    src: url("{font}");
+                }}
+            </style>
+            <span style="font-family: Noto{id}">{word}</span>
+            """, id=obj.id, word=obj.word, font=obj.font_url)
+        else:
+            return obj.word

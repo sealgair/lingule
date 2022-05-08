@@ -29,6 +29,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('solution/', include('solution.urls')),
     path('language/', include('language.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + [
+] + static(settings.FONT_URL, document_root=settings.FONT_ROOT) + [
     re_path('.*', static_root),
 ]

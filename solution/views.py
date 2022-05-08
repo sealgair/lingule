@@ -26,15 +26,18 @@ class WordView(ApiView):
             solution = Solution.objects.get(date=date)
         except Solution.DoesNotExist:
             raise Http404()
-        return {
+        data = {
             'id': solution.id,
             'word': solution.word,
-            'romanization': solution.romanization,
             'ipa': solution.ipa,
             'meaning': solution.english,
             'order': solution.order,
             'answer': solution.language.name,
         }
+        if solution.romanization:
+            data['romanization'] = solution.romanization
+            data['font'] = solution.font_url
+        return data
 
 
 class GuessView(ApiView):

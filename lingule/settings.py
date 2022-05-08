@@ -86,10 +86,8 @@ TEMPLATES = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = [
     BASE_DIR / "frontend/build",
-    BASE_DIR / "fonts/Subset",
 ]
 
 WSGI_APPLICATION = 'lingule.wsgi.application'
@@ -152,6 +150,9 @@ USE_TZ = False
 
 STATIC_URL = "blah/"
 MEDIA_URL = "media/"
+
+FONT_ROOT = os.path.join(BASE_DIR, 'fonts')
+FONT_URL = "fonts/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
