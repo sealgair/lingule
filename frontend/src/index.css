@@ -379,6 +379,7 @@ button.Guess {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 20em;
 }
 
 .Footer .Contact {

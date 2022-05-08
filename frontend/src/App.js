@@ -110,6 +110,13 @@ class App extends ServerComponent {
             <div className="Container">
                 {font}
                 <div className="MainColumn">
+                    <footer className="Footer">
+                        <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
+                        <span className="Contact">
+                            <a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a>
+                            <a href="https://weirder.earth/@chase" target="_new">Toot at me</a>
+                        </span>
+                    </footer>
                     <div className="Buffer"/>
                     <div className="ContentWrapper">
                         <header className="Header">
@@ -123,13 +130,6 @@ class App extends ServerComponent {
                             <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
                                      solution={this.state.solution} answer={this.state.answer}/>
                         </div>
-                        <footer className="Footer">
-                            <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
-                            <span className="Contact">
-                                <a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a>
-                                <a href="https://weirder.earth/@chase" target="_new">Toot at me</a>
-                            </span>
-                        </footer>
                     </div>
                 </div>
                 {stats}
@@ -160,7 +160,7 @@ class Word extends React.Component {
         let romanization = "";
         if (this.props.romanization) {
             romanization = <div id="romanization" className="ToolTip Side"
-                                    data-tip="romanization">{this.props.romanization}</div>;
+                                data-tip="romanization">{this.props.romanization}</div>;
         }
         return (
             <div className="WordContainer">
