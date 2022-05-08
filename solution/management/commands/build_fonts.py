@@ -11,6 +11,9 @@ from fontTools import subset, merge
 class Command(BaseCommand):
     help = 'Build font files'
 
+    def add_arguments(self, parser):
+        parser.add_argument('--collectstatic', '-c', dest='collectstatic', action="store_true", default=False)
+
     def make_fonts(self, text, serif='Sans', weight='Regular'):
         subsetter = subset.Subsetter()
         merger = merge.Merger()
@@ -55,5 +58,6 @@ class Command(BaseCommand):
         self.make_fonts(text, 'Serif')
         self.make_fonts(text, 'Serif', 'Italic')
 
-        call_command("collectstatic", interactive=False)
+        if options.get('collectstatic'):
+            call_command("collectstatic", interactive=False)
 
