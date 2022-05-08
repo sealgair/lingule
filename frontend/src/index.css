@@ -75,13 +75,13 @@ code {
 }
 
 .Title {
-    font-family: 'Futura';
+    font-family: 'NotoTitle';
     font-weight: bold;
     text-transform: uppercase;
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Futura';
+    font-family: 'NotoTitle';
     text-transform: uppercase;
     margin: 5px;
     text-align: center;
@@ -257,7 +257,7 @@ h1, h2, h3, h4 {
 button.Guess {
     font-weight: bold;
     text-transform: uppercase;
-    font-family: 'Futura';
+    font-family: 'NotoTitle';
     height: 2.5em;
 }
 
@@ -335,7 +335,7 @@ button.Guess {
 .Stat {
     font-size: 40px;
     font-weight: bold;
-    font-family: Futura;
+    font-family: NotoTitle;
 }
 
 .StatLabel {
