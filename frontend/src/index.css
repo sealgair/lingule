@@ -25,7 +25,7 @@ body {
 
     width: 100%;
     position: fixed;
-    overflow: hidden;
+    overflow: visible;
 }
 
 @media (prefers-color-scheme: light) {
@@ -67,6 +67,7 @@ code {
     width: 100%;
     overflow-y: auto;
 }
+
 .ContentWrapper {
     min-width: 25em;
 }
@@ -107,9 +108,11 @@ h1, h2, h3, h4 {
 .Header .IconSet {
     flex: 1;
 }
+
 .Header .IconSet.Left {
     text-align: left;
 }
+
 .Header .IconSet.Right {
     text-align: right;
 }
@@ -130,6 +133,7 @@ h1, h2, h3, h4 {
 .WordContainer {
     margin: 0;
     text-align: center;
+    cursor: default;
 }
 
 .WordContainer #word {
@@ -198,11 +202,11 @@ h1, h2, h3, h4 {
     cursor: default;
 }
 
-.ToolTip {
+*[data-tip] {
     position: relative;
 }
 
-.ToolTip[data-tip]:before {
+*[data-tip]:before {
     content: attr(data-tip);
     position: absolute;
     left: -3em;
@@ -216,18 +220,23 @@ h1, h2, h3, h4 {
     color: var(--text-color);
     text-align: center;
     font-size: 12px;
+    line-height: 20px;
 
     display: none;
     white-space: nowrap;
     z-index: 100;
 }
 
-.ToolTip.Side[data-tip]:before {
+*[data-tip].Side[data-tip]:before {
     top: calc(50% - 15px);
     left: calc(50% + 20px);
 }
 
-.ToolTip:hover:before {
+*[data-tip].TipBelow[data-tip]:before {
+    top: 30px;
+}
+
+*[data-tip]:hover:before {
     display: block;
 }
 

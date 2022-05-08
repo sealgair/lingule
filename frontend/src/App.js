@@ -1,5 +1,8 @@
 import React from 'react';
 import './App.css';
+import ReactDOM from 'react-dom'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faCoffee} from '@fortawesome/free-solid-svg-icons'
 
 function setData(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
@@ -12,6 +15,16 @@ function getData(key) {
     } catch {
     }
     return value;
+}
+
+function inClass(element, className) {
+    if (element.classList.contains(className)) {
+        return true;
+    }
+    if (element.parentElement) {
+        return inClass(element.parentElement, className);
+    }
+    return false;
 }
 
 class ServerComponent extends React.Component {
@@ -113,12 +126,18 @@ class App extends ServerComponent {
                     <div className="ContentWrapper">
                         <header className="Header">
                             <span className="IconSet Left">
-                                <span className="Help Icon" onClick={this.openHelp}>❓</span>
-                                <span className="Info Icon" onClick={this.openInfo}>ℹ</span>
+                                <span className="Help Icon TipBelow" data-tip="How To Play" onClick={this.openHelp}>
+                                    <i className="fa-solid fa-circle-question"></i>
+                                </span>
+                                <span className="Info Icon TipBelow" data-tip="Credits" onClick={this.openInfo}>
+                                    <i className="fa-solid fa-circle-info"></i>
+                                </span>
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
-                                <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                                <span className="Stats Icon TipBelow" data-tip="Score Data" onClick={this.openStats}>
+                                    <i className="fa-solid fa-square-poll-horizontal"></i>
+                                </span>
                             </span>
                         </header>
                         <Word word={this.state.word} romanization={this.state.romanization}
@@ -155,15 +174,15 @@ class Word extends React.Component {
     render() {
         let romanization = "";
         if (this.props.romanization) {
-            romanization = <div id="romanization" className="ToolTip Side"
+            romanization = <div id="romanization" className="Side"
                                 data-tip="romanization">{this.props.romanization}</div>;
         }
         return (
             <div className="WordContainer">
-                <div id="word" className="ToolTip Side" data-tip="mystery word">{this.props.word}</div>
+                <div id="word" className="Side" data-tip="mystery word">{this.props.word}</div>
                 {romanization}
-                <div id="ipa" className="ToolTip Side" data-tip="ipa pronunciation">{this.props.ipa}</div>
-                <div id="meaning" className="ToolTip Side" data-tip="english translation">{this.props.meaning}</div>
+                <div id="ipa" className="Side" data-tip="ipa pronunciation">{this.props.ipa}</div>
+                <div id="meaning" className="Side" data-tip="english translation">{this.props.meaning}</div>
             </div>
         )
     }
@@ -276,7 +295,7 @@ class Guesses extends ServerComponent {
         const list = guesses.map(function (guess, n) {
             if (guess) {
                 let hints = guess.hint.map((h, i) =>
-                    <span className="HintBlock ToolTip" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
+                    <span className="HintBlock" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
                 );
                 return (
                     <li className="Guess Tried" key={n} value={n}>
@@ -445,7 +464,7 @@ class ModalComponent extends React.Component {
     }
 
     onClick(event) {
-        if (event.target.classList.contains("Close") || event.target.classList.contains("Overlay")) {
+        if (inClass(event.target, "Close") || event.target.classList.contains("Overlay")) {
             this.props.onClose(event);
         }
     }
@@ -454,7 +473,9 @@ class ModalComponent extends React.Component {
         return (
             <div className="Overlay" onClick={this.onClick}>
                 <div className="ModalContainer">
-                    <span className="Close">Ⓧ</span>
+                    <span className="Close">
+                        <i className="fa-solid fa-circle-xmark"></i>
+                    </span>
                     <h1>{this.title}</h1>
                     <hr/>
                     {this.contents()}
