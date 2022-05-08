@@ -1,3 +1,2 @@
 
-mkdir -p fonts/Subset/fonts
-python manage.py build_fonts
+python manage.py migrate
