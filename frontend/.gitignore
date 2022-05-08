@@ -9,7 +9,7 @@
 /coverage
 
 # build
-/build/fonts
+/build
 /public/fonts
 
 # misc
