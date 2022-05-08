@@ -9,8 +9,8 @@
 /coverage
 
 # build
-/build/fonts
-/public/fonts
+/build/media
+/public/media
 
 # misc
 .DS_Store

@@ -1,6 +1,7 @@
 *.pyc
 .idea/*
 static/*
+media/*
 *.sqlite3
 /fonts/Subset/fonts/*
 .DS_Store

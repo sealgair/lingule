@@ -4,15 +4,13 @@ import tempfile
 from datetime import date, timedelta
 
 from django.conf import settings
+from django.core.files.storage import default_storage
 from django.core.management import BaseCommand, call_command
 from fontTools import subset, merge
 
 
 class Command(BaseCommand):
     help = 'Build font files'
-
-    def add_arguments(self, parser):
-        parser.add_argument('--collectstatic', '-c', dest='collectstatic', action="store_true", default=False)
 
     def make_fonts(self, text, serif='Sans', weight='Regular'):
         subsetter = subset.Subsetter()
@@ -41,9 +39,9 @@ class Command(BaseCommand):
                     font.save(tf)
                     subsetfiles.append(tf)
             font = merger.merge(subsetfiles)
-        savedir = fonts_dir / 'Subset/fonts'
-        savedir.mkdir(parents=True, exist_ok=True)
-        font.save(savedir/f'Noto{serif}-{weight}.ttf')
+        with tempfile.NamedTemporaryFile(suffix=".ttf") as file:
+            font.save(file.name)
+            default_storage.save(f"fonts/Noto{serif}-{weight}.ttf", file)
 
     def handle(self, *args, **options):
         from solution.models import Solution
@@ -57,7 +55,4 @@ class Command(BaseCommand):
         self.make_fonts(text, 'Sans')
         self.make_fonts(text, 'Serif')
         self.make_fonts(text, 'Serif', 'Italic')
-
-        if options.get('collectstatic'):
-            call_command("collectstatic", interactive=False)
 
