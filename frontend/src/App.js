@@ -59,42 +59,41 @@ class App extends ServerComponent {
         super(props);
         this.state = {
             word: "lingule",
-            ipa: "ˈlɪŋ.ɡwəl",
+            ipa: "/ˈlɪŋ.ɡwəl/",
             meaning: "a fun language game",
-            stats: false,
-            help: false,
+            modal: null,
         }
 
-        this.openStats = this.openStats.bind(this);
-        this.closeStats = this.closeStats.bind(this);
+        this.openInfo = this.openInfo.bind(this);
         this.openHelp = this.openHelp.bind(this);
-        this.closeHelp = this.closeHelp.bind(this);
+        this.openStats = this.openStats.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+    }
+
+    openInfo() {
+        this.setState({modal: "info"});
     }
 
     openHelp() {
-        this.setState({help: true, stats: false});
-    }
-
-    closeHelp() {
-        this.setState({help: false});
+        this.setState({modal: "help"});
     }
 
     openStats() {
-        this.setState({stats: true, help: false});
+        this.setState({modal: "stats"});
     }
 
-    closeStats() {
-        this.setState({stats: false});
+    closeModal() {
+        this.setState({modal: null});
     }
 
     render() {
-        let stats = "";
-        if (this.state.stats) {
-            stats = <Statistics onClose={this.closeStats}/>;
-        }
-        let help = "";
-        if (this.state.help) {
-            help = <HowTo onClose={this.closeHelp}/>;
+        let modal = "";
+        if (this.state.modal === "stats") {
+            modal = <Statistics onClose={this.closeModal}/>;
+        } else if (this.state.modal === "help") {
+            modal = <HowTo onClose={this.closeModal}/>;
+        } else if (this.state.modal === "info") {
+            modal = <Info onClose={this.closeModal}/>;
         }
         let font = "";
         if (this.state.font) {
@@ -110,19 +109,17 @@ class App extends ServerComponent {
             <div className="Container">
                 {font}
                 <div className="MainColumn">
-                    <footer className="Footer">
-                        <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
-                        <span className="Contact">
-                            <a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a>
-                            <a href="https://weirder.earth/@chase" target="_new">Toot at me</a>
-                        </span>
-                    </footer>
                     <div className="Buffer"/>
                     <div className="ContentWrapper">
                         <header className="Header">
-                            <span className="Help Icon" onClick={this.openHelp}>❓</span>
+                            <span className="IconSet Left">
+                                <span className="Help Icon" onClick={this.openHelp}>❓</span>
+                                <span className="Info Icon" onClick={this.openInfo}>ℹ</span>
+                            </span>
                             <h1>Lingule</h1>
-                            <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                            <span className="IconSet Right">
+                                <span className="Stats Icon" onClick={this.openStats}>📊</span>
+                            </span>
                         </header>
                         <Word word={this.state.word} romanization={this.state.romanization}
                               ipa={this.state.ipa} meaning={this.state.meaning}/>
@@ -132,8 +129,7 @@ class App extends ServerComponent {
                         </div>
                     </div>
                 </div>
-                {stats}
-                {help}
+                {modal}
             </div>
         );
     }
@@ -468,6 +464,22 @@ class ModalComponent extends React.Component {
     }
 
     contents() {
+    }
+}
+
+class Info extends ModalComponent {
+    constructor(props, context) {
+        super(props, context);
+        this.title = "Info";
+    }
+
+    contents() {
+        return <div className="InfoContent">
+            <p>This game was created by Chase Caster</p>
+            <p><a href="https://github.com/sealgair/lingule" target="_new">See the code</a></p>
+            <p><a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a></p>
+            <p><a href="https://weirder.earth/@chase" target="_new">Toot at me</a></p>
+        </div>;
     }
 }
 

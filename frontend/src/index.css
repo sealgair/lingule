@@ -101,12 +101,24 @@ h1, h2, h3, h4 {
 
 .Header h1 {
     margin: 0;
+    flex: 4;
+}
+
+.Header .IconSet {
+    flex: 1;
+}
+.Header .IconSet.Left {
+    text-align: left;
+}
+.Header .IconSet.Right {
+    text-align: right;
 }
 
 .Header .Icon {
     cursor: pointer;
-    margin: 0;
+    margin: 0 5px;
 }
+
 
 .Body {
     width: 100%;
@@ -302,7 +314,7 @@ button.Guess {
     margin: auto;
     border: 4px solid #AAA;
     background-color: var(--bg-color);
-    padding: 0 1em 2em 2em;
+    padding: 0 2em 1em 2em;
     border-radius: 1em;
     max-height: 100vh;
     max-width: 35em;
@@ -313,7 +325,7 @@ button.Guess {
 .Close {
     position: sticky;
     top: 5px;
-    left: calc(100% - 15px);
+    left: 100%;
     font-size: 25px;
     cursor: pointer;
     height: 0;
@@ -372,6 +384,10 @@ button.Guess {
 
 .HelpList .Direction {
     list-style-type: '↗️';
+}
+
+.InfoContent {
+    text-align: center;
 }
 
 .Footer {
