@@ -125,6 +125,10 @@ class App extends ServerComponent {
                         </div>
                         <footer className="Footer">
                             <a href="https://github.com/sealgair/lingule" target="_new">See the code</a>
+                            <span className="Contact">
+                                <a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a>
+                                <a href="https://weirder.earth/@chase" target="_new">Toot at me</a>
+                            </span>
                         </footer>
                     </div>
                 </div>

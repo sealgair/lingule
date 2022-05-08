@@ -377,4 +377,14 @@ button.Guess {
 .Footer {
     padding: 1em;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Footer .Contact {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1em;
 }
