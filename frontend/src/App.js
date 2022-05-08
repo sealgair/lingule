@@ -497,6 +497,11 @@ class HowTo extends ModalComponent {
                     other languages except in macro-area.
                 </p>
                 <p>
+                    Some words may exist in multiple closely-related languages. In those cases, any of those languages
+                    will be accepted as the correct answer, but only if the word has the same spelling and meaning
+                    (even if it is pronounced differently).
+                </p>
+                <p>
                     Direction is based on the (approximate) geographical point of origin of a language, even if
                     it is widely spoken. For example, the location for English is England, and Spanish is Spain.
                 </p>
