@@ -1,6 +1,10 @@
 import React from 'react';
 import './App.css';
 
+function isTouchOnly() {
+    return window.matchMedia("(any-hover: none)").matches;
+}
+
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
@@ -276,7 +280,7 @@ class Guesses extends ServerComponent {
         score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
         const data = score.join("\n");
-        if (navigator.share) {
+        if (isTouchOnly() && navigator.share) {
             navigator.share({
                 title: "Lingule",
                 text: data,
