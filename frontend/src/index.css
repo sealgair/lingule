@@ -14,8 +14,9 @@ body {
     --choice-color: #74697c;
     --guess-color: #5f259a;
     --share-color: #319a25;
-    --correct-color: #02b301;
-    --arrow-color: #6f8eac;
+    --correct-color: #02b301; /*🟩*/
+    --arrow-color: #6f8eac; /*⬆️*/
+    --trophy-color: #ffed68; /*🏆*/
     --wrong-color: #c42626;
     --link-color: #bb6bff;
     --graph-color: #881bf8;
@@ -146,6 +147,7 @@ h1, h2, h3, h4 {
     font-size: 50px;
     font-family: "NotoSans Script", "NotoSans";
     line-height: 60px;
+    margin-top: 10px;
 }
 
 .WordContainer #romanization {
@@ -233,6 +235,10 @@ table.Guesses tr {
 }
 .Guess.Hints td.Direction.up-left > * {
     transform: rotate(315deg);
+}
+.Guess.Hints td.Direction.here {
+    background-color: var(--correct-color);
+    color: var(--trophy-color);
 }
 
 .HintIcon {

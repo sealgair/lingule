@@ -297,7 +297,8 @@ class Guesses extends ServerComponent {
             ['⬇️️']: "down",
             ['↙️️️']: "down-left",
             ['⬅️']: "left",
-            ['↖️️️️']: "up-left"
+            ['↖️️️️']: "up-left",
+            ['🏆']: "here"
         };
         const cardmap = {
             ['⬆️']: "north",
@@ -307,12 +308,17 @@ class Guesses extends ServerComponent {
             ['⬇️️']: "south",
             ['↙️️️']: "southwest",
             ['⬅️']: "west",
-            ['↖️️️️']: "southwest"
+            ['↖️️️️']: "southwest",
+            ['🏆']: "you got it!"
         };
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const data = guesses.map(function (guess, n) {
             if (guess) {
+                let arrow = <i className="fa-solid fa-arrow-up"></i>;
+                if (guess.hint[5] === "🏆") {
+                    arrow = <i className="fa-solid fa-trophy"></i>
+                }
                 return (
                     <tr className="Guess Hints" key={n}>
                         <td className={guess.hint[0]} data-tip={guess.macroarea}></td>
@@ -321,7 +327,7 @@ class Guesses extends ServerComponent {
                         <td className={guess.hint[3]} data-tip={guess.genus}></td>
                         <td className={guess.hint[4]+" Language"}>{guess.language}</td>
                         <td className={"Direction " + dirmap[guess.hint[5]]} data-tip={cardmap[guess.hint[5]]}>
-                            <i className="fa-solid fa-arrow-up"></i>
+                            {arrow}
                         </td>
                     </tr>
                 );
