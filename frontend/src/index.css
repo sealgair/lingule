@@ -122,6 +122,7 @@ h1, h2, h3, h4 {
 .Header .Icon {
     cursor: pointer;
     margin: 0 5px;
+    font-size: 28px;
 }
 
 
@@ -168,7 +169,7 @@ table.Guesses {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 5px;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 table.Guesses tr {
@@ -192,6 +193,9 @@ table.Guesses tr {
 .Guess.Hints td {
     background-color: var(--guess-bg-color);
     border: 1px solid var(--text-color);
+}
+.Guess.Hints td.Language {
+    padding: 0 8px;
 }
 .Guess.Hints td.Language,
 .Guesses th.HintIcon.Language{
@@ -305,6 +309,7 @@ button.Guess,
     padding: 0 5px;
     margin: 0;
     box-sizing: border-box;
+    font-size: 16px;
 }
 
 

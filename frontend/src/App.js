@@ -298,7 +298,17 @@ class Guesses extends ServerComponent {
             ['↙️️️']: "down-left",
             ['⬅️']: "left",
             ['↖️️️️']: "up-left"
-        }
+        };
+        const cardmap = {
+            ['⬆️']: "north",
+            ['↗️️']: "northeast",
+            ['➡️️']: "east",
+            ['↘️️️']: "southeast",
+            ['⬇️️']: "south",
+            ['↙️️️']: "southwest",
+            ['⬅️']: "west",
+            ['↖️️️️']: "southwest"
+        };
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const data = guesses.map(function (guess, n) {
@@ -310,7 +320,8 @@ class Guesses extends ServerComponent {
                         <td className={guess.hint[2]} data-tip={guess.subfamily}></td>
                         <td className={guess.hint[3]} data-tip={guess.genus}></td>
                         <td className="Language">{guess.language}</td>
-                        <td className={"Direction " + dirmap[guess.hint[5]]}><i className="fa-solid fa-arrow-up"></i>
+                        <td className={"Direction " + dirmap[guess.hint[5]]} data-tip={cardmap[guess.hint[5]]}>
+                            <i className="fa-solid fa-arrow-up"></i>
                         </td>
                     </tr>
                 );
@@ -588,7 +599,7 @@ class HowTo extends ModalComponent {
                     </li>
                     <li>
                         <i className="fa-regular fa-compass"></i>
-                        Geographical direction to target language
+                        Geographical direction from guess to target language
                     </li>
                 </ul>
                 <p>
