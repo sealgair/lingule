@@ -10,7 +10,6 @@ body {
     --text-color: #f6efff;
     --dim-text-color: #a19bb2;
     --guess-text-color: #f6efff;
-    --disabled-text-color: #807e88;
     --choice-color: #74697c;
     --guess-color: #5f259a;
     --share-color: #319a25;
@@ -41,6 +40,7 @@ body {
         --input-bg-color: #f6efff;
         --link-color: #881bf8;
         --graph-color: #ae5eff;
+        --arrow-color: #81accc; /*⬆️*/
     }
 }
 
@@ -349,6 +349,7 @@ button.Guess {
     text-transform: uppercase;
     font-family: 'NotoTitle';
     height: 2.5em;
+    font-size: 18px;
 }
 
 .MakeGuess {
@@ -358,13 +359,12 @@ button.Guess {
 }
 
 .MakeGuess:disabled {
-    color: var(--disabled-text-color);
-    border-color: var(--disabled-text-color);
     cursor: default;
+    opacity: 50%;
 }
 
 .Share {
-    background-color: var(--share-color);
+    background-color: var(--correct-color);
     color: var(--guess-text-color);
     cursor: pointer;
 }
