@@ -104,7 +104,7 @@ h1, h2, h3, h4 {
 
 .Header h1 {
     margin: 0;
-    flex: 4;
+    flex: 3;
 }
 
 .Header .IconSet {

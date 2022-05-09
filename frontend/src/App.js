@@ -319,7 +319,7 @@ class Guesses extends ServerComponent {
                         <td className={guess.hint[1]} data-tip={guess.family}></td>
                         <td className={guess.hint[2]} data-tip={guess.subfamily}></td>
                         <td className={guess.hint[3]} data-tip={guess.genus}></td>
-                        <td className="Language">{guess.language}</td>
+                        <td className={guess.hint[4]+" Language"}>{guess.language}</td>
                         <td className={"Direction " + dirmap[guess.hint[5]]} data-tip={cardmap[guess.hint[5]]}>
                             <i className="fa-solid fa-arrow-up"></i>
                         </td>
