@@ -127,16 +127,16 @@ class App extends ServerComponent {
                     <div className="ContentWrapper">
                         <header className="Header">
                             <span className="IconSet Left">
-                                <span className="Help Icon TipBelow" data-tip="How To Play" onClick={this.openHelp}>
+                                <span className="Help Icon TipBelow" title="How To Play" onClick={this.openHelp}>
                                     <i className="fa-solid fa-circle-question"></i>
                                 </span>
-                                <span className="Info Icon TipBelow" data-tip="Credits" onClick={this.openInfo}>
+                                <span className="Info Icon TipBelow" title="Credits" onClick={this.openInfo}>
                                     <i className="fa-solid fa-circle-info"></i>
                                 </span>
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
-                                <span className="Stats Icon TipBelow" data-tip="Score Data" onClick={this.openStats}>
+                                <span className="Stats Icon TipBelow" title="Score Data" onClick={this.openStats}>
                                     <i className="fa-solid fa-square-poll-horizontal"></i>
                                 </span>
                             </span>
