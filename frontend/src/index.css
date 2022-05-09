@@ -264,12 +264,12 @@ button.Guess,
     height: 30px;
 }
 
-*[data-tip] {
+.ToolTip {
     position: relative;
 }
 
-*[data-tip]:before {
-    content: attr(data-tip);
+.ToolTip:before {
+    content: attr(title);
     position: absolute;
     left: -3em;
     top: -2.5em;
@@ -290,17 +290,21 @@ button.Guess,
     z-index: 100;
 }
 
-*[data-tip].Side[data-tip]:before {
+.ToolTip.Side[data-tip]:before {
     top: calc(50% - 15px);
     left: calc(50% + 20px);
 }
 
-*[data-tip].TipBelow[data-tip]:before {
+.ToolTip.TipBelow[data-tip]:before {
     top: 30px;
 }
 
-*[data-tip]:hover:before {
+.ToolTip:hover:before {
     display: block;
+}
+
+label {
+    display: none;
 }
 
 .LookupWrapper {

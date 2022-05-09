@@ -175,15 +175,15 @@ class Word extends React.Component {
     render() {
         let romanization = "";
         if (this.props.romanization) {
-            romanization = <div id="romanization" className="Side"
-                                data-tip="romanization">{this.props.romanization}</div>;
+            romanization = <div id="romanization" className="ToolTip Side"
+                                title="romanization">{this.props.romanization}</div>;
         }
         return (
             <div className="WordContainer">
-                <div id="word" className="Side" data-tip="mystery word">{this.props.word}</div>
+                <div id="word" className="ToolTip Side" title="mystery word">{this.props.word}</div>
                 {romanization}
-                <div id="ipa" className="Side" data-tip="ipa pronunciation">{this.props.ipa}</div>
-                <div id="meaning" className="Side" data-tip="english translation">{this.props.meaning}</div>
+                <div id="ipa" className="ToolTip Side" title="ipa pronunciation">{this.props.ipa}</div>
+                <div id="meaning" className="ToolTip Side" title="english translation">{this.props.meaning}</div>
             </div>
         )
     }
@@ -290,43 +290,43 @@ class Guesses extends ServerComponent {
 
     render() {
         const dirmap = {
-            ['⬆️']: "up",
-            ['↗️️']: "up-right",
-            ['➡️️']: "right",
-            ['↘️️️']: "down-right",
-            ['⬇️️']: "down",
-            ['↙️️️']: "down-left",
-            ['⬅️']: "left",
-            ['↖️️️️']: "up-left",
-            ['🏆']: "here"
+            '⬆️': "up",
+            '↗️️': "up-right",
+            '➡️️': "right",
+            '↘️️️': "down-right",
+            '⬇️️': "down",
+            '↙️️️': "down-left",
+            '⬅️': "left",
+            '↖️️️️': "up-left",
+            '🏆': "here"
         };
         const cardmap = {
-            ['⬆️']: "north",
-            ['↗️️']: "northeast",
-            ['➡️️']: "east",
-            ['↘️️️']: "southeast",
-            ['⬇️️']: "south",
-            ['↙️️️']: "southwest",
-            ['⬅️']: "west",
-            ['↖️️️️']: "southwest",
-            ['🏆']: "you got it!"
+            '⬆️': "north",
+            '↗️️': "northeast",
+            '➡️️': "east",
+            '↘️️️': "southeast",
+            '⬇️️': "south",
+            '↙️️️': "southwest",
+            '⬅️': "west",
+            '↖️️️️': "southwest",
+            '🏆': "you got it!"
         };
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const data = guesses.map(function (guess, n) {
             if (guess) {
-                let arrow = <i className="fa-solid fa-arrow-up"></i>;
+                let arrow = <i className="fa-solid fa-arrow-up"/>;
                 if (guess.hint[5] === "🏆") {
-                    arrow = <i className="fa-solid fa-trophy"></i>
+                    arrow = <i className="fa-solid fa-trophy"/>
                 }
                 return (
                     <tr className="Guess Hints" key={n}>
-                        <td className={guess.hint[0]} data-tip={guess.macroarea}></td>
-                        <td className={guess.hint[1]} data-tip={guess.family}></td>
-                        <td className={guess.hint[2]} data-tip={guess.subfamily}></td>
-                        <td className={guess.hint[3]} data-tip={guess.genus}></td>
+                        <td className={guess.hint[0]+" ToolTip"} title={guess.macroarea}/>
+                        <td className={guess.hint[1]+" ToolTip"} title={guess.family}/>
+                        <td className={guess.hint[2]+" ToolTip"} title={guess.subfamily}/>
+                        <td className={guess.hint[3]+" ToolTip"} title={guess.genus}/>
                         <td className={guess.hint[4]+" Language"}>{guess.language}</td>
-                        <td className={"Direction " + dirmap[guess.hint[5]]} data-tip={cardmap[guess.hint[5]]}>
+                        <td className={"Direction ToolTip " + dirmap[guess.hint[5]]} title={cardmap[guess.hint[5]]}>
                             {arrow}
                         </td>
                     </tr>
@@ -365,22 +365,22 @@ class Guesses extends ServerComponent {
                 <table className="Guesses" onKeyDown={this.handleKey}>
                     <thead>
                     <tr className="GuessColumns">
-                        <th className="HintIcon" data-tip="Macro-Area">
+                        <th className="HintIcon ToolTip" title="Macro-Area">
                             <i className="fa-solid fa-earth-asia"></i>
                         </th>
-                        <th className="HintIcon" data-tip="Language Family">
+                        <th className="HintIcon ToolTip" title="Language Family">
                             <i className="fa-solid fa-mountain-sun"></i>
                         </th>
-                        <th className="HintIcon" data-tip="Sub-Family">
+                        <th className="HintIcon ToolTip" title="Sub-Family">
                             <i className="fa-solid fa-mountain"></i>
                         </th>
-                        <th className="HintIcon" data-tip="Genus">
+                        <th className="HintIcon ToolTip" title="Genus">
                             <i className="fa-solid fa-mound"></i>
                         </th>
-                        <th className="HintIcon Language" data-tip="Language">
+                        <th className="HintIcon Language ToolTip" title="Language">
                             <i className="fa-regular fa-comments"></i>
                         </th>
-                        <th className="HintIcon" data-tip="Map Direction">
+                        <th className="HintIcon ToolTip" title="Map Direction">
                             <i className="fa-regular fa-compass"></i>
                         </th>
                     </tr>
@@ -498,7 +498,8 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <input type="text" className="Guess Lookup" autoFocus
+                <label for="guess-lookup">Look up language</label>
+                <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus
                        placeholder="What language is it?" value={this.state.value}
                        onBlur={this.handleBlur}
                        onChange={this.handleChange} onKeyDown={this.handleKeypress}/>
