@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
-import ReactDOM from 'react-dom'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faCoffee} from '@fortawesome/free-solid-svg-icons'
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
 
 function setData(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
@@ -288,52 +289,97 @@ class Guesses extends ServerComponent {
     }
 
     render() {
+        const dirmap = {
+            ['⬆️']: "up",
+            ['↗️️']: "up-right",
+            ['➡️️']: "right",
+            ['↘️️️']: "down-right",
+            ['⬇️️']: "down",
+            ['↙️️️']: "down-left",
+            ['⬅️']: "left",
+            ['↖️️️️']: "up-left"
+        }
         const numbers = [0, 1, 2, 3, 4, 5];
-        const hintkeys = ['macroarea', 'family', 'subfamily', 'genus', 'language'];
-
         const guesses = numbers.map(n => this.state.guesses[n] || false);
-        const list = guesses.map(function (guess, n) {
+        const data = guesses.map(function (guess, n) {
             if (guess) {
-                let hints = guess.hint.map((h, i) =>
-                    <span className="HintBlock" key={i} data-tip={guess[hintkeys[i]]}>{h}</span>
-                );
                 return (
-                    <li className="Guess Tried" key={n} value={n}>
-                        <span className="Language">{guess.language}</span>
-                        <span className="Hint">{hints}</span>
-                    </li>
+                    <tr className="Guess Hints" key={n}>
+                        <td className={guess.hint[0]} data-tip={guess.macroarea}></td>
+                        <td className={guess.hint[1]} data-tip={guess.family}></td>
+                        <td className={guess.hint[2]} data-tip={guess.subfamily}></td>
+                        <td className={guess.hint[3]} data-tip={guess.genus}></td>
+                        <td className="Language">{guess.language}</td>
+                        <td className={"Direction " + dirmap[guess.hint[5]]}><i className="fa-solid fa-arrow-up"></i>
+                        </td>
+                    </tr>
                 );
             } else {
-                return (<li className="Guess" key={n} value={n}/>);
+                return (<tr className="Guess Empty" key={n}>
+                    <td colSpan="6"></td>
+                </tr>);
             }
         });
+
+        let lookup = "";
+        let button = ""
         if (this.state.done) {
             let shareClass = "Guess Share";
-            let lookup = "";
             if (!this.state.success) {
                 lookup = <Solution answer={this.props.answer}/>
                 shareClass += " Fail";
             }
-
-            return (
-                <div className="Guesses">
-                    <ul>{list}</ul>
-                    {lookup}
-                    <button tabIndex="0" autoFocus className={shareClass}
-                            onClick={this.shareScore}>{this.state.shareName}</button>
-                </div>
-            );
+            button = <button tabIndex="0" autoFocus className={shareClass}
+                             onClick={this.shareScore}>{this.state.shareName}</button>
         } else {
-            return (
-                <div className="Guesses" onKeyDown={this.handleKey}>
-                    <ul>{list}</ul>
-                    <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>
-                    <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
-                            disabled={!this.state.guess}>Guess
-                    </button>
-                </div>
-            );
+            lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>;
+            button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
+                             disabled={!this.state.guess}>Guess</button>;
         }
+        if (lookup) {
+            lookup = <tr>
+                <td colSpan="6">
+                    {lookup}
+                </td>
+            </tr>;
+        }
+        return (
+            <div>
+                <table className="Guesses" onKeyDown={this.handleKey}>
+                    <thead>
+                    <tr className="GuessColumns">
+                        <th className="HintIcon" data-tip="Macro-Area">
+                            <i className="fa-solid fa-earth-asia"></i>
+                        </th>
+                        <th className="HintIcon" data-tip="Language Family">
+                            <i className="fa-solid fa-mountain-sun"></i>
+                        </th>
+                        <th className="HintIcon" data-tip="Sub-Family">
+                            <i className="fa-solid fa-mountain"></i>
+                        </th>
+                        <th className="HintIcon" data-tip="Genus">
+                            <i className="fa-solid fa-mound"></i>
+                        </th>
+                        <th className="HintIcon Language" data-tip="Language">
+                            <i className="fa-regular fa-comments"></i>
+                        </th>
+                        <th className="HintIcon" data-tip="Map Direction">
+                            <i className="fa-regular fa-compass"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>{data}</tbody>
+                    <tfoot>
+                    {lookup}
+                    <tr>
+                        <td colSpan="6">
+                            {button}
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        );
     }
 }
 
@@ -398,13 +444,15 @@ class Lookup extends ServerComponent {
     }
 
     selectLang(lang) {
-        this.guessId = lang.id;
-        this.setState({value: lang.name});
-        this.props.onSelect(lang);
+        if (lang) {
+            this.guessId = lang.id;
+            this.setState({value: lang.name});
+            this.props.onSelect(lang);
+        }
     }
 
     filteredLangs() {
-        const patterns = this.state.value.split(" ").map(t => new RegExp('\\b' + t, 'gi'));
+        const patterns = this.state.value.split(" ").map(t => new RegExp('\\b' + escapeRegExp(t), 'gi'));
         return this.languages.filter(lang => patterns.reduce(
             (p, pat) => p && lang.name.match(pat),
             true
@@ -516,14 +564,32 @@ class HowTo extends ModalComponent {
                 <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
                 <Word word="target word" romanization="romanization"
                       ipa="/ipa pronunciation/" meaning="english translation"/>
-                <p>After each guess, you'll see how close you got in 6 squares:</p>
+                <p>After each guess, you'll see how close you got in 6 columns:</p>
                 <ul className="HelpList">
-                    <li>Macro-area (e.g. "North America" or "Eurasia")</li>
-                    <li>Language Family (e.g. "Indo-European" or "Afro-Asiatic")</li>
-                    <li>Language Sub-Family (e.g. "Eastern Malayo-Polynesian" or "Benue-Congo")</li>
-                    <li>Language Genus (e.g. "Semitic" or "Romance")</li>
-                    <li className="Black">Language (Will only be green on the correct answer)</li>
-                    <li className="Direction">Geographical direction to target language</li>
+                    <li>
+                        <i className="fa-solid fa-earth-asia"></i>
+                        Macro-Area (e.g. "North America" or "Eurasia")
+                    </li>
+                    <li>
+                        <i className="fa-solid fa-mountain-sun"></i>
+                        Language Family (e.g. "Indo-European" or "Afro-Asiatic")
+                    </li>
+                    <li>
+                        <i className="fa-solid fa-mountain"></i>
+                        Language Sub-Family (e.g. "Eastern Malayo-Polynesian" or "Benue-Congo")
+                    </li>
+                    <li>
+                        <i className="fa-solid fa-mound"></i>
+                        Language Genus (e.g. "Semitic" or "Romance")
+                    </li>
+                    <li>
+                        <i className="fa-regular fa-comments"></i>
+                        Language (Will only be green on the correct answer)
+                    </li>
+                    <li>
+                        <i className="fa-regular fa-compass"></i>
+                        Geographical direction to target language
+                    </li>
                 </ul>
                 <p>
                     Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the

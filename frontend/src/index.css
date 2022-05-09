@@ -14,6 +14,8 @@ body {
     --choice-color: #74697c;
     --guess-color: #5f259a;
     --share-color: #319a25;
+    --correct-color: #02b301;
+    --arrow-color: #6f8eac;
     --wrong-color: #c42626;
     --link-color: #bb6bff;
     --graph-color: #881bf8;
@@ -134,6 +136,9 @@ h1, h2, h3, h4 {
     margin: 0;
     text-align: center;
     cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .WordContainer #word {
@@ -159,47 +164,93 @@ h1, h2, h3, h4 {
     font-family: "NotoSans Light";
 }
 
-.Guesses ul {
-    padding: 0;
-    margin: 0;
-}
-
-.Guess {
-    list-style: none;
-    background-color: var(--choice-color);
-    font-size: 16px;
-    margin: 5px 0;
-    border-radius: 5px;
-    height: 30px;
+table.Guesses {
     width: 100%;
-    box-sizing: border-box;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    font-size: 16px;
 }
 
-.Guess.Tried {
+table.Guesses tr {
+    height: 30px;
+}
+
+.Guess td {
+    background-color: var(--choice-color);
+    margin: 0;
+    text-align: center;
+}
+.Guess td:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.Guess td:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.Guess.Hints td {
     background-color: var(--guess-bg-color);
     border: 1px solid var(--text-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+.Guess.Hints td.Language,
+.Guesses th.HintIcon.Language{
+    min-width: calc(100% - 30px * 5);
+}
+.Guess.Hints td:not(.Language),
+.Guesses th.HintIcon:not(.Language) {
+    width: 30px;
+    box-sizing: border-box;
+}
+.Guess.Hints td.🟩 {
+    background-color: var(--correct-color);
+}
+.Guess.Hints td.Direction {
+    background-color: var(--arrow-color);
+    transform-origin: center;
+}
+.Guess.Hints td.Direction.up-right > * {
+    transform: rotate(45deg);
+}
+.Guess.Hints td.Direction.right > * {
+    transform: rotate(90deg);
+}
+.Guess.Hints td.Direction.down-right > * {
+    transform: rotate(135deg);
+}
+.Guess.Hints td.Direction.down > * {
+    transform: rotate(180deg);
+}
+.Guess.Hints td.Direction.down-left > * {
+    transform: rotate(225deg);
+}
+.Guess.Hints td.Direction.left > * {
+    transform: rotate(270deg);
+}
+.Guess.Hints td.Direction.up-left > * {
+    transform: rotate(315deg);
 }
 
-.Guess.Tried span {
-    white-space: nowrap;
-    padding: 0 1em;
+.HintIcon {
+    font-size: 20px;
+    text-align: left;
 }
-
-.Guess.Tried .Language {
-    overflow: hidden;
-}
-
-.Guess.Tried .Hint {
-    flex-shrink: 0;
+.HintIcon > * {
+    margin-left: 5px;
+    box-sizing: content-box;
 }
 
 .Guess.Tried .HintBlock {
     margin: 0;
     padding: 0;
     cursor: default;
+}
+
+button.Guess,
+.Lookup {
+    width: 100%;
+    border-radius: 5px;
+    height: 30px;
 }
 
 *[data-tip] {
@@ -221,6 +272,7 @@ h1, h2, h3, h4 {
     text-align: center;
     font-size: 12px;
     line-height: 20px;
+    pointer-events: none;
 
     display: none;
     white-space: nowrap;
@@ -242,9 +294,11 @@ h1, h2, h3, h4 {
 
 .LookupWrapper {
     position: relative;
+    width: 100%;
 }
 
 .Lookup {
+    width: 100%;
     background-color: var(--input-bg-color);
     color: var(--text-color);
     border: 2px var(--text-color) solid;
@@ -255,6 +309,8 @@ h1, h2, h3, h4 {
 
 
 .LangList {
+    margin: 0;
+    padding: 0;
     background-color: var(--input-bg-color);
     display: flex;
     flex-direction: column-reverse;
@@ -379,24 +435,19 @@ button.Guess {
 }
 
 .HelpList {
-    list-style-type: '🟩';
-    padding-left: 1em;
-}
-
-.HelpList li {
-    padding: 2px 5px;
-}
-
-.HelpList .Black {
-    list-style-type: '⬛️';
-}
-
-.HelpList .Direction {
-    list-style-type: '↗️';
+    list-style-type: none;
 }
 
 .InfoContent {
     text-align: center;
+}
+
+.HelpList {
+    padding: 0;
+}
+.HelpList li > *:first-child {
+    margin-right: 0.5em;
+    width: 1em;
 }
 
 .Footer {
