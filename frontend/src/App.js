@@ -366,21 +366,27 @@ class Guesses extends ServerComponent {
                     <thead>
                     <tr className="GuessColumns">
                         <th className="HintIcon ToolTip" title="Macro-Area">
+                            <span className="Description">Macro-Area of guessed language</span>
                             <i className="fa-solid fa-earth-asia"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Language Family">
+                            <span className="Description">Language Family of guessed language</span>
                             <i className="fa-solid fa-mountain-sun"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Sub-Family">
+                            <span className="Description">Sub-Family of guessed language</span>
                             <i className="fa-solid fa-mountain"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Genus">
+                            <span className="Description">Genus of guessed language</span>
                             <i className="fa-solid fa-mound"></i>
                         </th>
                         <th className="HintIcon Language ToolTip" title="Language">
+                            <span className="Description">Name of guessed language</span>
                             <i className="fa-regular fa-comments"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Map Direction">
+                            <span className="Description">Compass direction from guessed langauge to target language</span>
                             <i className="fa-regular fa-compass"></i>
                         </th>
                     </tr>

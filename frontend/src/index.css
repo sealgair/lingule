@@ -250,6 +250,9 @@ table.Guesses tr {
     margin-left: 5px;
     box-sizing: content-box;
 }
+.HintIcon .Description {
+    display: none;
+}
 
 .Guess.Tried .HintBlock {
     margin: 0;
