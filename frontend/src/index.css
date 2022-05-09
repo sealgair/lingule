@@ -28,12 +28,13 @@ body {
 
     width: 100%;
     position: fixed;
-    overflow: visible;
+    overflow-x: visible;
 }
 
 @media (prefers-color-scheme: light) {
     body {
         --bg-color: #f6efff;
+        --guess-bg-color: white;
         --text-color: #150326;
         --dim-text-color: #7c7a81;
         --choice-color: #c8c0cc;
@@ -193,8 +194,8 @@ table.Guesses tr {
 
 .Guess.Hints td {
     background-color: var(--guess-bg-color);
-    color: var(--guess-text-color);
-    border: 1px solid var(--guess-text-color);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
 }
 .Guess.Hints td.Language {
     padding: 0 8px;
@@ -459,20 +460,4 @@ button.Guess {
 .HelpList li > *:first-child {
     margin-right: 0.5em;
     width: 1em;
-}
-
-.Footer {
-    padding: 1em;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 20em;
-}
-
-.Footer .Contact {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 1em;
 }
