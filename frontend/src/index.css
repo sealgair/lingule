@@ -36,7 +36,6 @@ body {
         --bg-color: #f6efff;
         --text-color: #150326;
         --dim-text-color: #7c7a81;
-        --guess-bg-color: white;
         --choice-color: #c8c0cc;
         --input-bg-color: #f6efff;
         --link-color: #881bf8;
@@ -194,7 +193,8 @@ table.Guesses tr {
 
 .Guess.Hints td {
     background-color: var(--guess-bg-color);
-    border: 1px solid var(--text-color);
+    color: var(--guess-text-color);
+    border: 1px solid var(--guess-text-color);
 }
 .Guess.Hints td.Language {
     padding: 0 8px;
@@ -277,7 +277,7 @@ button.Guess,
     padding: 5px;
     border: 1px solid var(--text-color);
     border-radius: 10px;
-    background: var(--guess-bg-color) !important;
+    background: var(--bg-color) !important;
     color: var(--text-color);
     text-align: center;
     font-size: 12px;
