@@ -150,7 +150,10 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = "blah/"
+if DEBUG:
+    STATIC_URL = "static/"
+else:
+    STATIC_URL = '/'
 MEDIA_URL = "media/"
 
 FONT_ROOT = os.path.join(BASE_DIR, 'fonts')
