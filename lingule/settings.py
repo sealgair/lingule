@@ -38,6 +38,10 @@ if RUNNING_DEVSERVER:
         'sealg-adhar.local',
     ])
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://lingule.xyz',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
