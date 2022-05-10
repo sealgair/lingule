@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 import dj_database_url
 
@@ -29,7 +30,8 @@ ALLOWED_HOSTS = [
     'lingule.herokuapp.com',
     'lingule.xyz',
 ]
-if DEBUG:
+RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+if RUNNING_DEVSERVER:
     ALLOWED_HOSTS.extend([
         'localhost',
         '0.0.0.0',
@@ -53,7 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "lingule.middleware.RootWhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
