@@ -21,8 +21,7 @@ from django.urls import path, include, re_path
 
 
 def static_root(request, *args, **kwargs):
-    path = request.path if request.path.strip('/') else 'index.html'
-    return serve(request, path)
+    return serve(request, request.path, *args, **kwargs)
 
 
 urlpatterns = [
