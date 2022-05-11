@@ -99,30 +99,25 @@ class Language(models.Model):
 
     def compare(self, other):
         """
-        Return emoji string representing distance between languages
+        Return json comparison of various language fields
         """
-        if self == other:
-            return ["🟩", "🟩", "🟩", "🟩", "🟩", "🏆"]
-        else:
-            result = []
-            keys = ['macroarea_id', 'family_id', 'subfamily_cmp', 'genus_id', 'id']
-            if self.family.name in ['', 'other']:
-                keys = ['macroarea_id', 'id', 'id', 'id', 'id']
-            for key in keys:
-                if getattr(self, key) == getattr(other, key):
-                    result.append('🟩')
-                else:
-                    result.append('⬛')
-        directions = [
-            '⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'
-        ]
-        bearing = get_bearing(
-            (self.latitude, self.longitude),
-            (other.latitude, other.longitude),
-        )
-        d = round(bearing / 45)
-        result.append(directions[d])
-        return result
+        hint = {
+            'macroarea': self.macroarea == other.macroarea,
+            'language': self == other,
+        }
+        isolate = self.family.name in ['', 'other']
+        for field in ['family_id', 'subfamily_cmp', 'genus_id']:
+            key, _ = field.split('_')
+            hint[key] = self == other or (
+                    not isolate and getattr(self, field) == getattr(other, field)
+            )
+
+        if self != other:
+            hint['bearing'] = get_bearing(
+                (self.latitude, self.longitude),
+                (other.latitude, other.longitude),
+            )
+        return hint
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert, force_update, using, update_fields)

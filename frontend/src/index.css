@@ -209,35 +209,14 @@ table.Guesses tr {
     width: 30px;
     box-sizing: border-box;
 }
-.Guess.Hints td.🟩 {
+.Guess.Hints td[data-value='true'] {
     background-color: var(--correct-color);
 }
 .Guess.Hints td.Direction {
     background-color: var(--arrow-color);
     transform-origin: center;
 }
-.Guess.Hints td.Direction.up-right > * {
-    transform: rotate(45deg);
-}
-.Guess.Hints td.Direction.right > * {
-    transform: rotate(90deg);
-}
-.Guess.Hints td.Direction.down-right > * {
-    transform: rotate(135deg);
-}
-.Guess.Hints td.Direction.down > * {
-    transform: rotate(180deg);
-}
-.Guess.Hints td.Direction.down-left > * {
-    transform: rotate(225deg);
-}
-.Guess.Hints td.Direction.left > * {
-    transform: rotate(270deg);
-}
-.Guess.Hints td.Direction.up-left > * {
-    transform: rotate(315deg);
-}
-.Guess.Hints td.Direction.here {
+.Guess.Hints td.Direction[data-value='true'] {
     background-color: var(--correct-color);
     color: var(--trophy-color);
 }

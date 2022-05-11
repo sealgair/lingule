@@ -1,6 +1,26 @@
 import React from 'react';
 import './App.css';
 
+const directions = [
+    "north",
+    "north-northeast",
+    "northeast",
+    "east-northeast",
+    "east",
+    "east-southeast",
+    "southeast",
+    "south-southeast",
+    "south",
+    "south-southwest",
+    "southwest",
+    "west-southwest",
+    "west",
+    "west-northwest",
+    "northwest",
+    "north-northwest",
+    "north",
+];
+
 function isTouchOnly() {
     return window.matchMedia("(any-hover: none)").matches;
 }
@@ -201,7 +221,7 @@ class Guesses extends ServerComponent {
         let success = false;
         let guesses = [];
         if (this.props.wordNumber) {
-            let data = getData('guesses' + this.props.wordNumber);
+            let data = getData('guess' + this.props.wordNumber);
             if (Array.isArray(data)) {
                 guesses = data;
                 success = guesses[guesses.length - 1].success;
@@ -254,7 +274,7 @@ class Guesses extends ServerComponent {
                     sid: result.sid,
                 });
                 if (this.props.wordNumber) {
-                    setData('guesses' + this.props.wordNumber, this.state.guesses);
+                    setData('guess' + this.props.wordNumber, this.state.guesses);
                     if (done) {
                         let scores = getData('scores') || {};
                         if (result.success) {
@@ -275,8 +295,24 @@ class Guesses extends ServerComponent {
     }
 
     shareScore() {
+        const squares = {[true]: '🟩', [false]: '⬛️'};
+        const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
         const guessNum = this.state.success ? this.state.guesses.length : 'X';
-        let score = this.state.guesses.map(guess => guess.hint.join(""));
+        let score = this.state.guesses.map(function(guess) {
+            let hint = [
+                squares[guess.hint.macroarea],
+                squares[guess.hint.family],
+                squares[guess.hint.subfamily],
+                squares[guess.hint.genus],
+                squares[guess.hint.language],
+            ];
+            if (guess.hint.language) {
+                hint.push('🏆');
+            } else {
+                hint.push(arrows[Math.round(guess.hint.bearing/45)]);
+            }
+            return hint.join("");
+        });
         score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
         score.push(document.URL);
         const data = score.join("\n");
@@ -293,44 +329,24 @@ class Guesses extends ServerComponent {
     }
 
     render() {
-        const dirmap = {
-            '⬆️': "up",
-            '↗️️': "up-right",
-            '➡️️': "right",
-            '↘️️️': "down-right",
-            '⬇️️': "down",
-            '↙️️️': "down-left",
-            '⬅️': "left",
-            '↖️️️️': "up-left",
-            '🏆': "here"
-        };
-        const cardmap = {
-            '⬆️': "north",
-            '↗️️': "northeast",
-            '➡️️': "east",
-            '↘️️️': "southeast",
-            '⬇️️': "south",
-            '↙️️️': "southwest",
-            '⬅️': "west",
-            '↖️️️️': "southwest",
-            '🏆': "you got it!"
-        };
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const data = guesses.map(function (guess, n) {
             if (guess) {
-                let arrow = <i className="fa-solid fa-arrow-up"/>;
-                if (guess.hint[5] === "🏆") {
-                    arrow = <i className="fa-solid fa-trophy"/>
+                let arrow = <i className="fa-solid fa-trophy"/>;
+                let direction = "you got it!";
+                if (!guess.hint.language) {
+                    direction = directions[Math.round(guess.hint.bearing/22.5)];
+                    arrow = <i className="fa-solid fa-arrow-up" style={{transform: "rotate("+guess.hint.bearing+"deg)"}}/>
                 }
                 return (
                     <tr className="Guess Hints" key={n}>
-                        <td className={guess.hint[0]+" ToolTip"} title={guess.macroarea}/>
-                        <td className={guess.hint[1]+" ToolTip"} title={guess.family}/>
-                        <td className={guess.hint[2]+" ToolTip"} title={guess.subfamily}/>
-                        <td className={guess.hint[3]+" ToolTip"} title={guess.genus}/>
-                        <td className={guess.hint[4]+" Language"}>{guess.language}</td>
-                        <td className={"Direction ToolTip " + dirmap[guess.hint[5]]} title={cardmap[guess.hint[5]]}>
+                        <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}/>
+                        <td className="ToolTip" data-value={guess.hint.family} title={guess.family}/>
+                        <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily}/>
+                        <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus}/>
+                        <td className="Language" data-value={guess.hint.language}>{guess.language}</td>
+                        <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}>
                             {arrow}
                         </td>
                     </tr>
@@ -390,7 +406,8 @@ class Guesses extends ServerComponent {
                             <i className="fa-regular fa-comments"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Map Direction">
-                            <span className="Description">Compass direction from guessed langauge to target language</span>
+                            <span
+                                className="Description">Compass direction from guessed langauge to target language</span>
                             <i className="fa-regular fa-compass"></i>
                         </th>
                     </tr>
@@ -508,7 +525,7 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <label for="guess-lookup">Look up language</label>
+                <label htmlFor="guess-lookup">Look up language</label>
                 <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus
                        placeholder="What language is it?" value={this.state.value}
                        onBlur={this.handleBlur}
