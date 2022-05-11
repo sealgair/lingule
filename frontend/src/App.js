@@ -25,6 +25,10 @@ function isTouchOnly() {
     return window.matchMedia("(any-hover: none)").matches;
 }
 
+function isLightMode() {
+    return window.matchMedia("(prefers-color-scheme: light)").matches;
+}
+
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
@@ -216,10 +220,13 @@ class Word extends React.Component {
 class Share extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {shareName: "Share"};
+        this.state = {shareName: "Share", style: "text"};
         this.shareScore = this.shareScore.bind(this);
         this.makeScore = this.makeScore.bind(this);
         this.alertShare = this.alertShare.bind(this);
+        this.setTextStyle = this.setTextStyle.bind(this);
+        this.setSpoilerStyle = this.setSpoilerStyle.bind(this);
+        this.setImageStyle = this.setImageStyle.bind(this);
     }
 
     alertShare(newName) {
@@ -228,9 +235,11 @@ class Share extends React.Component {
     }
 
     makeScore() {
-        const squares = {[true]: '🟩', [false]: '⬛️'};
+        const wrong = isLightMode() ? '⬜️' : '⬛️';
+        const squares = {[true]: '🟩', [false]: wrong};
         const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
         const guessNum = this.props.success ? this.props.guesses.length : 'X';
+        const style = this.state.style;
         let score = this.props.guesses.map(function(guess) {
             let hint = [
                 squares[guess.hint.macroarea],
@@ -243,6 +252,13 @@ class Share extends React.Component {
                 hint.push('🏆');
             } else {
                 hint.push(arrows[Math.round(guess.hint.bearing/45)]);
+            }
+            if (style === "spoiler") {
+                let lang = guess.language.substring(0, 12);
+                while (lang.length < 12) {
+                    lang += " ";
+                }
+                hint.push("||`"+lang+"`||")
             }
             return hint.join("");
         });
@@ -265,6 +281,18 @@ class Share extends React.Component {
         }
     }
 
+    setTextStyle() {
+        this.setState({style: "text"});
+    }
+
+    setSpoilerStyle() {
+        this.setState({style: "spoiler"});
+    }
+
+    setImageStyle() {
+        this.setState({style: "image"});
+    }
+
     render() {
         let shareClass = "Guess Share";
         if (!this.props.success) {
@@ -273,6 +301,15 @@ class Share extends React.Component {
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
                        onClick={this.shareScore}>{this.state.shareName}</button>
+            <fieldset className="ShareData">
+                <div className="ShareOptions">
+                    <button className={"ShareOption" +( (this.state.style === "text") ? " Selected" : "")}
+                    onClick={this.setTextStyle}>Text</button>
+                    <button className={"ShareOption" +( (this.state.style === "spoiler") ? " Selected" : "")}
+                    onClick={this.setSpoilerStyle}>Spoiler</button>
+                </div>
+                <pre>{this.makeScore()}</pre>
+            </fieldset>
         </div>;
     }
 }

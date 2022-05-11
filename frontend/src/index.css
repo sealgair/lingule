@@ -359,6 +359,30 @@ button.Guess {
     background-color: var(--wrong-color);
 }
 
+.ShareData {
+    display: flex;
+    align-items: start;
+    padding: 0;
+}
+.ShareOptions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 1em;
+}
+button.ShareOption {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--text-color);
+    border-left-width: 0;
+    font-family: NotoTitle;
+    height: 3em;
+}
+button.ShareOption.Selected {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
 .Overlay {
     position: absolute;
     top: 0;
