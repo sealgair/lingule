@@ -213,6 +213,70 @@ class Word extends React.Component {
     }
 }
 
+class Share extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {shareName: "Share"};
+        this.shareScore = this.shareScore.bind(this);
+        this.makeScore = this.makeScore.bind(this);
+        this.alertShare = this.alertShare.bind(this);
+    }
+
+    alertShare(newName) {
+        this.setState({shareName: newName});
+        setTimeout(() => this.setState({shareName: "Share"}), 3000);
+    }
+
+    makeScore() {
+        const squares = {[true]: '🟩', [false]: '⬛️'};
+        const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
+        const guessNum = this.props.success ? this.props.guesses.length : 'X';
+        let score = this.props.guesses.map(function(guess) {
+            let hint = [
+                squares[guess.hint.macroarea],
+                squares[guess.hint.family],
+                squares[guess.hint.subfamily],
+                squares[guess.hint.genus],
+                squares[guess.hint.language],
+            ];
+            if (guess.hint.language) {
+                hint.push('🏆');
+            } else {
+                hint.push(arrows[Math.round(guess.hint.bearing/45)]);
+            }
+            return hint.join("");
+        });
+        score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
+        score.push(document.URL);
+        return score.join("\n");
+    }
+
+    shareScore() {
+        const data = this.makeScore();
+        if (isTouchOnly() && navigator.share) {
+            navigator.share({
+                title: "Lingule",
+                text: data,
+            }).then(r => this.alertShare("Shared"));
+        } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(data).then(r => this.alertShare("Copied"));
+        } else {
+            alert("Could not copy to clipboard, copy manually here:\n\n" + data);
+        }
+    }
+
+    render() {
+        let shareClass = "Guess Share";
+        if (!this.props.success) {
+            shareClass += " Fail";
+        }
+        return <div className="ShareBox">
+            <button tabIndex="0" autoFocus className={shareClass}
+                       onClick={this.shareScore}>{this.state.shareName}</button>
+        </div>;
+    }
+}
+
 class Guesses extends ServerComponent {
 
     constructor(props, context) {
@@ -233,13 +297,10 @@ class Guesses extends ServerComponent {
             guesses: guesses,
             done: done,
             success: success,
-            shareName: "Share",
         };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
-        this.shareScore = this.shareScore.bind(this);
-        this.alertShare = this.alertShare.bind(this);
     }
 
     onSelect(guess) {
@@ -289,45 +350,6 @@ class Guesses extends ServerComponent {
         );
     }
 
-    alertShare(newName) {
-        this.setState({shareName: newName});
-        setTimeout(() => this.setState({shareName: "Share"}), 3000);
-    }
-
-    shareScore() {
-        const squares = {[true]: '🟩', [false]: '⬛️'};
-        const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
-        const guessNum = this.state.success ? this.state.guesses.length : 'X';
-        let score = this.state.guesses.map(function(guess) {
-            let hint = [
-                squares[guess.hint.macroarea],
-                squares[guess.hint.family],
-                squares[guess.hint.subfamily],
-                squares[guess.hint.genus],
-                squares[guess.hint.language],
-            ];
-            if (guess.hint.language) {
-                hint.push('🏆');
-            } else {
-                hint.push(arrows[Math.round(guess.hint.bearing/45)]);
-            }
-            return hint.join("");
-        });
-        score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
-        score.push(document.URL);
-        const data = score.join("\n");
-        if (isTouchOnly() && navigator.share) {
-            navigator.share({
-                title: "Lingule",
-                text: data,
-            }).then(r => this.alertShare("Shared"));
-        } else if (navigator.clipboard) {
-            navigator.clipboard.writeText(data).then(r => this.alertShare("Copied"));
-        } else {
-            alert("Could not copy to clipboard, copy manually here:\n\n" + data);
-        }
-    }
-
     render() {
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
@@ -353,7 +375,7 @@ class Guesses extends ServerComponent {
                 );
             } else {
                 return (<tr className="Guess Empty" key={n}>
-                    <td colSpan="6"></td>
+                    <td colSpan="6"/>
                 </tr>);
             }
         });
@@ -361,13 +383,11 @@ class Guesses extends ServerComponent {
         let lookup = "";
         let button = ""
         if (this.state.done) {
-            let shareClass = "Guess Share";
             if (!this.state.success) {
                 lookup = <Solution answer={this.props.answer}/>
-                shareClass += " Fail";
             }
-            button = <button tabIndex="0" autoFocus className={shareClass}
-                             onClick={this.shareScore}>{this.state.shareName}</button>
+            button = <Share success={this.state.success} guesses={this.state.guesses}
+                            wordNumber={this.props.wordNumber}/>;
         } else {
             lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>;
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
