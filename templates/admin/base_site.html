@@ -1,0 +1,13 @@
+{% extends "admin/base_site.html" %}
+
+{% block branding %}
+    {{ block.super }} <span id="clock">Clock</span>
+    <script>
+        function startTime() {
+            let date = new Date()
+            document.getElementById('clock').innerHTML = date.toLocaleString('en-US', {timeZone: 'Pacific/Kiritimati'});
+            setTimeout(startTime, 1000);
+        }
+        startTime();
+    </script>
+{% endblock %}
