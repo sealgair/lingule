@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone, timedelta
 
 from django.contrib import admin
 from django.db import models
@@ -8,8 +8,13 @@ from django.utils.html import format_html
 from solution.models import Solution
 
 
+def today():
+    tz = timezone(timedelta(hours=14))
+    return datetime.now(tz).date()
+
+
 def shuffle_solutions(modeladmin, request, queryset):
-    queryset = queryset.filter(date__gt=date.today())
+    queryset = queryset.filter(date__gt=today())
     for (o, d), s in zip(queryset.values_list('order', 'date'), queryset.order_by('?')):
         queryset.filter(id=s.id).update(order=o, date=d)
 
@@ -26,9 +31,9 @@ class UpcomingListFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'True':
-            return queryset.filter(date__gt=date.today())
+            return queryset.filter(date__gt=today())
         elif self.value() == 'False':
-            return queryset.filter(date__lte=date.today())
+            return queryset.filter(date__lte=today())
 
 
 @admin.register(Solution)
