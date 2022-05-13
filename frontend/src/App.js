@@ -85,7 +85,9 @@ class Canvas extends React.Component {
         const {draw, ...rest} = this.props;
         return <div className="CanvasContainer">
             <canvas ref={this.canvas} className="Hide" {...rest}/>
-            <img ref={this.image} alt={this.props.title}/>
+            <img ref={this.image} alt={this.props.title} style={{
+                width: this.props.width, height: this.props.height
+            }}/>
         </div>;
     }
 }
@@ -262,7 +264,8 @@ class Word extends React.Component {
 class Share extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {shareName: "Share", style: "text"};
+        this.state = {shareName: "Share", style: getData("shareStyle", "text")};
+        this.options = React.createRef();
         this.shareScore = this.shareScore.bind(this);
         this.makeScore = this.makeScore.bind(this);
         this.makeScoreImage = this.makeScoreImage.bind(this);
@@ -458,6 +461,10 @@ class Share extends React.Component {
         this.setStyle("image");
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.options.current.style = "height: "+this.options.current.children[1].scrollHeight+"px";
+    }
+
     render() {
         let shareClass = "Guess Share";
         if (!this.props.success) {
@@ -472,7 +479,7 @@ class Share extends React.Component {
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
                     onClick={this.shareScore}>{this.state.shareName + extraButton}</button>
-            <fieldset className="ShareData">
+            <fieldset className="ShareData" ref={this.options}>
                 <div className="ShareOptions">
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
                             onClick={this.setTextStyle}>Text

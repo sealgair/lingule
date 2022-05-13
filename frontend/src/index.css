@@ -70,13 +70,13 @@ code {
     flex-direction: column-reverse;
     align-items: center;
     min-height: 100vh;
-    max-width: 30em;
-    width: 100%;
+    width: 30em;
     overflow-y: auto;
 }
 
 .ContentWrapper {
     min-width: 25em;
+    width: 100%;
 }
 
 .Buffer {
@@ -367,7 +367,8 @@ button.Guess {
     display: flex;
     align-items: start;
     padding: 0;
-    transition: height 5s, width 5s;
+    transition: height 600ms;
+    overflow: hidden;
 }
 .ShareOptions {
     display: flex;
