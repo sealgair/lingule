@@ -1,4 +1,5 @@
-import React, {useRef, useEffect} from 'react'
+import React from 'react'
+import {Transition, CSSTransition} from 'react-transition-group';
 import './App.css';
 
 const directions = [
@@ -175,14 +176,6 @@ class App extends ServerComponent {
     }
 
     render() {
-        let modal = "";
-        if (this.state.modal === "stats") {
-            modal = <Statistics onClose={this.closeModal}/>;
-        } else if (this.state.modal === "help") {
-            modal = <HowTo onClose={this.closeModal}/>;
-        } else if (this.state.modal === "info") {
-            modal = <Info onClose={this.closeModal}/>;
-        }
         let font = "";
         if (this.state.font) {
             let fontFace = [
@@ -224,7 +217,9 @@ class App extends ServerComponent {
                         </div>
                     </div>
                 </div>
-                {modal}
+                <Info on={this.state.modal === "info"} onClose={this.closeModal}/>
+                <HowTo on={this.state.modal === "help"} onClose={this.closeModal}/>
+                <Statistics on={this.state.modal === "stats"} onClose={this.closeModal}/>
             </div>
         );
     }
@@ -354,7 +349,7 @@ class Share extends React.Component {
     }
 
     makeScoreDescription() {
-        let description = ["Scorecard for Lingule #"+this.props.wordNumber];
+        let description = ["Scorecard for Lingule #" + this.props.wordNumber];
         if (this.props.success) {
             description.push("Got it in " + this.props.guesses.length);
         } else {
@@ -476,7 +471,7 @@ class Share extends React.Component {
         }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
-                    onClick={this.shareScore}>{this.state.shareName+extraButton}</button>
+                    onClick={this.shareScore}>{this.state.shareName + extraButton}</button>
             <fieldset className="ShareData">
                 <div className="ShareOptions">
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
@@ -806,17 +801,35 @@ class ModalComponent extends React.Component {
     }
 
     render() {
+        const duration = 300;
+        const defaultStyle = {
+            transition: `opacity ${duration}ms ease-in-out`,
+            opacity: 0,
+        }
+        const transitionStyles = {
+            entering: {opacity: 1},
+            entered: {opacity: 1},
+            exiting: {opacity: 0},
+            exited: {opacity: 0, height: 0},
+        };
         return (
-            <div className="Overlay" onClick={this.onClick}>
-                <div className="ModalContainer">
-                    <span className="Close">
-                        <i className="fa-solid fa-circle-xmark"></i>
-                    </span>
-                    <h1>{this.title}</h1>
-                    <hr/>
-                    {this.contents()}
-                </div>
-            </div>
+            <Transition in={this.props.on} timeout={duration}>
+                {state => (
+                    <div className="Overlay" onClick={this.onClick} style={{
+                        ...defaultStyle,
+                        ...transitionStyles[state]
+                    }}>
+                        <div className="ModalContainer">
+                        <span className="Close">
+                            <i className="fa-solid fa-circle-xmark"></i>
+                        </span>
+                            <h1>{this.title}</h1>
+                            <hr/>
+                            {this.contents()}
+                        </div>
+                    </div>
+                )}
+            </Transition>
         )
     }
 

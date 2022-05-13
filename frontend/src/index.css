@@ -367,6 +367,7 @@ button.Guess {
     display: flex;
     align-items: start;
     padding: 0;
+    transition: height 5s, width 5s;
 }
 .ShareOptions {
     display: flex;
@@ -399,6 +400,7 @@ button.ShareOption.Selected {
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .ModalContainer {
