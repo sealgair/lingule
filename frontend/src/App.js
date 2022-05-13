@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect} from 'react'
 import './App.css';
 
 const directions = [
@@ -21,6 +21,14 @@ const directions = [
     "north",
 ];
 
+const unicodeArrows = [
+    "&#129153",
+]
+
+function cssVar(name) {
+    return getComputedStyle(document.body).getPropertyValue(name);
+}
+
 function isTouchOnly() {
     return window.matchMedia("(any-hover: none)").matches;
 }
@@ -37,11 +45,14 @@ function setData(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 }
 
-function getData(key) {
+function getData(key, def) {
     let value = localStorage.getItem(key);
     try {
         value = JSON.parse(value);
     } catch {
+    }
+    if (value === null) {
+        value = def;
     }
     return value;
 }
@@ -54,6 +65,41 @@ function inClass(element, className) {
         return inClass(element.parentElement, className);
     }
     return false;
+}
+
+class Canvas extends React.Component {
+    constructor(props) {
+        super(props);
+        this.canvas = React.createRef();
+        this.image = React.createRef();
+    }
+
+    componentDidMount() {
+        const context = this.canvas.current.getContext('2d');
+        this.props.draw(context);
+        this.image.current.src = this.canvas.current.toDataURL();
+    }
+
+    render() {
+        const {draw, ...rest} = this.props;
+        return <div className="CanvasContainer">
+            <canvas ref={this.canvas} className="Hide" {...rest}/>
+            <img ref={this.image} alt={this.props.title}/>
+        </div>;
+    }
+}
+
+function drawArrow(ctx, s) {
+    ctx.lineWidth = 2;
+    const y = (s / 2);
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(0, -(y - 2));
+    ctx.lineTo(-y / 2, 0);
+    ctx.moveTo(0, -(y - 2));
+    ctx.lineTo(y / 2, 0);
+    ctx.closePath();
+    ctx.stroke();
 }
 
 class ServerComponent extends React.Component {
@@ -173,6 +219,7 @@ class App extends ServerComponent {
                               ipa={this.state.ipa} meaning={this.state.meaning}/>
                         <div className="Body">
                             <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
+                                     word={this.state.word}
                                      solution={this.state.solution} answer={this.state.answer}/>
                         </div>
                     </div>
@@ -223,24 +270,139 @@ class Share extends React.Component {
         this.state = {shareName: "Share", style: "text"};
         this.shareScore = this.shareScore.bind(this);
         this.makeScore = this.makeScore.bind(this);
+        this.makeScoreImage = this.makeScoreImage.bind(this);
+        this.makeScoreDescription = this.makeScoreDescription.bind(this);
         this.alertShare = this.alertShare.bind(this);
         this.setTextStyle = this.setTextStyle.bind(this);
         this.setSpoilerStyle = this.setSpoilerStyle.bind(this);
         this.setImageStyle = this.setImageStyle.bind(this);
+        this.setStyle = this.setStyle.bind(this);
     }
 
     alertShare(newName) {
+        let oldName = this.state.shareName;
         this.setState({shareName: newName});
-        setTimeout(() => this.setState({shareName: "Share"}), 3000);
+        setTimeout(() => this.setState({shareName: oldName}), 3000);
+    }
+
+    makeScoreImage() {
+        const guessNum = this.props.success ? this.props.guesses.length : 'X';
+        const title = "Lingule #" + this.props.wordNumber + ": " + guessNum + "/6";
+        const guesses = this.props.guesses;
+        const size = 30;
+        const ox = 10;
+        const ix = 10;
+        const oy = 30;
+        const ly = 10;
+        return <Canvas draw={function (ctx) {
+            ctx.fillStyle = cssVar('--bg-color');
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            ctx.fillStyle = cssVar('--text-color');
+            ctx.font = '25px NotoTitle';
+            ctx.fillText(title, ox, oy);
+
+            const boxColors = {
+                [true]: cssVar('--correct-color'),
+                [false]: cssVar('--guess-bg-color'),
+            }
+            ctx.strokeStyle = cssVar('--text-color');
+            guesses.forEach(function (guess, i) {
+                let x = ox + ix;
+                let y = (size + ly) * (i + 1);
+                ctx.fillStyle = cssVar('--text-color');
+                ctx.fillRect(x - 1, y - 1,
+                    (size + 1) * 6 + 1, size + 2);
+
+                ctx.fillStyle = boxColors[guess.hint.macroarea];
+                ctx.fillRect(x, y, size, size);
+                x += size + 1;
+                ctx.fillStyle = boxColors[guess.hint.family];
+                ctx.fillRect(x, y, size, size);
+                x += size + 1;
+                ctx.fillStyle = boxColors[guess.hint.subfamily];
+                ctx.fillRect(x, y, size, size);
+                x += size + 1;
+                ctx.fillStyle = boxColors[guess.hint.genus];
+                ctx.fillRect(x, y, size, size);
+                x += size + 1;
+                ctx.fillStyle = boxColors[guess.hint.language];
+                ctx.fillRect(x, y, size, size);
+                x += size + 1;
+
+                if (guess.hint.language) {
+                    ctx.font = '18px mono';
+                    ctx.fillStyle = boxColors[true];
+                    ctx.fillRect(x, y, size, size);
+                    ctx.fillText("🏆", x + 5, y + 22);
+                } else {
+                    ctx.fillStyle = cssVar('--arrow-color');
+                    ctx.fillRect(x, y, size, size);
+                    ctx.fillStyle = cssVar('--text-color');
+                    ctx.translate(x + size / 2, y + size / 2);
+                    ctx.rotate(guess.hint.bearing * (Math.PI / 180));
+                    drawArrow(ctx, size - 10);
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                }
+            });
+
+            ctx.fillStyle = cssVar('--text-color');
+            ctx.font = '20px NotoSans';
+            ctx.fillText(document.URL, ox, (size + ly) * (guesses.length + 1) + 2 * ly);
+        }} width={(size + 1) * 6 + (ox + ix) * 2} height={(size + ly) * (guesses.length + 1) + oy + ly}
+                       title={this.makeScoreDescription()}/>
+    }
+
+    makeScoreDescription() {
+        let description = ["Scorecard for Lingule #"+this.props.wordNumber];
+        if (this.props.success) {
+            description.push("Got it in " + this.props.guesses.length);
+        } else {
+            description.push("Didn't get it")
+        }
+        const correct = {
+            [true]: "correct",
+            [false]: "incorrect",
+        }
+        this.props.guesses.forEach(function (guess, i) {
+            let line = "Guess #" + (i + 1) + ": ";
+            if (guess.hint.language) {
+                line += "language correct!";
+            } else {
+                line += correct[guess.hint.macroarea] + " macro-area, ";
+                if (guess.hint.family) {
+                    if (guess.hint.subfamily) {
+                        if (guess.hint.genus) {
+                            line += "correct language genus";
+                        } else {
+                            line += "correct language sub-family";
+                        }
+                    } else {
+                        line += "correct language family";
+                    }
+                } else {
+                    line += "incorrect language family";
+                }
+                line += ", solution is " + directions[Math.round(guess.hint.bearing / 22.5)] + " of guess.";
+            }
+            description.push(line);
+        });
+        description.push("Played at " + document.URL);
+        return description.join("\n");
     }
 
     makeScore() {
+        const style = this.state.style;
+        const guessNum = this.props.success ? this.props.guesses.length : 'X';
+        const title = "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6";
+        if (style === "image") {
+            return this.makeScoreImage();
+        }
+
         const wrong = isLightMode() ? '⬜️' : '⬛️';
         const squares = {[true]: '🟩', [false]: wrong};
         const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
-        const guessNum = this.props.success ? this.props.guesses.length : 'X';
-        const style = this.state.style;
-        let score = this.props.guesses.map(function(guess) {
+        let score = this.props.guesses.map(function (guess) {
             let hint = [
                 squares[guess.hint.macroarea],
                 squares[guess.hint.family],
@@ -251,24 +413,27 @@ class Share extends React.Component {
             if (guess.hint.language) {
                 hint.push('🏆');
             } else {
-                hint.push(arrows[Math.round(guess.hint.bearing/45)]);
+                hint.push(arrows[Math.round(guess.hint.bearing / 45)]);
             }
             if (style === "spoiler") {
                 let lang = guess.language.substring(0, 12);
                 while (lang.length < 12) {
                     lang += " ";
                 }
-                hint.push("||`"+lang+"`||")
+                hint.push("||`" + lang + "`||")
             }
             return hint.join("");
         });
-        score.splice(0, 0, "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6");
+        score.splice(0, 0, title);
         score.push(document.URL);
         return score.join("\n");
     }
 
     shareScore() {
-        const data = this.makeScore();
+        let data = this.makeScore();
+        if (this.state.style === "image") {
+            data = this.makeScoreDescription();
+        }
         if (isTouchOnly() && navigator.share) {
             navigator.share({
                 title: "Lingule",
@@ -281,16 +446,21 @@ class Share extends React.Component {
         }
     }
 
+    setStyle(style) {
+        this.setState({style: style});
+        setData("shareStyle", style)
+    }
+
     setTextStyle() {
-        this.setState({style: "text"});
+        this.setStyle("text");
     }
 
     setSpoilerStyle() {
-        this.setState({style: "spoiler"});
+        this.setStyle("spoiler");
     }
 
     setImageStyle() {
-        this.setState({style: "image"});
+        this.setStyle("image");
     }
 
     render() {
@@ -298,17 +468,31 @@ class Share extends React.Component {
         if (!this.props.success) {
             shareClass += " Fail";
         }
+        let instructions = "";
+        let extraButton = "";
+        if (this.state.style === "image") {
+            instructions = "Right click to copy the image below, click \"share\" to copy text description";
+            extraButton = " Alt Text"
+        }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
-                       onClick={this.shareScore}>{this.state.shareName}</button>
+                    onClick={this.shareScore}>{this.state.shareName+extraButton}</button>
             <fieldset className="ShareData">
                 <div className="ShareOptions">
-                    <button className={"ShareOption" +( (this.state.style === "text") ? " Selected" : "")}
-                    onClick={this.setTextStyle}>Text</button>
-                    <button className={"ShareOption" +( (this.state.style === "spoiler") ? " Selected" : "")}
-                    onClick={this.setSpoilerStyle}>Spoiler</button>
+                    <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
+                            onClick={this.setTextStyle}>Text
+                    </button>
+                    <button className={"ShareOption" + ((this.state.style === "spoiler") ? " Selected" : "")}
+                            onClick={this.setSpoilerStyle}>Spoiler
+                    </button>
+                    <button className={"ShareOption" + ((this.state.style === "image") ? " Selected" : "")}
+                            onClick={this.setImageStyle}>Image
+                    </button>
                 </div>
-                <pre>{this.makeScore()}</pre>
+                <div>
+                    {instructions}
+                    <pre>{this.makeScore()}</pre>
+                </div>
             </fieldset>
         </div>;
     }
@@ -395,8 +579,9 @@ class Guesses extends ServerComponent {
                 let arrow = <i className="fa-solid fa-trophy"/>;
                 let direction = "you got it!";
                 if (!guess.hint.language) {
-                    direction = directions[Math.round(guess.hint.bearing/22.5)];
-                    arrow = <i className="fa-solid fa-arrow-up" style={{transform: "rotate("+guess.hint.bearing+"deg)"}}/>
+                    direction = directions[Math.round(guess.hint.bearing / 22.5)];
+                    arrow = <i className="fa-solid fa-arrow-up"
+                               style={{transform: "rotate(" + guess.hint.bearing + "deg)"}}/>
                 }
                 return (
                     <tr className="Guess Hints" key={n}>
@@ -424,6 +609,7 @@ class Guesses extends ServerComponent {
                 lookup = <Solution answer={this.props.answer}/>
             }
             button = <Share success={this.state.success} guesses={this.state.guesses}
+                            word={this.props.word}
                             wordNumber={this.props.wordNumber}/>;
         } else {
             lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>;

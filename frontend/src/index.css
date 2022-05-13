@@ -44,6 +44,10 @@ body {
     }
 }
 
+.Hide {
+    display: none;
+}
+
 a {
     color: var(--link-color);
 }
@@ -376,7 +380,9 @@ button.ShareOption {
     border-color: var(--text-color);
     border-left-width: 0;
     font-family: NotoTitle;
+    text-transform: uppercase;
     height: 3em;
+    text-align: left;
 }
 button.ShareOption.Selected {
     background-color: var(--text-color);
