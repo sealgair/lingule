@@ -264,8 +264,14 @@ class Word extends React.Component {
 class Share extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {shareName: "Share", style: getData("shareStyle", "text")};
+        this.state = {
+            shareName: "Share",
+            style: getData("shareStyle", "text"),
+            options: false,
+        };
         this.options = React.createRef();
+        this.scoreImage = React.createRef();
+        this.toggleOptions = this.toggleOptions.bind(this);
         this.shareScore = this.shareScore.bind(this);
         this.makeScore = this.makeScore.bind(this);
         this.makeScoreImage = this.makeScoreImage.bind(this);
@@ -275,6 +281,10 @@ class Share extends React.Component {
         this.setSpoilerStyle = this.setSpoilerStyle.bind(this);
         this.setImageStyle = this.setImageStyle.bind(this);
         this.setStyle = this.setStyle.bind(this);
+    }
+
+    toggleOptions() {
+        this.setState(prev => ({options: !prev.options}));
     }
 
     alertShare(newName) {
@@ -462,7 +472,22 @@ class Share extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.options.current.style = "height: "+this.options.current.children[1].scrollHeight+"px";
+        let height = 0;
+        let opacity = 0;
+        if (this.state.options) {
+            height = this.options.current.children[1].scrollHeight+'px';
+            opacity = 1;
+        }
+        this.options.current.style = "height: "+height+"; opacity: "+opacity+";";
+        if (this.scoreImage.current) {
+            height = 0;
+            opacity = 0;
+            if (!this.state.options) {
+                height = this.scoreImage.current.scrollHeight+'px';
+                opacity = 1;
+            }
+            this.scoreImage.current.style = "height: "+height+"; opacity: "+opacity+";";
+        }
     }
 
     render() {
@@ -472,14 +497,23 @@ class Share extends React.Component {
         }
         let instructions = "";
         let extraButton = "";
+        let image = "";
         if (this.state.style === "image") {
-            instructions = "Right click to copy the image below, click \"share\" to copy text description";
-            extraButton = " Alt Text"
+            if (isTouchOnly()) {
+                instructions = "Tap and hold"
+            } else {
+                instructions = "Right click";
+            }
+            instructions += " to copy the image below, click \"share alt text\" to copy text description";
+            extraButton = " Alt Text";
+            image = (<div className="ScoreImage Foldable" ref={this.scoreImage}>
+                {this.makeScoreImage()}
+            </div>)
         }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
                     onClick={this.shareScore}>{this.state.shareName + extraButton}</button>
-            <fieldset className="ShareData" ref={this.options}>
+            <div className="ShareData Foldable" ref={this.options} style={{height: 0, opacity: 0}}>
                 <div className="ShareOptions">
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
                             onClick={this.setTextStyle}>Text
@@ -491,11 +525,13 @@ class Share extends React.Component {
                             onClick={this.setImageStyle}>Image
                     </button>
                 </div>
-                <div>
+                <div className="ShareContent">
                     {instructions}
                     <pre>{this.makeScore()}</pre>
                 </div>
-            </fieldset>
+            </div>
+            {image}
+            <button className="ToggleShareOptions" onClick={this.toggleOptions}>Share<br/>Options</button>
         </div>;
     }
 }

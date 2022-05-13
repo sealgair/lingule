@@ -70,13 +70,18 @@ code {
     flex-direction: column-reverse;
     align-items: center;
     min-height: 100vh;
-    width: 30em;
+    width: 500px;
     overflow-y: auto;
+}
+@media (max-width:500px) {
+    .MainColumn {
+        width: 100vw;
+    }
 }
 
 .ContentWrapper {
-    min-width: 25em;
     width: 100%;
+    padding-bottom: 2em;
 }
 
 .Buffer {
@@ -363,13 +368,27 @@ button.Guess {
     background-color: var(--wrong-color);
 }
 
+.ShareBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .ShareData {
     display: flex;
     align-items: start;
     padding: 0;
-    transition: height 600ms;
+    border: 2px solid var(--text-color);
+    border-top-width: 0;
+    width: calc(100% - 1em);
+    max-width: calc(100vw - 2em);
+    box-sizing: border-box;
+}
+
+.Foldable {
+    transition: height 600ms, opacity 600ms;
     overflow: hidden;
 }
+
 .ShareOptions {
     display: flex;
     flex-direction: column;
@@ -389,6 +408,23 @@ button.ShareOption {
 button.ShareOption.Selected {
     background-color: var(--text-color);
     color: var(--bg-color);
+}
+button.ToggleShareOptions {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    font-family: NotoTitle;
+    text-transform: uppercase;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-bottom: 0;
+    border-right: 0;
+    padding: 5px;
+    font-size: 10px;
+}
+.ShareContent {
+    padding: 5px;
 }
 
 .Overlay {
