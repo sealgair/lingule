@@ -1,5 +1,4 @@
 import React from 'react'
-import {Transition, CSSTransition} from 'react-transition-group';
 import './App.css';
 
 const directions = [
@@ -149,9 +148,11 @@ class App extends ServerComponent {
     constructor(props) {
         super(props);
         this.state = {
-            word: "lingule",
-            ipa: "/ˈlɪŋ.ɡwəl/",
-            meaning: "a fun language game",
+            word: {
+                word: "lingule",
+                ipa: "/ˈlɪŋ.ɡwəl/",
+                meaning: "a fun language game",
+            },
             modal: null,
         }
 
@@ -179,11 +180,11 @@ class App extends ServerComponent {
 
     render() {
         let font = "";
-        if (this.state.font) {
+        if (this.state.word.font) {
             let fontFace = [
                 "@font-face {",
                 "font-family: \"NotoSans Script\";",
-                "src: url(\"" + this.state.font + "\")",
+                "src: url(\"" + this.state.word.font + "\")",
                 "}"
             ]
             font = <style>{fontFace.join("\n")}</style>
@@ -210,12 +211,11 @@ class App extends ServerComponent {
                                 </span>
                             </span>
                         </header>
-                        <Word word={this.state.word} romanization={this.state.romanization}
-                              ipa={this.state.ipa} meaning={this.state.meaning}/>
+                        <Word word={this.state.word.word} romanization={this.state.word.romanization}
+                              ipa={this.state.word.ipa} meaning={this.state.word.meaning}/>
                         <div className="Body">
-                            <Guesses wordNumber={this.state.wordNumber} key={this.state.wordNumber}
-                                     word={this.state.word}
-                                     solution={this.state.solution} answer={this.state.answer}/>
+                            <Guesses key={this.state.word.order}
+                                     word={this.state.word}/>
                         </div>
                     </div>
                 </div>
@@ -230,14 +230,14 @@ class App extends ServerComponent {
         this.fetch("/solution/word.json?tz=" + new Date().getTimezoneOffset(),
             (result) => {
                 this.setState({
-                    solution: result.id,
-                    word: result.word,
-                    romanization: result.romanization,
-                    font: result.font,
-                    ipa: result.ipa,
-                    meaning: result.meaning,
-                    wordNumber: result.order,
-                    answer: result.answer,
+                    word: result,
+                    // word: result.word,
+                    // romanization: result.romanization,
+                    // font: result.font,
+                    // ipa: result.ipa,
+                    // meaning: result.meaning,
+                    // wordNumber: result.order,
+                    // answer: result.answer,
                 });
             });
     }
@@ -281,6 +281,7 @@ class Share extends React.Component {
         this.setSpoilerStyle = this.setSpoilerStyle.bind(this);
         this.setImageStyle = this.setImageStyle.bind(this);
         this.setStyle = this.setStyle.bind(this);
+        this.wordText = this.wordText.bind(this);
     }
 
     toggleOptions() {
@@ -295,7 +296,11 @@ class Share extends React.Component {
 
     makeScoreImage() {
         const guessNum = this.props.success ? this.props.guesses.length : 'X';
-        const title = "Lingule #" + this.props.wordNumber + ": " + guessNum + "/6";
+        const title = "Lingule #" + this.props.word.order + ": " + guessNum + "/6";
+        let word = this.props.word.word;
+        if (this.props.word.romanization) {
+            word = word + " (" + this.props.word.romanization + ")"
+        }
         const guesses = this.props.guesses;
         const size = 30;
         const ox = 10;
@@ -303,12 +308,17 @@ class Share extends React.Component {
         const oy = 30;
         const ly = 10;
         return <Canvas draw={function (ctx) {
+            let y = oy;
             ctx.fillStyle = cssVar('--bg-color');
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
             ctx.fillStyle = cssVar('--text-color');
             ctx.font = '25px NotoTitle';
-            ctx.fillText(title, ox, oy);
+            ctx.fillText(title, ox, y);
+            y += 30;
+            ctx.font = '25px NotoScript';
+            ctx.fillText(word, ox * 2, y);
+            y += 20;
 
             const boxColors = {
                 [true]: cssVar('--correct-color'),
@@ -317,7 +327,6 @@ class Share extends React.Component {
             ctx.strokeStyle = cssVar('--text-color');
             guesses.forEach(function (guess, i) {
                 let x = ox + ix;
-                let y = (size + ly) * (i + 1);
                 ctx.fillStyle = cssVar('--text-color');
                 ctx.fillRect(x - 1, y - 1,
                     (size + 1) * 6 + 1, size + 2);
@@ -352,17 +361,19 @@ class Share extends React.Component {
                     drawArrow(ctx, size - 10);
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
                 }
+                y += size + ly;
             });
 
             ctx.fillStyle = cssVar('--text-color');
             ctx.font = '20px NotoSans';
-            ctx.fillText(document.URL, ox, (size + ly) * (guesses.length + 1) + 2 * ly);
-        }} width={(size + 1) * 6 + (ox + ix) * 2} height={(size + ly) * (guesses.length + 1) + oy + ly}
+            ctx.fillText(document.URL, ox, y + 20);
+        }} width={(size + 1) * 6 + (ox + ix) * 2} height={(size + ly) * (guesses.length) + 70 + oy + ly}
                        title={this.makeScoreDescription()}/>
     }
 
     makeScoreDescription() {
-        let description = ["Scorecard for Lingule #" + this.props.wordNumber];
+        let description = ["Scorecard for Lingule #" + this.props.word.order];
+        description.push("Mystery word was \"" + this.wordText() + "\"");
         if (this.props.success) {
             description.push("Got it in " + this.props.guesses.length);
         } else {
@@ -399,10 +410,14 @@ class Share extends React.Component {
         return description.join("\n");
     }
 
+    wordText() {
+        return this.props.word.romanization || this.props.word.word;
+    }
+
     makeScore() {
         const style = this.state.style;
         const guessNum = this.props.success ? this.props.guesses.length : 'X';
-        const title = "#Lingule #" + this.props.wordNumber + ": " + guessNum + "/6";
+        const title = "#Lingule #" + this.props.word.order + " \"" + this.wordText() + "\": " + guessNum + "/6";
         if (style === "image") {
             return this.makeScoreImage();
         }
@@ -475,18 +490,18 @@ class Share extends React.Component {
         let height = 0;
         let opacity = 0;
         if (this.state.options) {
-            height = this.options.current.children[1].scrollHeight+'px';
+            height = this.options.current.children[1].scrollHeight + 'px';
             opacity = 1;
         }
-        this.options.current.style = "height: "+height+"; opacity: "+opacity+";";
+        this.options.current.style = "height: " + height + "; opacity: " + opacity + ";";
         if (this.scoreImage.current) {
             height = 0;
             opacity = 0;
             if (!this.state.options) {
-                height = this.scoreImage.current.scrollHeight+'px';
+                height = this.scoreImage.current.scrollHeight + 'px';
                 opacity = 1;
             }
-            this.scoreImage.current.style = "height: "+height+"; opacity: "+opacity+";";
+            this.scoreImage.current.style = "height: " + height + "; opacity: " + opacity + ";";
         }
     }
 
@@ -543,8 +558,8 @@ class Guesses extends ServerComponent {
         let done = false;
         let success = false;
         let guesses = [];
-        if (this.props.wordNumber) {
-            let data = getData('guess' + this.props.wordNumber);
+        if (this.props.word.order) {
+            let data = getData('guess' + this.props.word.order);
             if (Array.isArray(data)) {
                 guesses = data;
                 success = guesses[guesses.length - 1].success;
@@ -579,7 +594,7 @@ class Guesses extends ServerComponent {
     makeGuess() {
         const params = new URLSearchParams({
             language: this.state.guess.id,
-            solution: this.props.solution,
+            solution: this.props.word.id,
         }).toString();
         this.fetch("/solution/guess.json?" + params,
             (result) => {
@@ -593,14 +608,14 @@ class Guesses extends ServerComponent {
                     guess: null,
                     sid: result.sid,
                 });
-                if (this.props.wordNumber) {
-                    setData('guess' + this.props.wordNumber, this.state.guesses);
+                if (this.props.word.order) {
+                    setData('guess' + this.props.word.order, this.state.guesses);
                     if (done) {
                         let scores = getData('scores') || {};
                         if (result.success) {
-                            scores[this.props.wordNumber] = guesses.length;
+                            scores[this.props.word.order] = guesses.length;
                         } else {
-                            scores[this.props.wordNumber] = 'X';
+                            scores[this.props.word.order] = 'X';
                         }
                         setData('scores', scores);
                     }
@@ -644,11 +659,10 @@ class Guesses extends ServerComponent {
         let button = ""
         if (this.state.done) {
             if (!this.state.success) {
-                lookup = <Solution answer={this.props.answer}/>
+                lookup = <Solution answer={this.props.word.answer}/>
             }
             button = <Share success={this.state.success} guesses={this.state.guesses}
-                            word={this.props.word}
-                            wordNumber={this.props.wordNumber}/>;
+                            word={this.props.word}/>;
         } else {
             lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>;
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
@@ -708,7 +722,7 @@ class Guesses extends ServerComponent {
     }
 }
 
-class Solution extends ServerComponent {
+class Solution extends React.Component {
 
     render() {
         return (
@@ -833,46 +847,42 @@ class ModalComponent extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.title = "Modal"
+        this.state = {on: false};
+        this.close = this.close.bind(this);
         this.onClick = this.onClick.bind(this);
         this.contents = this.contents.bind(this);
     }
 
+    static getDerivedStateFromProps(props, state) {
+        return {on: props.on};
+    }
+
+    close(event) {
+        this.props.onClose(event);
+    }
+
     onClick(event) {
         if (inClass(event.target, "Close") || event.target.classList.contains("Overlay")) {
-            this.props.onClose(event);
+            this.close();
         }
     }
 
     render() {
-        const duration = 300;
-        const defaultStyle = {
-            transition: `opacity ${duration}ms ease-in-out`,
-            opacity: 0,
-        }
-        const transitionStyles = {
-            entering: {opacity: 1},
-            entered: {opacity: 1},
-            exiting: {opacity: 0},
-            exited: {opacity: 0, height: 0},
-        };
+        let opacity = this.state.on ? 1 : 0;
+        let height = this.state.on ? "100vh" : 0;
         return (
-            <Transition in={this.props.on} timeout={duration}>
-                {state => (
-                    <div className="Overlay" onClick={this.onClick} style={{
-                        ...defaultStyle,
-                        ...transitionStyles[state]
-                    }}>
-                        <div className="ModalContainer">
-                        <span className="Close">
-                            <i className="fa-solid fa-circle-xmark"></i>
-                        </span>
-                            <h1>{this.title}</h1>
-                            <hr/>
-                            {this.contents()}
-                        </div>
-                    </div>
-                )}
-            </Transition>
+            <div className="Overlay" onClick={this.onClick} style={{
+                opacity: opacity, height: height
+            }}>
+                <div className="ModalContainer">
+                <span className="Close">
+                    <i className="fa-solid fa-circle-xmark"></i>
+                </span>
+                    <h1>{this.title}</h1>
+                    <hr/>
+                    {this.contents()}
+                </div>
+            </div>
         )
     }
 
@@ -891,7 +901,7 @@ class Info extends ModalComponent {
             <p>This game was created by Chase Caster</p>
             <p><a href="https://github.com/sealgair/lingule" target="_new">See the code</a></p>
             <p><a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a></p>
-            <p><a href="https://weirder.earth/@chase" target="_new">Toot at me</a></p>
+            <p><a rel="me" href="https://weirder.earth/@chase" target="_new">Toot at me</a></p>
         </div>;
     }
 }
