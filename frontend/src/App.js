@@ -265,8 +265,8 @@ class Share extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            shareName: "Share",
             style: getData("shareStyle", "text"),
+            shareName: this.baseShareName(),
             options: false,
         };
         this.options = React.createRef();
@@ -284,14 +284,18 @@ class Share extends React.Component {
         this.wordText = this.wordText.bind(this);
     }
 
+    baseShareName() {
+        const style = getData("shareStyle", "text");
+        return style === "image" ? "Copy Alt Text" : "Share";
+    }
+
     toggleOptions() {
         this.setState(prev => ({options: !prev.options}));
     }
 
     alertShare(newName) {
-        let oldName = this.state.shareName;
         this.setState({shareName: newName});
-        setTimeout(() => this.setState({shareName: oldName}), 3000);
+        setTimeout(() => this.setState({shareName: this.baseShareName()}), 3000);
     }
 
     makeScoreImage() {
@@ -457,7 +461,7 @@ class Share extends React.Component {
         if (this.state.style === "image") {
             data = this.makeScoreDescription();
         }
-        if (isTouchOnly() && navigator.share) {
+        if (isTouchOnly() && this.state.style !== "image"  && navigator.share) {
             navigator.share({
                 title: "Lingule",
                 text: data,
@@ -470,8 +474,11 @@ class Share extends React.Component {
     }
 
     setStyle(style) {
-        this.setState({style: style});
         setData("shareStyle", style)
+        this.setState({
+            style: style,
+            shareName: this.baseShareName(),
+        });
     }
 
     setTextStyle() {
@@ -511,7 +518,6 @@ class Share extends React.Component {
             shareClass += " Fail";
         }
         let instructions = "";
-        let extraButton = "";
         let image = "";
         if (this.state.style === "image") {
             if (isTouchOnly()) {
@@ -519,15 +525,14 @@ class Share extends React.Component {
             } else {
                 instructions = "Right click";
             }
-            instructions += " to copy the image below, click \"share alt text\" to copy text description";
-            extraButton = " Alt Text";
+            instructions += " to copy the image below, click \"copy alt text\" to copy text description";
             image = (<div className="ScoreImage Foldable" ref={this.scoreImage}>
                 {this.makeScoreImage()}
             </div>)
         }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
-                    onClick={this.shareScore}>{this.state.shareName + extraButton}</button>
+                    onClick={this.shareScore}>{this.state.shareName}</button>
             <div className="ShareData Foldable" ref={this.options} style={{height: 0, opacity: 0}}>
                 <div className="ShareOptions">
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
