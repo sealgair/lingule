@@ -528,12 +528,15 @@ class Share extends React.Component {
         let instructions = "";
         let image = "";
         if (this.state.style === "image") {
+            let verb = "";
             if (isTouchOnly()) {
-                instructions = "Tap and hold"
+                instructions = "Tap and hold";
+                verb = "tap";
             } else {
                 instructions = "Right click";
+                verb = "click";
             }
-            instructions += " to copy the image below, click \"copy alt text\" to copy text description";
+            instructions += " to copy the image below, "+verb+" \"copy alt text\" to copy text description";
             image = (<div className="ScoreImage Foldable" ref={this.scoreImage}>
                 {this.makeScoreImage()}
             </div>)
@@ -753,9 +756,10 @@ class Guesses extends ServerComponent {
             </div>
         }
         let showTip = this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let touchVerb = isTouchOnly() ? "Tap" : "Click";
         let mapTip = <div className="MapTip" style={{
             opacity: showTip ? 1 : 0
-        }}>Click on the arrows to see a map</div>;
+        }}>{touchVerb} on the arrows to see a map</div>;
         if (showTip) {
             setTimeout(() => this.setState({knowsMaps: true}), 5000);
         }
