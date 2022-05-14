@@ -730,7 +730,7 @@ class Guesses extends ServerComponent {
         map = <div className="MapWrapper" style={{
             height: this.state.mapGuess ? 300 : 0
         }}>{map}</div>
-        let showTip = this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let showTip = false; //this.state.guesses.length > 0 && !this.state.knowsMaps;
         let mapTip = <div className="MapTip" style={{
             opacity: showTip ? 1 : 0
         }}>Click on the arrows to see a map</div>;
@@ -781,7 +781,7 @@ class Guesses extends ServerComponent {
                     </tr>
                     </tfoot>
                 </table>
-                {map}
+                {/*{map}*/}
             </div>
         );
     }
