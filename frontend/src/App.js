@@ -578,6 +578,7 @@ class Guesses extends ServerComponent {
             done: done,
             success: success,
             mapGuess: null,
+            loadMap: false
         };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
@@ -656,7 +657,7 @@ class Guesses extends ServerComponent {
                             onClick={event => (
                                 !self.state.success &&
                                 !guess.hint.language &&
-                                self.setState({mapGuess: guess})
+                                self.setState({mapGuess: guess, loadMap: true})
                             )}>
                             {arrow}
                         </td>
@@ -690,34 +691,37 @@ class Guesses extends ServerComponent {
             </tr>;
         }
         let guess = this.state.mapGuess;
-        let map = (<div className="MapWrapper" style={{
-            height: this.state.mapGuess ? 300 : 0
-        }}>
+        let map = ""
+        if (this.state.loadMap) {
+            map = (<div className="MapWrapper" style={{
+                height: this.state.mapGuess ? 300 : 0
+            }}>
                 <span className="MapClose" onClick={e => this.setState({mapGuess: null})}>
                     <i className="fa-solid fa-circle-xmark"></i>
                 </span>
-            <Map
-                initialViewState={{
-                    zoom: 3
-                }}
-                longitude={guess ? guess.longitude : 0}
-                latitude={guess ? guess.latitude : 0}
-                style={{width: 300, height: 300}}
-                mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
-            >
-                {
-                    guess && <Marker longitude={guess.longitude} latitude={guess.latitude}
-                                     rotation={guess.hint.bearing - 90} anchor="center">
+                <Map
+                    initialViewState={{
+                        zoom: 3
+                    }}
+                    longitude={guess ? guess.longitude : 0}
+                    latitude={guess ? guess.latitude : 0}
+                    style={{width: 300, height: 300}}
+                    mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
+                >
+                    {
+                        guess && <Marker longitude={guess.longitude} latitude={guess.latitude}
+                                         rotation={guess.hint.bearing - 90} anchor="center">
                     <span
                         style={{
                             color: "red",
                             fontSize: 40,
                         }}
                     >⇴</span>
-                    </Marker>
-                }
-            </Map>
-        </div>)
+                        </Marker>
+                    }
+                </Map>
+            </div>)
+        }
 
         return (
             <div className="GuessWrapper">
