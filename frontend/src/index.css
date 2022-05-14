@@ -70,17 +70,19 @@ code {
     flex-direction: column-reverse;
     align-items: center;
     min-height: 100vh;
-    width: 500px;
+    width: 100%;
     overflow-y: auto;
 }
-@media (max-width:500px) {
+
+@media (max-width: 500px) {
     .MainColumn {
         width: 100vw;
     }
 }
 
 .ContentWrapper {
-    width: 100%;
+    width: 500px;
+    overflow-x: visible;
     padding-bottom: 2em;
 }
 
@@ -198,10 +200,12 @@ table.Guesses tr {
     margin: 0;
     text-align: center;
 }
+
 .Guess td:first-child {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
+
 .Guess td:last-child {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -212,41 +216,81 @@ table.Guesses tr {
     color: var(--text-color);
     border: 1px solid var(--text-color);
 }
+
 .Guess.Hints td.Language {
     padding: 0 8px;
 }
+
 .Guess.Hints td.Language,
-.Guesses th.HintIcon.Language{
+.Guesses th.HintIcon.Language {
     min-width: calc(100% - 30px * 5);
 }
+
 .Guess.Hints td:not(.Language),
 .Guesses th.HintIcon:not(.Language) {
     width: 30px;
     box-sizing: border-box;
 }
+
 .Guess.Hints td[data-value='true'] {
     background-color: var(--correct-color);
 }
+
 .Guess.Hints td.Direction {
     background-color: var(--arrow-color);
     transform-origin: center;
     cursor: pointer;
 }
+.Success .Guess.Hints td.Direction {
+    cursor: default;
+}
+
 .Guess.Hints td.Direction[data-value='true'] {
     background-color: var(--correct-color);
     color: var(--trophy-color);
+    cursor: default;
 }
 
 .HintIcon {
     font-size: 20px;
     text-align: left;
+    position: relative;
 }
+
 .HintIcon > * {
     margin-left: 5px;
     box-sizing: content-box;
 }
+
 .HintIcon .Description {
     display: none;
+}
+
+.MapTip {
+    position: absolute;
+    bottom: calc(2em + 13px);
+    right: -3em;
+    width: 10em;
+    padding: 5px;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    transition: opacity 300ms;
+}
+
+.MapTip:after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    right: calc(3em + 4px);
+    border-width: 15px 10px 0;
+    border-style: solid;
+    border-color: var(--text-color) transparent;
+    display: block;
+    width: 0;
 }
 
 .Guess.Tried .HintBlock {
@@ -394,6 +438,7 @@ button.Guess {
     flex-direction: column;
     align-items: center;
 }
+
 .ShareData {
     display: flex;
     align-items: start;
@@ -416,6 +461,7 @@ button.Guess {
     justify-content: space-between;
     margin-right: 1em;
 }
+
 button.ShareOption {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -426,10 +472,12 @@ button.ShareOption {
     height: 3em;
     text-align: left;
 }
+
 button.ShareOption.Selected {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
+
 button.ToggleShareOptions {
     position: fixed;
     right: 0;
@@ -444,6 +492,7 @@ button.ToggleShareOptions {
     padding: 5px;
     font-size: 10px;
 }
+
 .ShareContent {
     padding: 5px;
 }
@@ -534,6 +583,7 @@ button.ToggleShareOptions {
 .HelpList {
     padding: 0;
 }
+
 .HelpList li > *:first-child {
     margin-right: 0.5em;
     width: 1em;

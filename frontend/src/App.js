@@ -578,7 +578,8 @@ class Guesses extends ServerComponent {
             done: done,
             success: success,
             mapGuess: null,
-            loadMap: false
+            loadMap: false,
+            knowsMaps: getData("knowsMaps", false),
         };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
@@ -631,6 +632,12 @@ class Guesses extends ServerComponent {
                 }
             },
         );
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.knowsMaps != prevState.knowsMaps) {
+            setData("knowsMaps", this.state.knowsMaps);
+        }
     }
 
     render() {
@@ -693,20 +700,18 @@ class Guesses extends ServerComponent {
         let guess = this.state.mapGuess;
         let map = ""
         if (this.state.loadMap) {
-            map = (<div className="MapWrapper" style={{
-                height: this.state.mapGuess ? 300 : 0
-            }}>
-                <span className="MapClose" onClick={e => this.setState({mapGuess: null})}>
+            map = [
+                <span className="MapClose" onClick={e => this.setState({mapGuess: null})} key="close">
                     <i className="fa-solid fa-circle-xmark"></i>
-                </span>
-                <Map
-                    initialViewState={{
-                        zoom: 3
-                    }}
-                    longitude={guess ? guess.longitude : 0}
-                    latitude={guess ? guess.latitude : 0}
-                    style={{width: 300, height: 300}}
-                    mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
+                </span>,
+                <Map key="map"
+                     initialViewState={{
+                         zoom: 3
+                     }}
+                     longitude={guess ? guess.longitude : 0}
+                     latitude={guess ? guess.latitude : 0}
+                     style={{width: 300, height: 300}}
+                     mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
                 >
                     {
                         guess && <Marker longitude={guess.longitude} latitude={guess.latitude}
@@ -720,11 +725,21 @@ class Guesses extends ServerComponent {
                         </Marker>
                     }
                 </Map>
-            </div>)
+            ]
+        }
+        map = <div className="MapWrapper" style={{
+            height: this.state.mapGuess ? 300 : 0
+        }}>{map}</div>
+        let showTip = this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let mapTip = <div className="MapTip" style={{
+            opacity: showTip ? 1 : 0
+        }}>Click on the arrows to see a map</div>;
+        if (showTip) {
+            setTimeout(() => this.setState({knowsMaps: true}), 5000);
         }
 
         return (
-            <div className="GuessWrapper">
+            <div className={this.state.success ? "Success " : "" + "GuessWrapper"}>
                 <table className="Guesses" onKeyDown={this.handleKey}>
                     <thead>
                     <tr className="GuessColumns">
@@ -749,6 +764,7 @@ class Guesses extends ServerComponent {
                             <i className="fa-regular fa-comments"></i>
                         </th>
                         <th className="HintIcon ToolTip" title="Map Direction">
+                            {mapTip}
                             <span
                                 className="Description">Compass direction from guessed langauge to target language</span>
                             <i className="fa-regular fa-compass"></i>
