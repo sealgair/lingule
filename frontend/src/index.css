@@ -176,6 +176,12 @@ h1, h2, h3, h4 {
     font-family: "NotoSans Light";
 }
 
+.GuessWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 table.Guesses {
     width: 100%;
     border-collapse: separate;
@@ -224,6 +230,7 @@ table.Guesses tr {
 .Guess.Hints td.Direction {
     background-color: var(--arrow-color);
     transform-origin: center;
+    cursor: pointer;
 }
 .Guess.Hints td.Direction[data-value='true'] {
     background-color: var(--correct-color);
@@ -246,6 +253,20 @@ table.Guesses tr {
     margin: 0;
     padding: 0;
     cursor: default;
+}
+
+.MapWrapper {
+    position: relative;
+    transition: height 300ms ease-in-out;
+    overflow: hidden;
+    width: calc(300px + 3em);
+    display: flex;
+    justify-content: center;
+}
+
+.MapClose {
+    position: absolute;
+    right: 0;
 }
 
 button.Guess,

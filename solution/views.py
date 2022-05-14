@@ -61,4 +61,6 @@ class GuessView(ApiView):
             'subfamily': guess.subfamily.name if guess.subfamily else "(None)",
             'genus': guess.genus.name if guess.genus else "(None)",
             'hint': hint,
+            'latitude': guess.latitude,
+            'longitude': guess.longitude,
         }

@@ -1,4 +1,5 @@
 import React from 'react'
+import {Map, Marker} from 'react-map-gl';
 import './App.css';
 
 const directions = [
@@ -461,7 +462,7 @@ class Share extends React.Component {
         if (this.state.style === "image") {
             data = this.makeScoreDescription();
         }
-        if (isTouchOnly() && this.state.style !== "image"  && navigator.share) {
+        if (isTouchOnly() && this.state.style !== "image" && navigator.share) {
             navigator.share({
                 title: "Lingule",
                 text: data,
@@ -576,6 +577,7 @@ class Guesses extends ServerComponent {
             guesses: guesses,
             done: done,
             success: success,
+            mapGuess: null,
         };
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
@@ -612,6 +614,7 @@ class Guesses extends ServerComponent {
                     success: result.success,
                     guess: null,
                     sid: result.sid,
+                    mapGuess: null,
                 });
                 if (this.props.word.order) {
                     setData('guess' + this.props.word.order, this.state.guesses);
@@ -632,6 +635,7 @@ class Guesses extends ServerComponent {
     render() {
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
+        const self = this;
         const data = guesses.map(function (guess, n) {
             if (guess) {
                 let arrow = <i className="fa-solid fa-trophy"/>;
@@ -648,7 +652,12 @@ class Guesses extends ServerComponent {
                         <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily}/>
                         <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus}/>
                         <td className="Language" data-value={guess.hint.language}>{guess.language}</td>
-                        <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}>
+                        <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}
+                            onClick={event => (
+                                !self.state.success &&
+                                !guess.hint.language &&
+                                self.setState({mapGuess: guess})
+                            )}>
                             {arrow}
                         </td>
                     </tr>
@@ -680,8 +689,38 @@ class Guesses extends ServerComponent {
                 </td>
             </tr>;
         }
+        let guess = this.state.mapGuess;
+        let map = (<div className="MapWrapper" style={{
+            height: this.state.mapGuess ? 300 : 0
+        }}>
+                <span className="MapClose" onClick={e => this.setState({mapGuess: null})}>
+                    <i className="fa-solid fa-circle-xmark"></i>
+                </span>
+            <Map
+                initialViewState={{
+                    zoom: 3
+                }}
+                longitude={guess ? guess.longitude : 0}
+                latitude={guess ? guess.latitude : 0}
+                style={{width: 300, height: 300}}
+                mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
+            >
+                {
+                    guess && <Marker longitude={guess.longitude} latitude={guess.latitude}
+                                     rotation={guess.hint.bearing - 90} anchor="center">
+                    <span
+                        style={{
+                            color: "red",
+                            fontSize: 40,
+                        }}
+                    >⇴</span>
+                    </Marker>
+                }
+            </Map>
+        </div>)
+
         return (
-            <div>
+            <div className="GuessWrapper">
                 <table className="Guesses" onKeyDown={this.handleKey}>
                     <thead>
                     <tr className="GuessColumns">
@@ -722,6 +761,7 @@ class Guesses extends ServerComponent {
                     </tr>
                     </tfoot>
                 </table>
+                {map}
             </div>
         );
     }
