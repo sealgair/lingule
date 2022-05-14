@@ -239,7 +239,7 @@ table.Guesses tr {
 .Guess.Hints td.Direction {
     background-color: var(--arrow-color);
     transform-origin: center;
-    /*cursor: pointer;*/
+    cursor: pointer;
 }
 .Success .Guess.Hints td.Direction {
     cursor: default;

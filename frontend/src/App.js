@@ -1,5 +1,12 @@
 import React from 'react'
-import {Map, Marker} from 'react-map-gl';
+
+import {
+    Marker,
+    ComposableMap,
+    Geographies,
+    Geography,
+    ZoomableGroup
+} from "react-simple-maps";
 import './App.css';
 
 const directions = [
@@ -557,6 +564,42 @@ class Share extends React.Component {
     }
 }
 
+class Map extends React.Component {
+
+    constructor(props, context) {
+        super(props, context);
+        this.geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-50m.json";
+    }
+
+    render() {
+        return (
+            <ComposableMap style={{backgroundColor: "#e1feff"}}
+                           width={this.props.width} height={this.props.height}>
+                <ZoomableGroup zoom={5} maxZoom={16} center={[this.props.longitude, this.props.latitude]}>
+                    <Geographies geography={this.geoUrl}
+                                 strokeWidth="0.2"
+                                 stroke="#86B197"
+                                 fill="#a9dfbf">
+                        {({geographies}) =>
+                            geographies.map(geo => (
+                                <Geography key={geo.rsmKey} geography={geo}/>
+                            ))
+                        }
+                    </Geographies>
+                    <Marker coordinates={[this.props.longitude, this.props.latitude]}>
+                        <g transform={"rotate(" + this.props.bearing + ")"} stroke="#C30000" fill="#C30000"
+                           strokeWidth="0">
+                            <circle r="1.2"/>
+                            <path d="M 0,0  l 0,-4" strokeWidth="1"/>
+                            <path d="M 0,-8 l -1.25,4 l 2.5,0 z"/>
+                        </g>
+                    </Marker>
+                </ZoomableGroup>
+            </ComposableMap>
+        );
+    }
+}
+
 class Guesses extends ServerComponent {
 
     constructor(props, context) {
@@ -578,7 +621,6 @@ class Guesses extends ServerComponent {
             done: done,
             success: success,
             mapGuess: null,
-            loadMap: false,
             knowsMaps: getData("knowsMaps", false),
         };
         this.onSelect = this.onSelect.bind(this);
@@ -664,7 +706,7 @@ class Guesses extends ServerComponent {
                             onClick={event => (
                                 !self.state.success &&
                                 !guess.hint.language &&
-                                self.setState({mapGuess: guess, loadMap: true})
+                                self.setState({mapGuess: guess})
                             )}>
                             {arrow}
                         </td>
@@ -697,40 +739,20 @@ class Guesses extends ServerComponent {
                 </td>
             </tr>;
         }
-        let guess = this.state.mapGuess;
         let map = ""
-        if (this.state.loadMap) {
-            map = [
+        if (this.state.mapGuess) {
+            let guess = this.state.mapGuess;
+            map = <div className="MapWrapper" style={{
+                height: this.state.mapGuess ? 300 : 0
+            }}>
                 <span className="MapClose" onClick={e => this.setState({mapGuess: null})} key="close">
                     <i className="fa-solid fa-circle-xmark"></i>
-                </span>,
-                <Map key="map"
-                     initialViewState={{
-                         zoom: 3
-                     }}
-                     longitude={guess ? guess.longitude : 0}
-                     latitude={guess ? guess.latitude : 0}
-                     style={{width: 300, height: 300}}
-                     mapStyle="mapbox://styles/chasecaster/cl35ylt05000e15nxubapvq90"
-                >
-                    {
-                        guess && <Marker longitude={guess.longitude} latitude={guess.latitude}
-                                         rotation={guess.hint.bearing - 90} anchor="center">
-                    <span
-                        style={{
-                            color: "red",
-                            fontSize: 40,
-                        }}
-                    >⇴</span>
-                        </Marker>
-                    }
-                </Map>
-            ]
+                </span>
+                <Map key="map" latitude={guess.latitude} longitude={guess.longitude} bearing={guess.hint.bearing}
+                     width={300} height={300}/>
+            </div>
         }
-        map = <div className="MapWrapper" style={{
-            height: this.state.mapGuess ? 300 : 0
-        }}>{map}</div>
-        let showTip = false; //this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let showTip = this.state.guesses.length > 0 && !this.state.knowsMaps;
         let mapTip = <div className="MapTip" style={{
             opacity: showTip ? 1 : 0
         }}>Click on the arrows to see a map</div>;
@@ -781,7 +803,7 @@ class Guesses extends ServerComponent {
                     </tr>
                     </tfoot>
                 </table>
-                {/*{map}*/}
+                {map}
             </div>
         );
     }
