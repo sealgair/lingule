@@ -75,13 +75,13 @@ code {
 }
 
 @media (max-width: 500px) {
-    .MainColumn {
+    .ContentWrapper {
         width: 100vw;
     }
 }
 
 .ContentWrapper {
-    width: 500px;
+    max-width: 500px;
     overflow-x: visible;
     padding-bottom: 2em;
 }
