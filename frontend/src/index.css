@@ -74,16 +74,16 @@ code {
     overflow-y: auto;
 }
 
+.ContentWrapper {
+    width: 500px;
+    overflow-x: visible;
+    padding-bottom: 2em;
+}
+
 @media (max-width: 500px) {
     .ContentWrapper {
         width: 100vw;
     }
-}
-
-.ContentWrapper {
-    max-width: 500px;
-    overflow-x: visible;
-    padding-bottom: 2em;
 }
 
 .Buffer {
