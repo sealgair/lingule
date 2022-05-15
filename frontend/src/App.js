@@ -755,7 +755,7 @@ class Guesses extends ServerComponent {
                      width={300} height={300}/>
             </div>
         }
-        let showTip = this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let showTip = !this.state.success && this.state.guesses.length > 0 && !this.state.knowsMaps;
         let touchVerb = isTouchOnly() ? "Tap" : "Click";
         let mapTip = <div className="MapTip" style={{
             opacity: showTip ? 1 : 0
