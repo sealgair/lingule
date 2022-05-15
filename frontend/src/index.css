@@ -581,6 +581,9 @@ button.ToggleShareOptions {
 .InfoContent {
     text-align: center;
 }
+.InfoContent .Icon {
+    margin-right: .5em;
+}
 
 .HelpList {
     padding: 0;

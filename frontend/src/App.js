@@ -536,7 +536,7 @@ class Share extends React.Component {
                 instructions = "Right click";
                 verb = "click";
             }
-            instructions += " to copy the image below, "+verb+" \"copy alt text\" to copy text description";
+            instructions += " to copy the image below, " + verb + " \"copy alt text\" to copy text description";
             image = (<div className="ScoreImage Foldable" ref={this.scoreImage}>
                 {this.makeScoreImage()}
             </div>)
@@ -990,9 +990,27 @@ class Info extends ModalComponent {
     contents() {
         return <div className="InfoContent">
             <p>This game was created by Chase Caster</p>
-            <p><a href="https://github.com/sealgair/lingule" target="_new">See the code</a></p>
-            <p><a href="https://twitter.com/ChaseCaster" target="_new">Tweet at me</a></p>
-            <p><a rel="me" href="https://weirder.earth/@chase" target="_new">Toot at me</a></p>
+            <p>
+                <a href="https://github.com/sealgair/lingule" target="_new">
+                    <i className="fa-brands fa-github Icon"></i>
+                    See the code
+                </a>
+            </p>
+            <p>
+                <a href="https://twitter.com/ChaseCaster" target="_new">
+                    <i className="fa-brands fa-twitter Icon"></i>
+                    Tweet at me
+                </a>
+            </p>
+            <p>
+                <a rel="me" href="https://weirder.earth/@chase" target="_new">
+                    <i className="fa-brands fa-mastodon Icon"></i>
+                    Toot at me
+                </a>
+            </p>
+            <p>
+                The only thing I like more than compliments is bug reports!
+            </p>
         </div>;
     }
 }
