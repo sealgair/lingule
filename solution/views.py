@@ -54,7 +54,7 @@ class GuessView(ApiView):
         if guess in solution.alternates.all():
             hint = guess.compare(guess)
         return {
-            'success': guess == solution.language,
+            'success': hint['language'],
             'language': guess.name,
             'macroarea': guess.macroarea.name,
             'family': guess.family.name,
