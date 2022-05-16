@@ -239,13 +239,6 @@ class App extends ServerComponent {
             (result) => {
                 this.setState({
                     word: result,
-                    // word: result.word,
-                    // romanization: result.romanization,
-                    // font: result.font,
-                    // ipa: result.ipa,
-                    // meaning: result.meaning,
-                    // wordNumber: result.order,
-                    // answer: result.answer,
                 });
             });
     }
@@ -505,7 +498,10 @@ class Share extends React.Component {
         let height = 0;
         let opacity = 0;
         if (this.state.options) {
-            height = this.options.current.children[1].scrollHeight + 'px';
+            height = Math.max(
+                this.options.current.children[0].scrollHeight+10,
+                this.options.current.children[1].scrollHeight,
+            ) + 'px';
             opacity = 1;
         }
         this.options.current.style = "height: " + height + "; opacity: " + opacity + ";";
@@ -610,7 +606,7 @@ class Guesses extends ServerComponent {
         let done = false;
         let success = false;
         let guesses = [];
-        if (this.props.word.order) {
+        if (this.props.word) {
             let data = getData('guess' + this.props.word.order);
             if (Array.isArray(data)) {
                 guesses = data;
@@ -723,10 +719,14 @@ class Guesses extends ServerComponent {
         });
 
         let lookup = "";
-        let button = ""
+        let button = "";
+        let message = "";
         if (this.state.done) {
-            if (!this.state.success) {
+            if (this.state.success) {
+                message = this.props.word.victory_message;
+            } else {
                 lookup = <Solution answer={this.props.word.answer}/>
+                message = this.props.word.failure_message;
             }
             button = <Share success={this.state.success} guesses={this.state.guesses}
                             word={this.props.word}/>;
@@ -808,6 +808,7 @@ class Guesses extends ServerComponent {
                     </tfoot>
                 </table>
                 {map}
+                <p className="Message">{message}</p>
             </div>
         );
     }

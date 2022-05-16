@@ -33,6 +33,8 @@ class WordView(ApiView):
             'meaning': solution.english,
             'order': solution.order,
             'answer': solution.language.name,
+            'victory_message': solution.victory_message,
+            'failure_message': solution.failure_message,
         }
         if solution.romanization:
             data['romanization'] = solution.romanization

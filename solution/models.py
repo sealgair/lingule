@@ -19,6 +19,8 @@ class Solution(models.Model):
     alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solution')
     date = models.DateField(null=True, blank=True)
     order = models.PositiveIntegerField(null=True)
+    victory_message = models.TextField(blank=True)
+    failure_message = models.TextField(blank=True)
 
     @property
     def font_url(self):

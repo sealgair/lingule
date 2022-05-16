@@ -1,8 +1,8 @@
-from datetime import date, datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta
 
 from django.contrib import admin
 from django.db import models
-from django.forms import TextInput
+from django.forms import TextInput, Textarea
 from django.utils.html import format_html
 
 from solution.models import Solution
@@ -46,6 +46,7 @@ class SolutionAdmin(admin.ModelAdmin):
                 'ipa',
                 'english',
                 'font',
+                ('victory_message', 'failure_message'),
                 'language',
                 'alternates',
                 ('date', 'order',),
@@ -60,6 +61,11 @@ class SolutionAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': TextInput},
     }
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name.endswith('_message'):
+            kwargs['widget'] = Textarea
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
     def font_word(self, obj):
         if obj.font:
