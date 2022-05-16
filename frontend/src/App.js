@@ -448,7 +448,7 @@ class Share extends React.Component {
                 while (lang.length < 12) {
                     lang += " ";
                 }
-                hint.push("||`" + lang + "`||")
+                hint.push(" ||`" + lang + "`||")
             }
             return hint.join("");
         });
