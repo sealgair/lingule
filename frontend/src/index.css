@@ -239,16 +239,14 @@ table.Guesses tr {
 .Guess.Hints td.Direction {
     background-color: var(--arrow-color);
     transform-origin: center;
-    cursor: pointer;
 }
-.Success .Guess.Hints td.Direction {
-    cursor: default;
+.Maps .Guess.Hints td.Direction {
+    cursor: pointer;
 }
 
 .Guess.Hints td.Direction[data-value='true'] {
     background-color: var(--correct-color);
     color: var(--trophy-color);
-    cursor: default;
 }
 
 .HintIcon {
@@ -361,7 +359,7 @@ button.Guess,
     display: block;
 }
 
-label {
+label.HiddenGuessWrapper {
     display: none;
 }
 
@@ -603,4 +601,9 @@ button.ToggleShareOptions {
     height: 0;
     margin: 0;
     opacity: 0;
+}
+
+fieldset ul {
+    list-style: none;
+    padding: 0;
 }

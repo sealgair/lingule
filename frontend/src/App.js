@@ -9,6 +9,8 @@ import {
 } from "react-simple-maps";
 import './App.css';
 
+const FIRST_EASY = 11;
+
 const directions = [
     "north",
     "north-northeast",
@@ -29,9 +31,14 @@ const directions = [
     "north",
 ];
 
-const unicodeArrows = [
-    "&#129153",
-]
+function randomInt(r, f) {
+    f = f || 0;
+    return Math.floor(Math.random() * r) + f
+}
+
+function randomChoice(arr) {
+    return arr[randomInt(arr.length)];
+}
 
 function cssVar(name) {
     return getComputedStyle(document.body).getPropertyValue(name);
@@ -166,6 +173,7 @@ class App extends ServerComponent {
 
         this.openInfo = this.openInfo.bind(this);
         this.openHelp = this.openHelp.bind(this);
+        this.openSettings = this.openSettings.bind(this);
         this.openStats = this.openStats.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
@@ -176,6 +184,10 @@ class App extends ServerComponent {
 
     openHelp() {
         this.setState({modal: "help"});
+    }
+
+    openSettings() {
+        this.setState({modal: "settings"});
     }
 
     openStats() {
@@ -214,6 +226,9 @@ class App extends ServerComponent {
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
+                                <span className="Settings Icon TipBelow" title="Settings" onClick={this.openSettings}>
+                                    <i className="fa-solid fa-gear"></i>
+                                </span>
                                 <span className="Stats Icon TipBelow" title="Score Data" onClick={this.openStats}>
                                     <i className="fa-solid fa-square-poll-horizontal"></i>
                                 </span>
@@ -229,6 +244,7 @@ class App extends ServerComponent {
                 </div>
                 <Info on={this.state.modal === "info"} onClose={this.closeModal}/>
                 <HowTo on={this.state.modal === "help"} onClose={this.closeModal}/>
+                <Settings on={this.state.modal === "settings"} word={this.state.word} onClose={this.closeModal}/>
                 <Statistics on={this.state.modal === "stats"} onClose={this.closeModal}/>
             </div>
         );
@@ -274,6 +290,7 @@ class Share extends React.Component {
         this.scoreImage = React.createRef();
         this.toggleOptions = this.toggleOptions.bind(this);
         this.shareScore = this.shareScore.bind(this);
+        this.getScore = this.getScore.bind(this);
         this.makeScore = this.makeScore.bind(this);
         this.makeScoreImage = this.makeScoreImage.bind(this);
         this.makeScoreDescription = this.makeScoreDescription.bind(this);
@@ -299,9 +316,20 @@ class Share extends React.Component {
         setTimeout(() => this.setState({shareName: this.baseShareName()}), 3000);
     }
 
+    getScore(hardString) {
+        const scores = getData('scores');
+        let score = scores[this.props.word.order];
+        const hard = score.toString().endsWith("*");
+        if (hard) {
+            score = score.substring(0, score.length - 1);
+        }
+        hardString = hardString || "*";
+        return [score, hard ? hardString : ""];
+    }
+
     makeScoreImage() {
-        const guessNum = this.props.success ? this.props.guesses.length : 'X';
-        const title = "Lingule #" + this.props.word.order + ": " + guessNum + "/6";
+        const [score, hard] = this.getScore();
+        const title = "Lingule #" + this.props.word.order + ": " + score + "/6" + hard;
         let word = this.props.word.word;
         if (this.props.word.romanization) {
             word = word + " (" + this.props.word.romanization + ")"
@@ -379,10 +407,11 @@ class Share extends React.Component {
     makeScoreDescription() {
         let description = ["Scorecard for Lingule #" + this.props.word.order];
         description.push("Mystery word was \"" + this.wordText() + "\"");
+        const [score, hard] = this.getScore(" (on hard mode)");
         if (this.props.success) {
-            description.push("Got it in " + this.props.guesses.length);
+            description.push("Got it in " + score + hard);
         } else {
-            description.push("Didn't get it")
+            description.push("Didn't get it" + hard)
         }
         const correct = {
             [true]: "correct",
@@ -421,8 +450,8 @@ class Share extends React.Component {
 
     makeScore() {
         const style = this.state.style;
-        const guessNum = this.props.success ? this.props.guesses.length : 'X';
-        const title = "#Lingule #" + this.props.word.order + " \"" + this.wordText() + "\": " + guessNum + "/6";
+        const [score, hard] = this.getScore();
+        const title = "#Lingule #" + this.props.word.order + " \"" + this.wordText() + "\": " + score + "/6" + hard;
         if (style === "image") {
             return this.makeScoreImage();
         }
@@ -430,7 +459,7 @@ class Share extends React.Component {
         const wrong = isLightMode() ? '⬜️' : '⬛️';
         const squares = {[true]: '🟩', [false]: wrong};
         const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
-        let score = this.props.guesses.map(function (guess) {
+        let scoreCard = this.props.guesses.map(function (guess) {
             let hint = [
                 squares[guess.hint.macroarea],
                 squares[guess.hint.family],
@@ -452,9 +481,9 @@ class Share extends React.Component {
             }
             return hint.join("");
         });
-        score.splice(0, 0, title);
-        score.push(document.URL);
-        return score.join("\n");
+        scoreCard.splice(0, 0, title);
+        scoreCard.push(document.URL);
+        return scoreCard.join("\n");
     }
 
     shareScore() {
@@ -499,7 +528,7 @@ class Share extends React.Component {
         let opacity = 0;
         if (this.state.options) {
             height = Math.max(
-                this.options.current.children[0].scrollHeight+10,
+                this.options.current.children[0].scrollHeight + 10,
                 this.options.current.children[1].scrollHeight,
             ) + 'px';
             opacity = 1;
@@ -663,11 +692,16 @@ class Guesses extends ServerComponent {
                     setData('guess' + this.props.word.order, this.state.guesses);
                     if (done) {
                         let scores = getData('scores') || {};
+                        let score;
                         if (result.success) {
-                            scores[this.props.word.order] = guesses.length;
+                            score = guesses.length;
                         } else {
-                            scores[this.props.word.order] = 'X';
+                            score = 'X';
                         }
+                        if (!getData('allowMaps', true)) {
+                            score = score + "*";
+                        }
+                        scores[this.props.word.order] = score;
                         setData('scores', scores);
                     }
                 }
@@ -682,6 +716,7 @@ class Guesses extends ServerComponent {
     }
 
     render() {
+        const mapAllowed = getData("allowMaps", true);
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const self = this;
@@ -703,7 +738,8 @@ class Guesses extends ServerComponent {
                         <td className="Language" data-value={guess.hint.language}>{guess.language}</td>
                         <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}
                             onClick={event => (
-                                !self.state.success &&
+                                mapAllowed &&
+                                !self.state.done &&
                                 !guess.hint.language &&
                                 self.setState({mapGuess: guess})
                             )}>
@@ -755,7 +791,7 @@ class Guesses extends ServerComponent {
                      width={300} height={300}/>
             </div>
         }
-        let showTip = !this.state.success && this.state.guesses.length > 0 && !this.state.knowsMaps;
+        let showTip = mapAllowed && !this.state.done && this.state.guesses.length > 0 && !this.state.knowsMaps;
         let touchVerb = isTouchOnly() ? "Tap" : "Click";
         let mapTip = <div className="MapTip" style={{
             opacity: showTip ? 1 : 0
@@ -765,7 +801,7 @@ class Guesses extends ServerComponent {
         }
 
         return (
-            <div className={this.state.success ? "Success " : "" + "GuessWrapper"}>
+            <div className={(mapAllowed && !this.state.done ? "Maps " : "") + "GuessWrapper"}>
                 <table className="Guesses" onKeyDown={this.handleKey}>
                     <thead>
                     <tr className="GuessColumns">
@@ -912,7 +948,7 @@ class Lookup extends ServerComponent {
         }
         return (
             <div className="LookupWrapper">
-                <label htmlFor="guess-lookup">Look up language</label>
+                <label className="Hidden" htmlFor="guess-lookup">Look up language</label>
                 <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus
                        placeholder="What language is it?" value={this.state.value}
                        onBlur={this.handleBlur}
@@ -1077,6 +1113,71 @@ class HowTo extends ModalComponent {
     }
 }
 
+class Settings extends ModalComponent {
+    constructor(props, context) {
+        super(props, context);
+        this.title = "Settings"
+        this.state = {
+            maps: getData('allowMaps', true),
+            share: getData("shareStyle", "text"),
+        }
+        this.changeMap = this.changeMap.bind(this);
+        this.changeShareStyle = this.changeShareStyle.bind(this);
+    }
+
+    changeMap(event) {
+        let allowed = event.target.checked;
+        setData('allowMaps', allowed);
+        this.setState({maps: allowed})
+    }
+
+    changeShareStyle(event) {
+        let style = event.target.value;
+        setData('shareStyle', style);
+        this.setState({share: style});
+    }
+
+    contents() {
+        const guesses = getData('guess' + this.props.word.order);
+        const guessing = guesses && guesses.length < 6 && guesses.filter(g => g.hint.language).length === 0;
+        return (<div>
+            <fieldset disabled={guessing}>
+                <legend>Difficulty</legend>
+                <label><input type="checkbox" name="map" onChange={this.changeMap}
+                              checked={this.state.maps}/>
+                    Allow maps {guessing ? "(can't change mid-game)" : "(disable for hard mode)"}
+                </label>
+            </fieldset>
+            <br/>
+            <fieldset>
+                <legend>Sharing Options</legend>
+                <span>{guessing ? "" : "(use \"share options\" in bottom right to change"}</span>
+                <ul>
+                    <li><label><input type="radio" name="style" value="text"
+                                      onChange={this.changeShareStyle}
+                                      disabled={!guessing}
+                                      checked={this.state.share === "text"}/>
+                        Emoji text
+                    </label></li>
+                    <li><label><input type="radio" name="style" value="spoiler"
+                                      onChange={this.changeShareStyle}
+                                      disabled={!guessing}
+                                      checked={this.state.share === "spoiler"}/>
+                        Emoji text with discord style spoilers
+                    </label></li>
+                    <li><label><input type="radio" name="style" value="image"
+                                      onChange={this.changeShareStyle}
+                                      disabled={!guessing}
+                                      checked={this.state.share === "image"}/>
+                        Image and alt text
+                    </label></li>
+                </ul>
+            </fieldset>
+            <br/>
+        </div>)
+    }
+}
+
 class Statistics extends ModalComponent {
 
     constructor(props, context) {
@@ -1085,33 +1186,40 @@ class Statistics extends ModalComponent {
         this.title = "Statistics"
         this.games = Object.keys(scores).length;
         this.wins = 0;
+        this.hardWins = 0;
         this.maxScore = 0;
         this.scores = {};
         const self = this;
-        Object.values(scores).forEach(function (s) {
+
+        // Calculate streaks
+        this.cStreak = 0;
+        this.mStreak = 0;
+
+        Object.values(scores).forEach(function (s, i) {
+            let hard = s.toString().endsWith("*");
+            if (hard) {
+                s = s.substring(0, s.length - 1);
+            }
+            let won = s !== 'X';
+            if (won) {
+                s = parseInt(s);
+            }
             let c = self.scores[s] || 0;
             self.scores[s] = c + 1;
             self.maxScore = Math.max(self.maxScore, self.scores[s]);
-            if (s !== 'X') {
+            if (won) {
                 self.wins += 1;
+                if (hard || i < FIRST_EASY) {
+                    self.hardWins += 1;
+                }
             }
-        });
-
-        // Calculate streaks
-        let minWord = Math.min(...Object.keys(scores));
-        let maxWord = Math.max(...Object.keys(scores));
-        this.cStreak = 0;
-        this.mStreak = 0;
-        let prev = null;
-        for (let i = minWord - 1; i <= maxWord; i++) {
-            prev = scores[i];
-            if (prev && prev !== 'X') {
-                this.cStreak += 1;
+            if (s === 'X') {
+                self.cStreak = 0;
             } else {
-                this.cStreak = 0;
+                self.cStreak += 1;
             }
-            this.mStreak = Math.max(this.cStreak, this.mStreak);
-        }
+            self.mStreak = Math.max(self.cStreak, self.mStreak);
+        });
 
         this.onClick = this.onClick.bind(this);
     }
@@ -1142,6 +1250,10 @@ class Statistics extends ModalComponent {
                     <div className="StatBox">
                         <span className="Stat">{this.wins}</span>
                         <span className="StatLabel">Wins</span>
+                    </div>
+                    <div className="StatBox">
+                        <span className="Stat">{this.hardWins}</span>
+                        <span className="StatLabel">Hard Wins</span>
                     </div>
                     <div className="StatBox">
                         <span className="Stat">{this.cStreak}</span>
