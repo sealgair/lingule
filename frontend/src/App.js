@@ -1140,6 +1140,7 @@ class Settings extends ModalComponent {
     contents() {
         const guesses = getData('guess' + this.props.word.order);
         const guessing = guesses && guesses.length < 6 && guesses.filter(g => g.hint.language).length === 0;
+        const scoring = guessing || !guesses;
         return (<div>
             <fieldset disabled={guessing}>
                 <legend>Difficulty</legend>
@@ -1151,23 +1152,23 @@ class Settings extends ModalComponent {
             <br/>
             <fieldset>
                 <legend>Sharing Options</legend>
-                <span>{guessing ? "" : "(use \"share options\" in bottom right to change"}</span>
+                <span>{scoring ? "" : "(use \"share options\" in bottom right to change"}</span>
                 <ul>
                     <li><label><input type="radio" name="style" value="text"
                                       onChange={this.changeShareStyle}
-                                      disabled={!guessing}
+                                      disabled={!scoring}
                                       checked={this.state.share === "text"}/>
                         Emoji text
                     </label></li>
                     <li><label><input type="radio" name="style" value="spoiler"
                                       onChange={this.changeShareStyle}
-                                      disabled={!guessing}
+                                      disabled={!scoring}
                                       checked={this.state.share === "spoiler"}/>
                         Emoji text with discord style spoilers
                     </label></li>
                     <li><label><input type="radio" name="style" value="image"
                                       onChange={this.changeShareStyle}
-                                      disabled={!guessing}
+                                      disabled={!scoring}
                                       checked={this.state.share === "image"}/>
                         Image and alt text
                     </label></li>
