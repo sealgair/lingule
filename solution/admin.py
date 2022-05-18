@@ -49,11 +49,12 @@ class SolutionAdmin(admin.ModelAdmin):
                 ('victory_message', 'failure_message'),
                 'language',
                 'alternates',
+                'hidden_options',
                 ('date', 'order',),
             )
         }),
     )
-    filter_horizontal = ['alternates']
+    filter_horizontal = ['alternates', 'hidden_options']
     list_display = ['font_word', 'ipa', 'english', 'language', 'date', 'order']
     list_editable = ['date']
     list_filter = [UpcomingListFilter]

@@ -31,6 +31,16 @@ const directions = [
     "north",
 ];
 
+function compare(a, b) {
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 function randomInt(r, f) {
     f = f || 0;
     return Math.floor(Math.random() * r) + f
@@ -767,7 +777,8 @@ class Guesses extends ServerComponent {
             button = <Share success={this.state.success} guesses={this.state.guesses}
                             word={this.props.word}/>;
         } else {
-            lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}/>;
+            lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}
+                             hiddenOptions={this.props.word.hidden_options}/>;
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
                              disabled={!this.state.guess}>Guess</button>;
         }
@@ -844,9 +855,9 @@ class Guesses extends ServerComponent {
                     </tfoot>
                 </table>
                 {map}
-                <p className="Message">
+                <div className="Message">
                     <ReactMarkdown>{message}</ReactMarkdown>
-                </p>
+                </div>
             </div>
         );
     }
@@ -968,6 +979,13 @@ class Lookup extends ServerComponent {
         this.fetch("/language/all.json",
             (result) => {
                 this.languages = result;
+                if (this.props.hiddenOptions && this.props.hiddenOptions.length > 0) {
+                    this.languages = this.languages.concat(this.props.hiddenOptions);
+                    this.languages.sort((a, b) => compare(
+                        a.name.toLowerCase(),
+                        b.name.toLowerCase()
+                    ));
+                }
             }
         );
     }

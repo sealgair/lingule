@@ -35,6 +35,9 @@ class WordView(ApiView):
             'answer': solution.language.name,
             'victory_message': solution.victory_message,
             'failure_message': solution.failure_message,
+            'hidden_options': [
+                {'name': l.name, 'id': l.id} for l in solution.hidden_options.all()
+            ]
         }
         if solution.romanization:
             data['romanization'] = solution.romanization

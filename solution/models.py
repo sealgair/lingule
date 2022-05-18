@@ -16,7 +16,9 @@ class Solution(models.Model):
     english = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     font = models.FilePathField(path=settings.FONT_ROOT, recursive=True, blank=True)
-    alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solution')
+    alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solutions')
+    hidden_options = models.ManyToManyField(Language, blank=True, related_name='hidden_solutions',
+                                            limit_choices_to={'hidden': True})
     date = models.DateField(null=True, blank=True)
     order = models.PositiveIntegerField(null=True)
     victory_message = models.TextField(blank=True)
