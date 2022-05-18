@@ -466,7 +466,7 @@ class Share extends React.Component {
             return this.makeScoreImage();
         }
 
-        const wrong = isLightMode() ? '⬜️' : '⬛️';
+        const wrong = isLightMode() ? '⬜' : '⬛';
         const squares = {[true]: '🟩', [false]: wrong};
         const arrows = ['⬆️', '↗️️', '➡️️', '↘️️️', '⬇️️', '↙️️️', '⬅️', '↖️️️️', '⬆️'];
         let scoreCard = this.props.guesses.map(function (guess) {
