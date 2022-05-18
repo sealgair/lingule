@@ -49,6 +49,9 @@ class Macroarea(models.Model):
 class Family(models.Model):
     name = models.TextField(unique=True)
 
+    class Meta:
+        verbose_name_plural = 'Families'
+
     def __str__(self):
         return self.name
 
@@ -56,6 +59,9 @@ class Family(models.Model):
 class Subfamily(models.Model):
     name = models.TextField()
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'Subamilies'
 
     def __str__(self):
         return self.name
@@ -65,6 +71,9 @@ class Genus(models.Model):
     name = models.TextField()
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
     subfamily = models.ForeignKey(Subfamily, null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = 'Genera'
 
     def __str__(self):
         return self.name
