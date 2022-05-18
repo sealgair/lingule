@@ -1,5 +1,5 @@
 import React from 'react'
-
+import ReactMarkdown from 'react-markdown'
 import {
     Marker,
     ComposableMap,
@@ -710,7 +710,7 @@ class Guesses extends ServerComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.knowsMaps != prevState.knowsMaps) {
+        if (this.state.knowsMaps !== prevState.knowsMaps) {
             setData("knowsMaps", this.state.knowsMaps);
         }
     }
@@ -844,7 +844,9 @@ class Guesses extends ServerComponent {
                     </tfoot>
                 </table>
                 {map}
-                <p className="Message">{message}</p>
+                <p className="Message">
+                    <ReactMarkdown>{message}</ReactMarkdown>
+                </p>
             </div>
         );
     }

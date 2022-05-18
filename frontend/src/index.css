@@ -359,7 +359,7 @@ button.Guess,
     display: block;
 }
 
-label.HiddenGuessWrapper {
+label.Hidden {
     display: none;
 }
 
@@ -594,13 +594,20 @@ button.ToggleShareOptions {
 
 .Message {
     width: 100%;
+    padding: 15px;
+    margin: 0;
     text-align: center;
     transition: opacity 1500ms;
+    box-sizing: border-box;
 }
 .Message:empty {
     height: 0;
     margin: 0;
     opacity: 0;
+    padding: 0;
+}
+.Message * {
+    width: 100%;
 }
 
 fieldset ul {
