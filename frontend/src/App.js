@@ -343,10 +343,10 @@ class Share extends React.Component {
 
     makeScoreImage() {
         const [score, hard] = this.getScore();
-        const title = "Lingule #" + this.props.word.order + ": " + score + "/6" + hard;
+        const title = `Lingule #${this.props.word.order}: ${score}/6${hard}`;
         let word = this.props.word.word;
         if (this.props.word.romanization) {
-            word = word + " (" + this.props.word.romanization + ")"
+            word = `${word} (${this.props.word.romanization})`
         }
         const guesses = this.props.guesses;
         const size = 30;
@@ -420,7 +420,7 @@ class Share extends React.Component {
 
     makeScoreDescription() {
         let description = ["Scorecard for Lingule #" + this.props.word.order];
-        description.push("Mystery word was \"" + this.wordText() + "\"");
+        description.push(`Mystery word was "${this.wordText()}"`);
         const [score, hard] = this.getScore(" (on hard mode)");
         if (this.props.success) {
             description.push("Got it in " + score + hard);
@@ -432,7 +432,7 @@ class Share extends React.Component {
             [false]: "incorrect",
         }
         this.props.guesses.forEach(function (guess, i) {
-            let line = "Guess #" + (i + 1) + ": ";
+            let line = `Guess #${i + 1}: `;
             if (guess.hint.language) {
                 line += "language correct!";
             } else {
@@ -450,7 +450,7 @@ class Share extends React.Component {
                 } else {
                     line += "incorrect language family";
                 }
-                line += ", solution is " + directions[Math.round(guess.hint.bearing / 22.5)] + " of guess.";
+                line += `, solution is ${directions[Math.round(guess.hint.bearing / 22.5)]} of guess.`;
             }
             description.push(line);
         });
@@ -603,7 +603,6 @@ class Share extends React.Component {
                 <div className="ShareContent" aria-live="polite">
                     {instructions}
                     {score}
-                    <pre role="image" aria-label="emoji-based lingule scorecard for this round">{this.makeScore()}</pre>
                 </div>
             </div>
             {image}
@@ -751,13 +750,12 @@ class Guesses extends ServerComponent {
                 if (!guess.hint.language) {
                     direction = directions[Math.round(guess.hint.bearing / 22.5)];
                     arrow = <i className="fa-solid fa-arrow-up"
-                               style={{transform: "rotate(" + guess.hint.bearing + "deg)"}}>arrow</i>
+                               style={{transform: `rotate(${guess.hint.bearing}deg)`}}>arrow</i>
                 }
                 return (
                     <tr className="Guess Hints" key={n} aria-live="polite">
                         <td className="Description">
-                            {"guess " + n + " out of six: " + guess.language
-                            + " was " + ariaHints[guess.hint.language]}
+                            {`guess ${n} out of 6: ${guess.language} was ${ariaHints[guess.hint.language]}`}
                         </td>
                         <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}>
                             <span className="Description">
@@ -775,7 +773,7 @@ class Guesses extends ServerComponent {
                         </td>
                         <td className="Language" data-value={guess.hint.language}>
                             {guess.language}
-                            <span className="Description">({ariaHints[guess.hint.language]})</span>
+                            <span className="Description">{`(${ariaHints[guess.hint.language]})`}</span>
                         </td>
                         <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}
                             onClick={event => (
@@ -790,7 +788,7 @@ class Guesses extends ServerComponent {
                     </tr>
                 );
             } else {
-                return (<tr className="Guess Empty" key={n} aria-hidden="true">
+                return (<tr className="Guess Empty" key={n}>
                     <td className="Description"/>
                     <td colSpan="6"/>
                 </tr>);
@@ -842,7 +840,8 @@ class Guesses extends ServerComponent {
 
         return (
             <div className={(mapAllowed && !this.state.done ? "Maps " : "") + "GuessWrapper"}>
-                <table className="Guesses" aria-rowcount={this.state.guesses.length + 1}>
+                <table className="Guesses" aria-rowcount={this.state.guesses.length + 1}
+                       aria-label={`guesses (${this.state.guesses.length} out of 6 made)`}>
                     <thead>
                     <tr className="GuessColumns">
                         <th className="Description">Guess Result</th>
@@ -893,8 +892,9 @@ class Guesses extends ServerComponent {
 class Solution extends React.Component {
     render() {
         return (
-            <div className="LookupWrapper">
-                <input type="text" className="Guess Lookup" disabled value={this.props.answer}/>
+            <div className="LookupWrapper" aria-live="polite">
+                <input type="text" className="Guess Lookup" aria-label="correct answer"
+                       disabled value={this.props.answer}/>
             </div>
         )
     }
@@ -1303,7 +1303,6 @@ class Statistics extends ModalComponent {
                 .map((s, i) =>
                     <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}
                         aria-label={`${s} game${plural(s, '', 's')} in ${i+1} guess${plural(i+1, '', 'es')}`}>
-                        {/*aria-label={s+" games in " + (i+1) + " guess" + plural(i+1, )}>*/}
                         <div className="GraphLabel" aria-hidden="true">{s}</div>
                     </li>
                 );

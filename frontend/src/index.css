@@ -329,7 +329,7 @@ table.Guesses tr {
 
 .LookupSection {
     width: 100%;
-    padding: 0 5px;
+    padding: 0;
     box-sizing: border-box;
 }
 
