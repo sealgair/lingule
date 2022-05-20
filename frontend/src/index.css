@@ -190,7 +190,6 @@ table.Guesses {
     border-collapse: separate;
     border-spacing: 0 5px;
     font-size: 18px;
-    margin-left: -5px; /*to make up for extra hidden description row*/
 }
 
 table.Guesses tr {
@@ -219,7 +218,7 @@ table.Guesses tr {
     border: 1px solid var(--text-color);
 }
 
-td.Description {
+.Guess td.Description {
     margin: 0;
     padding: 0;
     border: 0;
@@ -273,6 +272,8 @@ td.Description {
 .Description {
     width: 0;
     height: 0;
+    padding: 0;
+    margin: 0;
     overflow: hidden;
     display: block;
 }
