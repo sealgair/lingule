@@ -31,14 +31,18 @@ const directions = [
     "north",
 ];
 
+function plural(n, singular, plural) {
+    return n == 1 ? singular : plural;
+}
+
 function compare(a, b) {
-  if (a < b) {
-    return -1;
-  } else if (a > b) {
-    return 1;
-  } else {
-    return 0;
-  }
+    if (a < b) {
+        return -1;
+    } else if (a > b) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function randomInt(r, f) {
@@ -222,26 +226,26 @@ class App extends ServerComponent {
         return (
             <div className="Container">
                 {font}
-                <div className="MainColumn">
+                <div className="MainColumn" aria-hidden={this.state.modal ? "true" : "false"}>
                     <div className="Buffer"/>
                     <div className="ContentWrapper">
                         <header className="Header">
                             <span className="IconSet Left">
-                                <span className="Help Icon TipBelow" title="How To Play" onClick={this.openHelp}>
+                                <a className="Help Icon TipBelow" title="How To Play" onClick={this.openHelp}>
                                     <i className="fa-solid fa-circle-question"></i>
-                                </span>
-                                <span className="Info Icon TipBelow" title="Credits" onClick={this.openInfo}>
+                                </a>
+                                <a className="Info Icon TipBelow" title="Credits" onClick={this.openInfo}>
                                     <i className="fa-solid fa-circle-info"></i>
-                                </span>
+                                </a>
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
-                                <span className="Settings Icon TipBelow" title="Settings" onClick={this.openSettings}>
+                                <a className="Settings Icon TipBelow" title="Settings" onClick={this.openSettings}>
                                     <i className="fa-solid fa-gear"></i>
-                                </span>
-                                <span className="Stats Icon TipBelow" title="Score Data" onClick={this.openStats}>
+                                </a>
+                                <a className="Stats Icon TipBelow" title="Score Data" onClick={this.openStats}>
                                     <i className="fa-solid fa-square-poll-horizontal"></i>
-                                </span>
+                                </a>
                             </span>
                         </header>
                         <Word word={this.state.word.word} romanization={this.state.word.romanization}
@@ -279,10 +283,10 @@ class Word extends React.Component {
         }
         return (
             <div className="WordContainer">
-                <div id="word" className="ToolTip Side" title="mystery word">{this.props.word}</div>
+                <span id="word" className="ToolTip Side" title="mystery word">{this.props.word}</span>
                 {romanization}
-                <div id="ipa" className="ToolTip Side" title="ipa pronunciation">{this.props.ipa}</div>
-                <div id="meaning" className="ToolTip Side" title="english translation">{this.props.meaning}</div>
+                <span id="ipa" className="ToolTip Side" title="IPA pronunciation">{this.props.ipa}</span>
+                <span id="meaning" className="ToolTip Side" title="english translation">{this.props.meaning}</span>
             </div>
         )
     }
@@ -576,11 +580,16 @@ class Share extends React.Component {
                 {this.makeScoreImage()}
             </div>)
         }
+        let score = this.makeScore();
+        if (this.state.style !== "image") {
+            score = <pre role="image" aria-label="emoji-based lingule scorecard for this round">{score}</pre>;
+        }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
                     onClick={this.shareScore}>{this.state.shareName}</button>
-            <div className="ShareData Foldable" ref={this.options} style={{height: 0, opacity: 0}}>
-                <div className="ShareOptions">
+            <div className="ShareData Foldable" ref={this.options} aria-hidden={this.state.options ? "false" : "true"}
+                 style={{height: 0, opacity: 0}} aria-live="polite">
+                <div className="ShareOptions" aria-label="choose share style">
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
                             onClick={this.setTextStyle}>Text
                     </button>
@@ -591,9 +600,10 @@ class Share extends React.Component {
                             onClick={this.setImageStyle}>Image
                     </button>
                 </div>
-                <div className="ShareContent">
+                <div className="ShareContent" aria-live="polite">
                     {instructions}
-                    <pre>{this.makeScore()}</pre>
+                    {score}
+                    <pre role="image" aria-label="emoji-based lingule scorecard for this round">{this.makeScore()}</pre>
                 </div>
             </div>
             {image}
@@ -726,26 +736,47 @@ class Guesses extends ServerComponent {
     }
 
     render() {
+        const ariaHints = {
+            [true]: 'correct',
+            [false]: 'incorrect',
+        }
         const mapAllowed = getData("allowMaps", true);
         const numbers = [0, 1, 2, 3, 4, 5];
         const guesses = numbers.map(n => this.state.guesses[n] || false);
         const self = this;
         const data = guesses.map(function (guess, n) {
             if (guess) {
-                let arrow = <i className="fa-solid fa-trophy"/>;
+                let arrow = <i className="fa-solid fa-trophy">trophy</i>;
                 let direction = "you got it!";
                 if (!guess.hint.language) {
                     direction = directions[Math.round(guess.hint.bearing / 22.5)];
                     arrow = <i className="fa-solid fa-arrow-up"
-                               style={{transform: "rotate(" + guess.hint.bearing + "deg)"}}/>
+                               style={{transform: "rotate(" + guess.hint.bearing + "deg)"}}>arrow</i>
                 }
                 return (
-                    <tr className="Guess Hints" key={n}>
-                        <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}/>
-                        <td className="ToolTip" data-value={guess.hint.family} title={guess.family}/>
-                        <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily}/>
-                        <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus}/>
-                        <td className="Language" data-value={guess.hint.language}>{guess.language}</td>
+                    <tr className="Guess Hints" key={n} aria-live="polite">
+                        <td className="Description">
+                            {"guess " + n + " out of six: " + guess.language
+                            + " was " + ariaHints[guess.hint.language]}
+                        </td>
+                        <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}>
+                            <span className="Description">
+                                {ariaHints[guess.hint.macroarea]}
+                            </span>
+                        </td>
+                        <td className="ToolTip" data-value={guess.hint.family} title={guess.family}>
+                            <span className="Description">{ariaHints[guess.hint.family]}</span>
+                        </td>
+                        <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily}>
+                            <span className="Description">{ariaHints[guess.hint.subfamily]}</span>
+                        </td>
+                        <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus}>
+                            <span className="Description">{ariaHints[guess.hint.genus]}</span>
+                        </td>
+                        <td className="Language" data-value={guess.hint.language}>
+                            {guess.language}
+                            <span className="Description">({ariaHints[guess.hint.language]})</span>
+                        </td>
                         <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}
                             onClick={event => (
                                 mapAllowed &&
@@ -753,13 +784,15 @@ class Guesses extends ServerComponent {
                                 !guess.hint.language &&
                                 self.setState({mapGuess: guess})
                             )}>
+                            <span className="Description">{guess.hint.language ? "trophy" : "arrow"}</span>
                             {arrow}
                         </td>
                     </tr>
                 );
             } else {
-                return (<tr className="Guess Empty" key={n}>
-                    <td colSpan="6"/>
+                return (<tr className="Guess Empty" key={n} aria-hidden="true">
+                    <th className="Description"/>
+                    <td colSpan="7"/>
                 </tr>);
             }
         });
@@ -782,20 +815,15 @@ class Guesses extends ServerComponent {
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
                              disabled={!this.state.guess}>Guess</button>;
         }
-        if (lookup) {
-            lookup = <tr>
-                <td colSpan="6">
-                    {lookup}
-                </td>
-            </tr>;
-        }
         let map = ""
         if (this.state.mapGuess) {
             let guess = this.state.mapGuess;
-            map = <div className="MapWrapper" style={{
-                height: this.state.mapGuess ? 300 : 0
-            }}>
+            map = <div className="MapWrapper" role="image" aria-hidden={this.state.mapGuess ? "false" : "true"}
+                       style={{
+                           height: this.state.mapGuess ? 300 : 0
+                       }}>
                 <span className="MapClose" onClick={e => this.setState({mapGuess: null})} key="close">
+                    <span className="Description">close</span>
                     <i className="fa-solid fa-circle-xmark"></i>
                 </span>
                 <Map key="map" latitude={guess.latitude} longitude={guess.longitude} bearing={guess.hint.bearing}
@@ -804,58 +832,57 @@ class Guesses extends ServerComponent {
         }
         let showTip = mapAllowed && !this.state.done && this.state.guesses.length > 0 && !this.state.knowsMaps;
         let touchVerb = isTouchOnly() ? "Tap" : "Click";
-        let mapTip = <div className="MapTip" style={{
-            opacity: showTip ? 1 : 0
-        }}>{touchVerb} on the arrows to see a map</div>;
+        let mapTip = <div className="MapTip" aria-hidden={showTip ? "false" : "true"} aria-label="polite"
+                          style={{
+                              opacity: showTip ? 1 : 0
+                          }}>{touchVerb} on the arrows to see a map</div>;
         if (showTip) {
             setTimeout(() => this.setState({knowsMaps: true}), 5000);
         }
 
         return (
             <div className={(mapAllowed && !this.state.done ? "Maps " : "") + "GuessWrapper"}>
-                <table className="Guesses" onKeyDown={this.handleKey}>
+                <table className="Guesses" onKeyDown={this.handleKey} aria-rowcount={this.state.guesses.length + 1}>
                     <thead>
                     <tr className="GuessColumns">
-                        <th className="HintIcon ToolTip" title="Macro-Area">
+                        <th className="Description">Guess Result</th>
+                        <th className="HintIcon ToolTip" data-title="Macro-Area">
                             <span className="Description">Macro-Area of guessed language</span>
                             <i className="fa-solid fa-earth-asia"></i>
                         </th>
-                        <th className="HintIcon ToolTip" title="Language Family">
+                        <th className="HintIcon ToolTip" data-title="Language Family">
                             <span className="Description">Language Family of guessed language</span>
                             <i className="fa-solid fa-mountain-sun"></i>
                         </th>
-                        <th className="HintIcon ToolTip" title="Sub-Family">
+                        <th className="HintIcon ToolTip" data-title="Sub-Family">
                             <span className="Description">Sub-Family of guessed language</span>
                             <i className="fa-solid fa-mountain"></i>
                         </th>
-                        <th className="HintIcon ToolTip" title="Genus">
+                        <th className="HintIcon ToolTip" data-title="Genus">
                             <span className="Description">Genus of guessed language</span>
                             <i className="fa-solid fa-mound"></i>
                         </th>
-                        <th className="HintIcon Language ToolTip" title="Language">
+                        <th className="HintIcon Language ToolTip" data-title="Language">
                             <span className="Description">Name of guessed language</span>
                             <i className="fa-regular fa-comments"></i>
                         </th>
-                        <th className="HintIcon ToolTip" title="Map Direction">
+                        <th className="HintIcon ToolTip" data-title="Map Direction">
                             {mapTip}
-                            <span
-                                className="Description">Compass direction from guessed langauge to target language</span>
+                            <span className="Description">
+                                Compass direction from guessed language to target language
+                            </span>
                             <i className="fa-regular fa-compass"></i>
                         </th>
                     </tr>
                     </thead>
                     <tbody>{data}</tbody>
-                    <tfoot>
-                    {lookup}
-                    <tr>
-                        <td colSpan="6">
-                            {button}
-                        </td>
-                    </tr>
-                    </tfoot>
                 </table>
+                <div className="LookupSection">
+                    {lookup}
+                    {button}
+                </div>
                 {map}
-                <div className="Message">
+                <div className="Message" aria-live="polite">
                     <ReactMarkdown>{message}</ReactMarkdown>
                 </div>
             </div>
@@ -864,7 +891,6 @@ class Guesses extends ServerComponent {
 }
 
 class Solution extends React.Component {
-
     render() {
         return (
             <div className="LookupWrapper">
@@ -892,27 +918,40 @@ class Lookup extends ServerComponent {
         let selected = this.state.selected;
         let langs = this.filteredLangs();
         let lcount = langs.length;
+
         if (event.code === "ArrowDown") {
-            selected -= 1;
+            if (selected === null) {
+                selected = lcount - 1;
+            } else {
+                selected -= 1;
+            }
             if (selected < 0) {
-                selected += lcount;
+                selected = null;
             }
         } else if (event.code === "ArrowUp") {
-            selected += 1;
+            if (selected === null) {
+                selected = 0;
+            } else {
+                selected += 1;
+            }
             if (selected >= lcount) {
-                selected -= lcount;
+                selected = null;
+            }
+        }
+        if (event.code === "Enter") {
+            if (selected === null) {
+                selected = 0;
+            } else if (this.state.value) {
+                let lang = langs[selected];
+                this.selectLang(lang);
             }
         }
         this.setState({selected: selected});
-        if (event.code === "Enter" && this.state.value) {
-            let lang = langs[selected];
-            this.selectLang(lang);
-        }
     }
 
     handleChange(event) {
         this.guessId = null;
-        this.setState({value: event.target.value, selected: 0});
+        this.setState({value: event.target.value, selected: null});
         this.props.onSelect();
     }
 
@@ -941,20 +980,23 @@ class Lookup extends ServerComponent {
 
     render() {
         let filtered = "";
+        let selected = null;
         if (!this.guessId && this.state.value) {
             const self = this;
             let list = this.filteredLangs().map(function (lang, i) {
                 let classes = "Lang";
                 if (i === self.state.selected) {
                     classes += " Selected";
+                    selected = lang;
                 }
                 return (
-                    <li className={classes} key={lang.id} value={lang.id} onClick={self.handleSelect}>
+                    <li className={classes} key={lang.id} value={lang.id} role="option"
+                        onClick={self.handleSelect} id={"lang-" + lang.id}>
                         {lang.name}
                     </li>);
             });
             filtered = (
-                <ul className="LangList">
+                <ul className="LangList" id="languages" aria-label="languages" role="listbox">
                     {list}
                 </ul>
             )
@@ -962,8 +1004,12 @@ class Lookup extends ServerComponent {
         return (
             <div className="LookupWrapper">
                 <label className="Hidden" htmlFor="guess-lookup">Look up language</label>
-                <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus
+                <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus role="combobox"
                        placeholder="What language is it?" value={this.state.value}
+                       aria-controls="languages"
+                       aria-autocomplete="list"
+                       aria-expanded={filtered ? "true" : "false"}
+                       aria-activedescendant={selected ? "lang-" + selected.id : "none"}
                        onBlur={this.handleBlur}
                        onChange={this.handleChange} onKeyDown={this.handleKeypress}/>
                 {filtered}
@@ -1021,14 +1067,15 @@ class ModalComponent extends React.Component {
         return (
             <div className="Overlay" onClick={this.onClick} style={{
                 opacity: opacity, height: height
-            }}>
+            }} aria-hidden={this.state.on ? "false" : "true"} aria-live="polite">
                 <div className="ModalContainer">
-                <span className="Close">
-                    <i className="fa-solid fa-circle-xmark"></i>
-                </span>
                     <h1>{this.title}</h1>
                     <hr/>
                     {this.contents()}
+                    <a className="Close Icon">
+                        <span className="Description">Close</span>
+                        <i className="fa-solid fa-circle-xmark"></i>
+                    </a>
                 </div>
             </div>
         )
@@ -1081,7 +1128,10 @@ class HowTo extends ModalComponent {
     contents() {
         return (
             <div>
-                <p>Every day you'll get a new <span className="Title">Lingule</span>.</p>
+                <p>
+                    Every day you'll get a new <span className="Title">Lingule</span>. You get six guesses to
+                    figure out what language the mystery word is.
+                </p>
                 <Word word="target word" romanization="romanization"
                       ipa="/ipa pronunciation/" meaning="english translation"/>
                 <p>After each guess, you'll see how close you got in 6 columns:</p>
@@ -1251,12 +1301,14 @@ class Statistics extends ModalComponent {
             const scores = [1, 2, 3, 4, 5, 6]
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
-                    <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}>
-                        <div className="GraphLabel">{s}</div>
+                    <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}
+                        aria-label={`${s} game${plural(s, '', 's')} in ${i+1} guess${plural(i+1, '', 'es')}`}>
+                        {/*aria-label={s+" games in " + (i+1) + " guess" + plural(i+1, )}>*/}
+                        <div className="GraphLabel" aria-hidden="true">{s}</div>
                     </li>
                 );
             distribution = (
-                <ol className="Distribution">
+                <ol className="Distribution" aria-label="Score distribution">
                     {scores}
                 </ol>
             )
