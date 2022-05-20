@@ -791,8 +791,8 @@ class Guesses extends ServerComponent {
                 );
             } else {
                 return (<tr className="Guess Empty" key={n} aria-hidden="true">
-                    <th className="Description"/>
-                    <td colSpan="7"/>
+                    <td className="Description"/>
+                    <td colSpan="6"/>
                 </tr>);
             }
         });
@@ -842,7 +842,7 @@ class Guesses extends ServerComponent {
 
         return (
             <div className={(mapAllowed && !this.state.done ? "Maps " : "") + "GuessWrapper"}>
-                <table className="Guesses" onKeyDown={this.handleKey} aria-rowcount={this.state.guesses.length + 1}>
+                <table className="Guesses" aria-rowcount={this.state.guesses.length + 1}>
                     <thead>
                     <tr className="GuessColumns">
                         <th className="Description">Guess Result</th>
@@ -877,7 +877,7 @@ class Guesses extends ServerComponent {
                     </thead>
                     <tbody>{data}</tbody>
                 </table>
-                <div className="LookupSection">
+                <div className="LookupSection" onKeyDown={this.handleKey}>
                     {lookup}
                     {button}
                 </div>
@@ -941,7 +941,7 @@ class Lookup extends ServerComponent {
         if (event.code === "Enter") {
             if (selected === null) {
                 selected = 0;
-            } else if (this.state.value) {
+            } else {
                 let lang = langs[selected];
                 this.selectLang(lang);
             }

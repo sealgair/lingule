@@ -219,7 +219,7 @@ table.Guesses tr {
     border: 1px solid var(--text-color);
 }
 
-.Guess.Hints td.Description {
+td.Description {
     margin: 0;
     padding: 0;
     border: 0;
