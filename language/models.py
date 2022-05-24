@@ -104,7 +104,7 @@ class Language(models.Model):
         """
         fall back to family if there is no subfamily
         """
-        return self.subfamily_id or self.family_id
+        return f'sf{self.subfamily_id}' or f'f{self.family_id}'
 
     def compare(self, other):
         """
