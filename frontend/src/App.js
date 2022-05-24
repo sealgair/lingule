@@ -665,6 +665,7 @@ class Guesses extends ServerComponent {
         this.state = {
             guess: null,
             guesses: guesses,
+            guessing: false,
             done: done,
             success: success,
             mapGuess: null,
@@ -690,10 +691,14 @@ class Guesses extends ServerComponent {
     }
 
     makeGuess() {
+        if (this.state.guessing) {
+            return;
+        }
         const params = new URLSearchParams({
             language: this.state.guess.id,
             solution: this.props.word.id,
         }).toString();
+        this.setState({'guessing': true});
         this.fetch("/solution/guess.json?" + params,
             (result) => {
                 let guesses = this.state.guesses;
@@ -701,6 +706,7 @@ class Guesses extends ServerComponent {
                 let done = result.success || guesses.length >= 6;
                 this.setState({
                     guesses: guesses,
+                    guessing: false,
                     done: done,
                     success: result.success,
                     guess: null,
@@ -725,6 +731,9 @@ class Guesses extends ServerComponent {
                     }
                 }
             },
+            (error) => {
+                this.setState({guessing: false});
+            }
         );
     }
 
@@ -811,7 +820,7 @@ class Guesses extends ServerComponent {
             lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}
                              hiddenOptions={this.props.word.hidden_options}/>;
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
-                             disabled={!this.state.guess}>Guess</button>;
+                             disabled={this.state.guessing || !this.state.guess}>Guess</button>;
         }
         let map = ""
         if (this.state.mapGuess) {
@@ -1302,7 +1311,7 @@ class Statistics extends ModalComponent {
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
                     <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}
-                        aria-label={`${s} game${plural(s, '', 's')} in ${i+1} guess${plural(i+1, '', 'es')}`}>
+                        aria-label={`${s} game${plural(s, '', 's')} in ${i + 1} guess${plural(i + 1, '', 'es')}`}>
                         <div className="GraphLabel" aria-hidden="true">{s}</div>
                     </li>
                 );
