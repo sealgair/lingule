@@ -981,9 +981,13 @@ class Lookup extends ServerComponent {
 
     filteredLangs() {
         const patterns = this.state.value.split(" ").map(t => new RegExp('\\b' + escapeRegExp(t), 'gi'));
+        const narrowPattern = new RegExp(`\\b${escapeRegExp(this.state.value)}.*`, 'gi');
         return this.languages.filter(lang => patterns.reduce(
             (p, pat) => p && lang.name.match(pat),
             true
+        ) || lang.other_names.reduce(
+            (n, name) => n || name.match(narrowPattern),
+            false
         ));
     }
 
