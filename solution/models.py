@@ -20,6 +20,7 @@ class Solution(models.Model):
     hidden_options = models.ManyToManyField(Language, blank=True, related_name='hidden_solutions',
                                             limit_choices_to={'hidden': True})
     date = models.DateField(null=True, blank=True)
+    freeze_date = models.BooleanField(default=False)
     order = models.PositiveIntegerField(null=True)
     victory_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)

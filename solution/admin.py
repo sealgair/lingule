@@ -14,7 +14,7 @@ def today():
 
 
 def shuffle_solutions(modeladmin, request, queryset):
-    queryset = queryset.filter(date__gt=today())
+    queryset = queryset.filter(date__gt=today(), freeze_date=False)
     for (o, d), s in zip(queryset.values_list('order', 'date'), queryset.order_by('?')):
         queryset.filter(id=s.id).update(order=o, date=d)
 
@@ -50,13 +50,13 @@ class SolutionAdmin(admin.ModelAdmin):
                 'language',
                 'alternates',
                 'hidden_options',
-                ('date', 'order',),
+                ('date', 'freeze_date', 'order',),
             )
         }),
     )
     filter_horizontal = ['alternates', 'hidden_options']
-    list_display = ['font_word', 'ipa', 'english', 'language', 'date', 'order']
-    list_editable = ['date']
+    list_display = ['font_word', 'ipa', 'english', 'language', 'date', 'freeze_date', 'order']
+    list_editable = ['date', 'freeze_date']
     list_filter = [UpcomingListFilter]
     actions = [shuffle_solutions]
     formfield_overrides = {
