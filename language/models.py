@@ -42,6 +42,9 @@ def get_bearing(start_point, end_point):
 class Macroarea(models.Model):
     name = models.TextField(unique=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -51,6 +54,7 @@ class Family(models.Model):
 
     class Meta:
         verbose_name_plural = 'Families'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -62,6 +66,7 @@ class Subfamily(models.Model):
 
     class Meta:
         verbose_name_plural = 'Subamilies'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -74,14 +79,16 @@ class Genus(models.Model):
 
     class Meta:
         verbose_name_plural = 'Genera'
+        ordering = ['name']
 
     def __str__(self):
         return self.name
 
 
 class Language(models.Model):
-    name = models.TextField(unique=True)
     lang_id = models.TextField(blank=True)
+    name = models.TextField(unique=True)
+    other_names = models.JSONField(blank=True)
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -94,7 +101,7 @@ class Language(models.Model):
 
     class Meta:
         db_table = 'language'
-        ordering = ['name']
+        ordering = ['macroarea__name', 'family__name', 'subfamily__name', 'genus__name', 'name']
 
     def __str__(self):
         return self.name

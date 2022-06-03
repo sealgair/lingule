@@ -26,7 +26,8 @@ class LanguageAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                'name',
+                ('name', 'lang_id'),
+                'other_names',
                 'macroarea',
                 ('family', 'subfamily', 'genus'),
                 ('latitude', 'longitude'),
@@ -40,14 +41,13 @@ class LanguageAdmin(admin.ModelAdmin):
         'family',
         'subfamily',
         'genus',
-        'latitude',
-        'longitude',
         'hidden',
     ]
     list_editable = ['hidden']
-    list_filter = ['hidden']
+    list_filter = ['hidden', 'macroarea', 'family']
     search_fields = [
         'name',
+        'other_names',
         'family__name',
         'subfamily__name',
         'genus__name',
