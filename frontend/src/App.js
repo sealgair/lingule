@@ -7,6 +7,7 @@ import {
     Geography,
     ZoomableGroup
 } from "react-simple-maps";
+import {withTranslation} from "react-i18next";
 import './App.css';
 
 const FIRST_EASY = 11;
@@ -1014,11 +1015,12 @@ class Lookup extends ServerComponent {
                 </ul>
             )
         }
+        const t = this.props.t;
         return (
             <div className="LookupWrapper">
                 <label className="Hidden" htmlFor="guess-lookup">Look up language</label>
                 <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus role="combobox"
-                       placeholder="What language is it?" value={this.state.value}
+                       placeholder={t("lookup.prompt")} value={this.state.value}
                        aria-controls="languages"
                        aria-autocomplete="list"
                        aria-expanded={filtered ? "true" : "false"}
@@ -1049,6 +1051,8 @@ class Lookup extends ServerComponent {
         );
     }
 }
+
+Lookup = withTranslation()(Lookup)
 
 class ModalComponent extends React.Component {
     constructor(props, context) {
