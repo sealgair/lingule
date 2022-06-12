@@ -12,6 +12,12 @@ import './App.css';
 
 const FIRST_EASY = 11;
 
+const siteLanguages = {
+  en: { endonym: 'English' },
+  es: { endonym: 'Español' },
+  fr: { endonym: 'Français' }
+};
+
 const directions = [
     "north",
     "north-northeast",
@@ -1225,9 +1231,21 @@ class Settings extends ModalComponent {
     }
 
     contents() {
+        const i18n = this.props.i18n;
         const guesses = getData('guess' + this.props.word.order);
         const guessing = guesses && guesses.length < 6 && guesses.filter(g => g.hint.language).length === 0;
         const scoring = guessing || !guesses;
+
+        const languageChoices = Object.keys(siteLanguages).map(lang=>
+            <li key={lang}><label>
+                <input type="radio" name="language" value={lang}
+                       checked={i18n.resolvedLanguage === lang}
+                       onClick={(e) => i18n.changeLanguage(lang)}
+                />
+                {siteLanguages[lang].endonym}
+            </label></li>
+        )
+
         return (<div>
             <fieldset disabled={guessing}>
                 <legend>Difficulty</legend>
@@ -1262,9 +1280,17 @@ class Settings extends ModalComponent {
                 </ul>
             </fieldset>
             <br/>
+            <fieldset>
+                <legend>Language</legend>
+                <ul>
+                    {languageChoices}
+                </ul>
+                <p>All translations are from english, and entirely amateur. Any and all corrections welcome.</p>
+            </fieldset>
         </div>)
     }
 }
+Settings = withTranslation()(Settings)
 
 class Statistics extends ModalComponent {
 
