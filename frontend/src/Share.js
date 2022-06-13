@@ -146,29 +146,31 @@ class Share extends React.Component {
             [false]: "incorrect",
         }
         this.props.guesses.forEach(function (guess, i) {
-            let line = `Guess #${i + 1}: `;
+            let line = t('share.alt.guessTitle', {num: i + 1});
             if (guess.hint.language) {
-                line += "language correct!";
+                line += t('share.alt.guessRight');
             } else {
-                line += correct[guess.hint.macroarea] + " macro-area, ";
+                line += t('share.alt.macroArea', {context: guess.hint.macroarea ? 'right' : 'wrong'});
                 if (guess.hint.family) {
                     if (guess.hint.subfamily) {
                         if (guess.hint.genus) {
-                            line += "correct language genus";
+                            line += t('share.alt.gotGenus');
                         } else {
-                            line += "correct language sub-family";
+                            line += t('share.alt.gotSubFamily');
                         }
                     } else {
-                        line += "correct language family";
+                        line += t('share.alt.gotFamily');
                     }
                 } else {
-                    line += "incorrect language family";
+                    line += t('share.alt.missedFamily');
                 }
-                line += `, solution is ${directions[Math.round(guess.hint.bearing / 22.5)]} of guess.`;
+                let direction = directions[Math.round(guess.hint.bearing / 22.5)];
+                direction = t('directions.'+direction);
+                line += t('share.alt.direction', {direction: direction});
             }
             description.push(line);
         });
-        description.push("Played at " + document.URL);
+        description.push(t('share.alt.link', {url: document.URL}));
         return description.join("\n");
     }
 
