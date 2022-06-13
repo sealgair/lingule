@@ -5,6 +5,7 @@ import Map from "./Map";
 import ReactMarkdown from "react-markdown";
 import React from "react";
 import Lookup from "./Lookup";
+import {withTranslation} from "react-i18next";
 
 class Guesses extends ServerComponent {
 
@@ -103,9 +104,10 @@ class Guesses extends ServerComponent {
     }
 
     render() {
+        const t = this.props.t;
         const ariaHints = {
-            [true]: 'correct',
-            [false]: 'incorrect',
+            [true]: t('guess.correct'),
+            [false]: t('guess.incorrect'),
         }
         const mapAllowed = getData("allowMaps", true);
         const numbers = [0, 1, 2, 3, 4, 5];
@@ -114,7 +116,7 @@ class Guesses extends ServerComponent {
         const data = guesses.map(function (guess, n) {
             if (guess) {
                 let arrow = <i className="fa-solid fa-trophy">trophy</i>;
-                let direction = "you got it!";
+                let direction = "success";
                 if (!guess.hint.language) {
                     direction = directions[Math.round(guess.hint.bearing / 22.5)];
                     arrow = <i className="fa-solid fa-arrow-up"
@@ -123,7 +125,11 @@ class Guesses extends ServerComponent {
                 return (
                     <tr className="Guess Hints" key={n} aria-live="polite">
                         <td className="Description">
-                            {`guess ${n} out of 6: ${guess.language} was ${ariaHints[guess.hint.language]}`}
+                            {t("guess.description", {
+                                guessNum: n,
+                                language: guess.language,
+                                correct: ariaHints[guess.hint.language],
+                            })}
                         </td>
                         <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}>
                             <span className="Description">
@@ -143,7 +149,7 @@ class Guesses extends ServerComponent {
                             {guess.language}
                             <span className="Description">{`(${ariaHints[guess.hint.language]})`}</span>
                         </td>
-                        <td className="Direction ToolTip" data-value={guess.hint.language} title={direction}
+                        <td className="Direction ToolTip" data-value={guess.hint.language} title={t('directions.'+direction)}
                             onClick={event => (
                                 mapAllowed &&
                                 !self.state.done &&
@@ -179,7 +185,7 @@ class Guesses extends ServerComponent {
             lookup = <Lookup onSelect={this.onSelect} key={this.state.guesses.length}
                              hiddenOptions={this.props.word.hidden_options}/>;
             button = <button tabIndex="0" className="MakeGuess Guess" onClick={this.makeGuess}
-                             disabled={this.state.guessing || !this.state.guess}>Guess</button>;
+                             disabled={this.state.guessing || !this.state.guess}>{t('buttons.guess')}</button>;
         }
         let map = ""
         if (this.state.mapGuess) {
@@ -189,7 +195,7 @@ class Guesses extends ServerComponent {
                            height: this.state.mapGuess ? 300 : 0
                        }}>
                 <span className="MapClose" onClick={e => this.setState({mapGuess: null})} key="close">
-                    <span className="Description">close</span>
+                    <span className="Description">{t('buttons.close')}</span>
                     <i className="fa-solid fa-circle-xmark"></i>
                 </span>
                 <Map key="map" latitude={guess.latitude} longitude={guess.longitude} bearing={guess.hint.bearing}
@@ -197,11 +203,11 @@ class Guesses extends ServerComponent {
             </div>
         }
         let showTip = mapAllowed && !this.state.done && this.state.guesses.length > 0 && !this.state.knowsMaps;
-        let touchVerb = isTouchOnly() ? "Tap" : "Click";
+        let touchVerb = isTouchOnly() ? t("tips.tap") : t("tips.click");
         let mapTip = <div className="MapTip" aria-hidden={showTip ? "false" : "true"} aria-label="polite"
                           style={{
                               opacity: showTip ? 1 : 0
-                          }}>{touchVerb} on the arrows to see a map</div>;
+                          }}>{t("tips.mapPrompt", {touchVerb: touchVerb})}</div>;
         if (showTip) {
             setTimeout(() => this.setState({knowsMaps: true}), 5000);
         }
@@ -212,31 +218,31 @@ class Guesses extends ServerComponent {
                        aria-label={`guesses (${this.state.guesses.length} out of 6 made)`}>
                     <thead>
                     <tr className="GuessColumns">
-                        <th className="Description">Guess Result</th>
-                        <th className="HintIcon ToolTip" data-title="Macro-Area">
-                            <span className="Description">Macro-Area of guessed language</span>
+                        <th className="Description">{t("guess.titles.result")}</th>
+                        <th className="HintIcon ToolTip" data-title={t("tips.macro-area")}>
+                            <span className="Description">{t("guess.titles.macro-area")}</span>
                             <i className="fa-solid fa-earth-asia"></i>
                         </th>
-                        <th className="HintIcon ToolTip" data-title="Language Family">
-                            <span className="Description">Language Family of guessed language</span>
+                        <th className="HintIcon ToolTip" data-title={t("tips.family")}>
+                            <span className="Description">{t("guess.titles.family")}</span>
                             <i className="fa-solid fa-mountain-sun"></i>
                         </th>
-                        <th className="HintIcon ToolTip" data-title="Sub-Family">
-                            <span className="Description">Sub-Family of guessed language</span>
+                        <th className="HintIcon ToolTip" data-title={t("tips.sub-family")}>
+                            <span className="Description">{t("guess.titles.sub-family")}</span>
                             <i className="fa-solid fa-mountain"></i>
                         </th>
-                        <th className="HintIcon ToolTip" data-title="Genus">
-                            <span className="Description">Genus of guessed language</span>
+                        <th className="HintIcon ToolTip" data-title={t("tips.genus")}>
+                            <span className="Description">{t("guess.titles.genus")}</span>
                             <i className="fa-solid fa-mound"></i>
                         </th>
-                        <th className="HintIcon Language ToolTip" data-title="Language">
-                            <span className="Description">Name of guessed language</span>
+                        <th className="HintIcon Language ToolTip" data-title={t("tips.language")}>
+                            <span className="Description">{t("guess.titles.name")}</span>
                             <i className="fa-regular fa-comments"></i>
                         </th>
-                        <th className="HintIcon ToolTip" data-title="Map Direction">
+                        <th className="HintIcon ToolTip" data-title={t("tips.direction")}>
                             {mapTip}
                             <span className="Description">
-                                Compass direction from guessed language to target language
+                                {t("guess.titles.direction")}
                             </span>
                             <i className="fa-regular fa-compass"></i>
                         </th>
@@ -268,4 +274,4 @@ class Solution extends React.Component {
     }
 }
 
-export default Guesses;
+export default withTranslation()(Guesses);

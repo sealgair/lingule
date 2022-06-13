@@ -1,6 +1,8 @@
 {
   "lookup": {
-    "prompt": "¿Que idioma es?",
+    "prompt": "¿Que idioma es?"
+  },
+  "guess": {
     "button": "Adivinar"
   }
 }

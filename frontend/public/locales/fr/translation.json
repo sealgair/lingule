@@ -1,6 +1,8 @@
 {
   "lookup": {
     "prompt": "Quelle langue est-ce?",
+  },
+  "guess": {
     "button": "Deviner"
   }
 }

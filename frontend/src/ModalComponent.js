@@ -26,6 +26,7 @@ class ModalComponent extends React.Component {
     }
 
     render() {
+        const t = this.props.t || ((s) => s); // needs to be injected in subclasses
         let opacity = this.state.on ? 1 : 0;
         let height = this.state.on ? "100vh" : 0;
         return (
@@ -37,7 +38,7 @@ class ModalComponent extends React.Component {
                     <hr/>
                     {this.contents()}
                     <a className="Close Icon">
-                        <span className="Description">Close</span>
+                        <span className="Description">{t('buttons.close')}</span>
                         <i className="fa-solid fa-circle-xmark"></i>
                     </a>
                 </div>

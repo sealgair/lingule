@@ -1,6 +1,7 @@
 import React from "react";
 import {getData, plural} from "./utils";
 import ModalComponent from "./ModalComponent";
+import {withTranslation} from "react-i18next";
 
 const FIRST_EASY = 11;
 
@@ -9,7 +10,7 @@ class Statistics extends ModalComponent {
     constructor(props, context) {
         super(props, context);
         const scores = getData('scores') || {};
-        this.title = "Statistics"
+        this.title = this.props.t("titles.stats");
         this.games = Object.keys(scores).length;
         this.wins = 0;
         this.hardWins = 0;
@@ -51,18 +52,19 @@ class Statistics extends ModalComponent {
     }
 
     contents() {
-        let distribution = <h4>No Data</h4>;
+        const t = this.props.t;
+        let distribution = <h4>{t('stats.empty')}</h4>;
         if (Object.keys(this.scores).length > 0) {
             const scores = [1, 2, 3, 4, 5, 6]
                 .map(s => this.scores[s] || 0)
                 .map((s, i) =>
                     <li style={{width: (s / this.maxScore * 100) + '%'}} key={i}
-                        aria-label={`${s} game${plural(s, '', 's')} in ${i + 1} guess${plural(i + 1, '', 'es')}`}>
+                        aria-label={t('stats.graphLabelA', {count: s}) + t('stats.graphLabelB', {count: i+1})}>
                         <div className="GraphLabel" aria-hidden="true">{s}</div>
                     </li>
                 );
             distribution = (
-                <ol className="Distribution" aria-label="Score distribution">
+                <ol className="Distribution" aria-label={t('stats.distribution')}>
                     {scores}
                 </ol>
             )
@@ -72,26 +74,26 @@ class Statistics extends ModalComponent {
                 <div className="StatsList">
                     <div className="StatBox">
                         <span className="Stat">{this.games}</span>
-                        <span className="StatLabel">Games</span>
+                        <span className="StatLabel">{t("stats.games")}</span>
                     </div>
                     <div className="StatBox">
                         <span className="Stat">{this.wins}</span>
-                        <span className="StatLabel">Wins</span>
+                        <span className="StatLabel">{t("stats.wins")}</span>
                     </div>
                     <div className="StatBox">
                         <span className="Stat">{this.hardWins}</span>
-                        <span className="StatLabel">Hard Wins</span>
+                        <span className="StatLabel">{t("stats.hardWins")}</span>
                     </div>
                     <div className="StatBox">
                         <span className="Stat">{this.cStreak}</span>
-                        <span className="StatLabel">Current Streak</span>
+                        <span className="StatLabel">{t("stats.thisStreak")}</span>
                     </div>
                     <div className="StatBox">
                         <span className="Stat">{this.mStreak}</span>
-                        <span className="StatLabel">Max Streak</span>
+                        <span className="StatLabel">{t("stats.maxStreak")}</span>
                     </div>
                 </div>
-                <h2>Guess Distribution</h2>
+                <h2>{t("stats.distribution")}</h2>
                 <hr/>
                 {distribution}
             </div>
@@ -99,4 +101,4 @@ class Statistics extends ModalComponent {
     }
 }
 
-export default Statistics
+export default withTranslation()(Statistics);

@@ -1,6 +1,7 @@
 import React from "react";
 import {directions, cssVar, getData, isLightMode, isTouchOnly, setData, drawArrow} from "./utils";
 import Canvas from "./Canvas";
+import {withTranslation} from "react-i18next";
 
 class Share extends React.Component {
     constructor(props) {
@@ -40,7 +41,7 @@ class Share extends React.Component {
         setTimeout(() => this.setState({shareName: this.baseShareName()}), 3000);
     }
 
-    getScore(hardString) {
+    getScore(hardString, easyString) {
         const scores = getData('scores');
         let score = scores[this.props.word.order];
         const hard = score.toString().endsWith("*");
@@ -48,7 +49,8 @@ class Share extends React.Component {
             score = score.substring(0, score.length - 1);
         }
         hardString = hardString || "*";
-        return [score, hard ? hardString : ""];
+        easyString = easyString || "";
+        return [score, hard ? hardString : easyString];
     }
 
     makeScoreImage() {
@@ -129,13 +131,14 @@ class Share extends React.Component {
     }
 
     makeScoreDescription() {
-        let description = ["Scorecard for Lingule #" + this.props.word.order];
-        description.push(`Mystery word was "${this.wordText()}"`);
-        const [score, hard] = this.getScore(" (on hard mode)");
+        const t = this.props.t;
+        let description = [t('share.alt.title', {num: this.props.word.order})];
+        description.push(t('share.alt.word', {word: this.wordText()}));
+        const [score, hard] = this.getScore("hard", "normal");
         if (this.props.success) {
-            description.push("Got it in " + score + hard);
+            description.push(t("share.alt.score", {score: score, context: hard}));
         } else {
-            description.push("Didn't get it" + hard)
+            description.push(t("share.alt.miss", {context: hard}));
         }
         const correct = {
             [true]: "correct",
@@ -270,6 +273,7 @@ class Share extends React.Component {
     }
 
     render() {
+        const t = this.props.t;
         let shareClass = "Guess Share";
         if (!this.props.success) {
             shareClass += " Fail";
@@ -277,37 +281,31 @@ class Share extends React.Component {
         let instructions = "";
         let image = "";
         if (this.state.style === "image") {
-            let verb = "";
-            if (isTouchOnly()) {
-                instructions = "Tap and hold";
-                verb = "tap";
-            } else {
-                instructions = "Right click";
-                verb = "click";
-            }
-            instructions += " to copy the image below, " + verb + " \"copy alt text\" to copy text description";
+            instructions = t("share.instructions", {
+                "context": isTouchOnly() ? "tap" : "click"
+            })
             image = (<div className="ScoreImage Foldable" ref={this.scoreImage}>
                 {this.makeScoreImage()}
             </div>)
         }
         let score = this.makeScore();
         if (this.state.style !== "image") {
-            score = <pre role="image" aria-label="emoji-based lingule scorecard for this round">{score}</pre>;
+            score = <pre role="image" aria-label={t("share.description")}>{score}</pre>;
         }
         return <div className="ShareBox">
             <button tabIndex="0" autoFocus className={shareClass}
                     onClick={this.shareScore}>{this.state.shareName}</button>
             <div className="ShareData Foldable" ref={this.options} aria-hidden={this.state.options ? "false" : "true"}
                  style={{height: 0, opacity: 0}} aria-live="polite">
-                <div className="ShareOptions" aria-label="choose share style">
+                <div className="ShareOptions" aria-label={t("share.styleChoice")}>
                     <button className={"ShareOption" + ((this.state.style === "text") ? " Selected" : "")}
-                            onClick={this.setTextStyle}>Text
+                            onClick={this.setTextStyle}>{t("share.textStyle")}
                     </button>
                     <button className={"ShareOption" + ((this.state.style === "spoiler") ? " Selected" : "")}
-                            onClick={this.setSpoilerStyle}>Spoiler
+                            onClick={this.setSpoilerStyle}>{t("share.spoilerStyle")}
                     </button>
                     <button className={"ShareOption" + ((this.state.style === "image") ? " Selected" : "")}
-                            onClick={this.setImageStyle}>Image
+                            onClick={this.setImageStyle}>{t("share.imageStyle")}
                     </button>
                 </div>
                 <div className="ShareContent" aria-live="polite">
@@ -316,9 +314,11 @@ class Share extends React.Component {
                 </div>
             </div>
             {image}
-            <button className="ToggleShareOptions" onClick={this.toggleOptions}>Share<br/>Options</button>
+            <button className="ToggleShareOptions" onClick={this.toggleOptions}>
+                {t("share.options")}
+            </button>
         </div>;
     }
 }
 
-export default Share;
+export default withTranslation()(Share);

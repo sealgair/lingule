@@ -12,7 +12,7 @@ const siteLanguages = {
 class Settings extends ModalComponent {
     constructor(props, context) {
         super(props, context);
-        this.title = "Settings"
+        this.title = this.props.t("titles.settings")
         this.state = {
             maps: getData('allowMaps', true),
             share: getData("shareStyle", "text"),
@@ -34,6 +34,7 @@ class Settings extends ModalComponent {
     }
 
     contents() {
+        const t = this.props.t;
         const i18n = this.props.i18n;
         const guesses = getData('guess' + this.props.word.order);
         const guessing = guesses && guesses.length < 6 && guesses.filter(g => g.hint.language).length === 0;
@@ -51,44 +52,44 @@ class Settings extends ModalComponent {
 
         return (<div>
             <fieldset disabled={guessing}>
-                <legend>Difficulty</legend>
+                <legend>{t("settings.difficulty")}</legend>
                 <label><input type="checkbox" name="map" onChange={this.changeMap}
                               checked={this.state.maps}/>
-                    Allow maps {guessing ? "(can't change mid-game)" : "(disable for hard mode)"}
+                    {t("settings.allowMaps", {context: guessing ? "off" : "on"})}
                 </label>
             </fieldset>
             <br/>
             <fieldset>
-                <legend>Sharing Options</legend>
-                <span>{scoring ? "" : "(use \"share options\" in bottom right to change"}</span>
+                <legend>{t("settings.sharing")}</legend>
+                <span>{scoring ? "" : t("settings.shareHint")}</span>
                 <ul>
                     <li><label><input type="radio" name="style" value="text"
                                       onChange={this.changeShareStyle}
                                       disabled={!scoring}
                                       checked={this.state.share === "text"}/>
-                        Emoji text
+                        {t("settings.shareText")}
                     </label></li>
                     <li><label><input type="radio" name="style" value="spoiler"
                                       onChange={this.changeShareStyle}
                                       disabled={!scoring}
                                       checked={this.state.share === "spoiler"}/>
-                        Emoji text with discord style spoilers
+                        {t("settings.shareSpoilers")}
                     </label></li>
                     <li><label><input type="radio" name="style" value="image"
                                       onChange={this.changeShareStyle}
                                       disabled={!scoring}
                                       checked={this.state.share === "image"}/>
-                        Image and alt text
+                        {t("settings.shareImage")}
                     </label></li>
                 </ul>
             </fieldset>
             <br/>
             <fieldset>
-                <legend>Language</legend>
+                <legend>{t("settings.language")}</legend>
                 <ul>
                     {languageChoices}
                 </ul>
-                <p>All translations are from english, and entirely amateur. Any and all corrections welcome.</p>
+                <p>{t("settings.languageDisclaimer")}</p>
             </fieldset>
         </div>)
     }

@@ -111,7 +111,7 @@ class Lookup extends ServerComponent {
         const t = this.props.t;
         return (
             <div className="LookupWrapper">
-                <label className="Hidden" htmlFor="guess-lookup">Look up language</label>
+                <label className="Hidden" htmlFor="guess-lookup">{t("lookup.description")}</label>
                 <input id="guess-lookup" type="text" className="Guess Lookup" autoFocus role="combobox"
                        placeholder={t("lookup.prompt")} value={this.state.value}
                        aria-controls="languages"

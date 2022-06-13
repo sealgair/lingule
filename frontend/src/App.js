@@ -51,6 +51,7 @@ class App extends ServerComponent {
     }
 
     render() {
+        let t = this.props.t;
         let font = "";
         if (this.state.word.font) {
             let fontFace = [
@@ -69,19 +70,19 @@ class App extends ServerComponent {
                     <div className="ContentWrapper">
                         <header className="Header">
                             <span className="IconSet Left">
-                                <a className="Help Icon TipBelow" title="How To Play" onClick={this.openHelp}>
+                                <a className="Help Icon TipBelow" title={t("titles.how-to")} onClick={this.openHelp}>
                                     <i className="fa-solid fa-circle-question"></i>
                                 </a>
-                                <a className="Info Icon TipBelow" title="Credits" onClick={this.openInfo}>
+                                <a className="Info Icon TipBelow" title={t("titles.credits")} onClick={this.openInfo}>
                                     <i className="fa-solid fa-circle-info"></i>
                                 </a>
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
-                                <a className="Settings Icon TipBelow" title="Settings" onClick={this.openSettings}>
+                                <a className="Settings Icon TipBelow" title={t("titles.settings")} onClick={this.openSettings}>
                                     <i className="fa-solid fa-gear"></i>
                                 </a>
-                                <a className="Stats Icon TipBelow" title="Score Data" onClick={this.openStats}>
+                                <a className="Stats Icon TipBelow" title={t("titles.score")} onClick={this.openStats}>
                                     <i className="fa-solid fa-square-poll-horizontal"></i>
                                 </a>
                             </span>

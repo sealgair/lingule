@@ -1,6 +1,146 @@
 {
+  "titles": {
+    "how-to": "How To Play",
+    "credits": "Credits",
+    "settings": "Settings",
+    "score": "Score Data",
+    "stats": "Statistics",
+    "info": "Info"
+  },
+  "tips": {
+    "romanization": "romanization",
+    "word": "mystery word",
+    "ipa": "IPA pronunciation",
+    "meaning": "english translation",
+    "tap": "Tap",
+    "click": "Click",
+    "mapPrompt": "{{touchVerb}} on the arrows to see a map",
+    "macro-area": "Macro-Area",
+    "family": "Language Family",
+    "sub-family": "Sub-Family",
+    "genus": "Genus",
+    "language": "Language",
+    "direction": "Map Direction"
+  },
+  "buttons": {
+    "guess": "Guess",
+    "close": "Close",
+    "share": "Share",
+    "copyAlt": "Copy Alt Text"
+  },
   "lookup": {
-    "prompt": "What language is it?",
-    "button": "Guess"
+    "description": "Look up language",
+    "prompt": "What language is it?"
+  },
+  "guess": {
+    "correct": "correct",
+    "incorrect": "incorrect",
+    "description": "guess {{guessNum}} out of 6: {{language}} was {{correct}}",
+    "titles": {
+      "result": "Guess Result",
+      "macro-area": "Macro-Area of guessed language",
+      "family": "Language Family of guessed language",
+      "sub-family": "Sub-Family of guessed language",
+      "genus": "Genus of guessed language",
+      "name": "Name of guessed language",
+      "direction": "Compass direction from guessed language to target language"
+    }
+  },
+  "share": {
+    "instructions_tap": "Tap and hold to copy the image below, tap \"copy alt text\" to copy text description",
+    "instructions_click": "Right click to copy the image below, click \"copy alt text\" to copy text description",
+    "description": "emoji-based lingule scorecard for this round",
+    "styleChoice": "choose share style",
+    "textStyle": "Text",
+    "spoilerStyle": "Spoiler",
+    "imageStyle": "Image",
+    "options": "Share\nOptions",
+    "alt": {
+      "title": "Scorecard for Lingule #{{num}}",
+      "word": "Mystery word was #{{word}}",
+      "score_normal": "Got it in {{score}} guesses",
+      "score_hard": "Got it in {{score}} guesses (on hard mode)",
+      "miss_normal": "Didn't get it",
+      "miss_hard": "Didn't get it (on hard mode)",
+      "guessTitle": "Guess #{{num}}: ",
+      "guessRight": "language correct!",
+      "macroArea_right": "correct macro-area, ",
+      "macroArea_wrong": "incorrect macro-area, ",
+      "gotGenus": "correct language genus, ",
+      "gotSubFamily": "correct language sub-family, ",
+      "gotFamily": "correct language family, ",
+      "missedFamily": "incorrect language family, ",
+      "direction": "solution is {{direction}} of guess.",
+      "link": "Played at {{url}}"
+    }
+  },
+  "directions": {
+    "north":  "north",
+    "north-northeast":  "north-northeast",
+    "northeast":  "northeast",
+    "east-northeast":  "east-northeast",
+    "east":  "east",
+    "east-southeast":  "east-southeast",
+    "southeast":  "southeast",
+    "south-southeast":  "south-southeast",
+    "south":  "south",
+    "south-southwest":  "south-southwest",
+    "southwest":  "southwest",
+    "west-southwest":  "west-southwest",
+    "west":  "west",
+    "west-northwest":  "west-northwest",
+    "northwest":  "northwest",
+    "north-northwest":  "north-northwest",
+    "success": "you got it!"
+  },
+  "stats": {
+    "empty": "No Data",
+    "graphLabelA_one": "{{count}} game in ",
+    "graphLabelA_other": "{{count}} games in ",
+    "graphLabelB_one": "{{count}} guess",
+    "graphLabelB_other": "{{count}} guesses",
+    "distribution": "Guess Distribution",
+    "games": "Games",
+    "wins": "Wins",
+    "hardWins": "Hard Wins",
+    "thisStreak": "Current Streak",
+    "maxStreak": "Max Streak"
+  },
+  "info": {
+    "credit": "This game was created by Chase Caster",
+    "code": "See the code",
+    "tweet": "Tweet at me",
+    "toot": "Toot at me",
+    "bugs": "The only thing I like more than compliments is bug reports!"
+  },
+  "settings": {
+    "difficulty": "Difficulty",
+    "allowMaps_on": "Allow Maps (disable for hard mode)",
+    "allowMaps_off": "Allow Maps (can't change mid-game)",
+    "sharing": "Sharing Options",
+    "shareHint": "(use \"share options\" in bottom right to change)",
+    "shareText": "Emoji text",
+    "shareSpoilers": "Emoji text with discord style spoilers",
+    "shareImage": "Image and alt text",
+    "language": "Language",
+    "languageDisclaimer": "All translations are from english, and entirely amateur. Any and all corrections welcome."
+  },
+  "howto": {
+    "intro": "Every day you'll get a new <1>Lingule</1>. You get six guesses to figure out what language the mystery word is.",
+    "target": "target word",
+    "romanization": "romanization",
+    "ipa": "/ipa pronunciation/",
+    "meaning": "english translation",
+    "afterGuess": "After each guess, you'll see how close you got in 6 columns:",
+    "macroArea": "Macro-Area (e.g. \"North America\" or \"Eurasia\")",
+    "family": "Language Family (e.g. \"Indo-European\" or \"Afro-Asiatic\")",
+    "subFamily": "Language Sub-Family (e.g. \"Eastern Malayo-Polynesian\" or \"Benue-Congo\")",
+    "genus": "Language Genus (e.g. \"Semitic\" or \"Romance\")",
+    "language": "Language (Will only be green on the correct answer)",
+    "direction": "Geographical direction from guess to target language",
+    "isolates": "Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the other languages except in macro-area.",
+    "multiMatch": "Some words may exist in multiple closely-related languages. In those cases, any of those languages will be accepted as the correct answer, but only if the word has the same spelling and meaning (even if it is pronounced differently).",
+    "directionMeans": "Direction is based on the (approximate) geographical point of origin of a language, even if it is widely spoken. For example, the location for English is England, and Spanish is Spain.",
+    "dataSource": "All language data is supplied by <1>The World Atlas of Language Structures</1>"
   }
 }
