@@ -203,11 +203,10 @@ class Guesses extends ServerComponent {
             </div>
         }
         let showTip = mapAllowed && !this.state.done && this.state.guesses.length > 0 && !this.state.knowsMaps;
-        let touchVerb = isTouchOnly() ? t("tips.tap") : t("tips.click");
         let mapTip = <div className="MapTip" aria-hidden={showTip ? "false" : "true"} aria-label="polite"
                           style={{
                               opacity: showTip ? 1 : 0
-                          }}>{t("tips.mapPrompt", {touchVerb: touchVerb})}</div>;
+                          }}>{t("tips.mapPrompt", {context: isTouchOnly() ? "tap" : "click"})}</div>;
         if (showTip) {
             setTimeout(() => this.setState({knowsMaps: true}), 5000);
         }

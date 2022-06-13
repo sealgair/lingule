@@ -4,7 +4,6 @@ import {inClass} from "./utils";
 class ModalComponent extends React.Component {
     constructor(props, context) {
         super(props, context);
-        this.title = "Modal"
         this.state = {on: false};
         this.close = this.close.bind(this);
         this.onClick = this.onClick.bind(this);
@@ -13,6 +12,10 @@ class ModalComponent extends React.Component {
 
     static getDerivedStateFromProps(props, state) {
         return {on: props.on};
+    }
+
+    getTitle() {
+        return "Modal";
     }
 
     close(event) {
@@ -34,7 +37,7 @@ class ModalComponent extends React.Component {
                 opacity: opacity, height: height
             }} aria-hidden={this.state.on ? "false" : "true"} aria-live="polite">
                 <div className="ModalContainer">
-                    <h1>{this.title}</h1>
+                    <h1>{this.getTitle()}</h1>
                     <hr/>
                     {this.contents()}
                     <a className="Close Icon">

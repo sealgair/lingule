@@ -12,13 +12,16 @@ const siteLanguages = {
 class Settings extends ModalComponent {
     constructor(props, context) {
         super(props, context);
-        this.title = this.props.t("titles.settings")
         this.state = {
             maps: getData('allowMaps', true),
             share: getData("shareStyle", "text"),
         }
         this.changeMap = this.changeMap.bind(this);
         this.changeShareStyle = this.changeShareStyle.bind(this);
+    }
+
+    getTitle() {
+        return this.props.t("titles.settings");
     }
 
     changeMap(event) {

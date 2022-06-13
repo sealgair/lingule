@@ -3,9 +3,8 @@ import ModalComponent from "./ModalComponent";
 import {withTranslation} from "react-i18next";
 
 class Info extends ModalComponent {
-    constructor(props, context) {
-        super(props, context);
-        this.title = this.props.t("titles.info");
+    getTitle() {
+        return this.props.t("titles.info");
     }
 
     contents() {

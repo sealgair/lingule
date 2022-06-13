@@ -10,7 +10,6 @@ class Statistics extends ModalComponent {
     constructor(props, context) {
         super(props, context);
         const scores = getData('scores') || {};
-        this.title = this.props.t("titles.stats");
         this.games = Object.keys(scores).length;
         this.wins = 0;
         this.hardWins = 0;
@@ -49,6 +48,10 @@ class Statistics extends ModalComponent {
         });
 
         this.onClick = this.onClick.bind(this);
+    }
+
+    getTitle() {
+        return this.props.t("titles.stats");
     }
 
     contents() {

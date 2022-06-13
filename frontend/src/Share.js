@@ -1,7 +1,7 @@
 import React from "react";
 import {directions, cssVar, getData, isLightMode, isTouchOnly, setData, drawArrow} from "./utils";
 import Canvas from "./Canvas";
-import {withTranslation} from "react-i18next";
+import {withTranslation, Trans} from "react-i18next";
 
 class Share extends React.Component {
     constructor(props) {
@@ -28,8 +28,9 @@ class Share extends React.Component {
     }
 
     baseShareName() {
+        const t = this.props.t;
         const style = getData("shareStyle", "text");
-        return style === "image" ? "Copy Alt Text" : "Share";
+        return style === "image" ? t("buttons.copyAlt") : t("buttons.share");
     }
 
     toggleOptions() {
@@ -315,7 +316,7 @@ class Share extends React.Component {
             </div>
             {image}
             <button className="ToggleShareOptions" onClick={this.toggleOptions}>
-                {t("share.options")}
+                <Trans i18nKey="share.options">Share<br/>Options</Trans>
             </button>
         </div>;
     }

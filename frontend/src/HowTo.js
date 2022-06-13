@@ -4,9 +4,8 @@ import ModalComponent from "./ModalComponent";
 import {withTranslation, Trans} from "react-i18next";
 
 class HowTo extends ModalComponent {
-    constructor(props, context) {
-        super(props, context);
-        this.title = this.props.t("titles.how-to");
+    getTitle() {
+        return this.props.t("titles.how-to");
     }
 
     contents() {
