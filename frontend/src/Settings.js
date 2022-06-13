@@ -44,7 +44,11 @@ class Settings extends ModalComponent {
             <li key={lang}><label>
                 <input type="radio" name="language" value={lang}
                        checked={i18n.resolvedLanguage === lang}
-                       onClick={(e) => i18n.changeLanguage(lang)}
+                       onChange={(e) => {
+                           if (e.target.checked) {
+                               i18n.changeLanguage(lang)
+                           }
+                       }}
                 />
                 {siteLanguages[lang].endonym}
             </label></li>
