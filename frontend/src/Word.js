@@ -16,7 +16,7 @@ class Word extends React.Component {
                 {romanization}
                 <span id="ipa" className="ToolTip Side" title={t("tips.ipa")}>{this.props.ipa}</span>
                 <span id="meaning" className="ToolTip Side" title={t("tips.meaning")}>
-                    {this.props.meaning[i18n.resolvedLanguage]}
+                    {this.props.meaning[i18n.resolvedLanguage] || this.props.meaning.en}
                 </span>
             </div>
         )

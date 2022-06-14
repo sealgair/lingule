@@ -2,6 +2,7 @@ import ServerComponent from "./ServerComponent";
 import {compare, escapeRegExp} from "./utils";
 import {withTranslation} from "react-i18next";
 import React from "react";
+import {loadLanguages} from "i18next";
 
 class Lookup extends ServerComponent {
 
@@ -15,6 +16,7 @@ class Lookup extends ServerComponent {
         this.handleSelect = this.handleSelect.bind(this);
         this.selectLang = this.selectLang.bind(this);
         this.handleBlur = this.handleBlur.bind(this);
+        this.loadLanguages = this.loadLanguages.bind(this);
     }
 
     handleKeypress(event) {
@@ -129,8 +131,8 @@ class Lookup extends ServerComponent {
         this.languages = [];
     }
 
-    componentDidMount() {
-        this.fetch("/language/all.json",
+    loadLanguages() {
+        this.fetch("/language/all.json?language="+this.props.i18n.resolvedLanguage,
             (result) => {
                 this.languages = result;
                 if (this.props.hiddenOptions && this.props.hiddenOptions.length > 0) {
@@ -142,6 +144,13 @@ class Lookup extends ServerComponent {
                 }
             }
         );
+    }
+
+    componentDidMount() {
+        this.loadLanguages();
+        this.props.i18n.on('languageChanged', () => {
+            this.loadLanguages();
+        });
     }
 }
 

@@ -4,6 +4,8 @@ from django.core.cache import cache
 from django.db import models
 from django.urls import reverse
 
+from i18n.models import Translatable
+
 
 def get_bearing(start_point, end_point):
     """
@@ -39,7 +41,7 @@ def get_bearing(start_point, end_point):
     return bearing
 
 
-class Macroarea(models.Model):
+class Macroarea(Translatable):
     name = models.TextField(unique=True)
 
     class Meta:
@@ -49,7 +51,7 @@ class Macroarea(models.Model):
         return self.name
 
 
-class Family(models.Model):
+class Family(Translatable):
     name = models.TextField(unique=True)
 
     class Meta:
@@ -60,7 +62,7 @@ class Family(models.Model):
         return self.name
 
 
-class Subfamily(models.Model):
+class Subfamily(Translatable):
     name = models.TextField()
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
 
@@ -72,7 +74,7 @@ class Subfamily(models.Model):
         return self.name
 
 
-class Genus(models.Model):
+class Genus(Translatable):
     name = models.TextField()
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
     subfamily = models.ForeignKey(Subfamily, null=True, on_delete=models.CASCADE)
@@ -85,7 +87,7 @@ class Genus(models.Model):
         return self.name
 
 
-class Language(models.Model):
+class Language(Translatable):
     lang_id = models.TextField(blank=True)
     name = models.TextField(unique=True)
     other_names = models.JSONField(blank=True)
@@ -105,6 +107,12 @@ class Language(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def all_names(self):
+        return [self.name] + self.other_names + [
+            t.value for t in self.translations.all()
+        ]
 
     @property
     def subfamily_cmp(self):

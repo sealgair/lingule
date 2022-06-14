@@ -26,3 +26,15 @@ class Translatable(models.Model):
 
     class Meta:
         abstract = True
+
+    def get_language(self, language, default='en', fname='name'):
+        langs = self.all_languages(fname=fname)
+        return langs.get(language, langs.get(default))
+
+    def all_languages(self, fname='name'):
+        data = {'en': getattr(self, fname)}
+        data.update({
+            trans.language: trans.value
+            for trans in self.translations.all()
+        })
+        return data
