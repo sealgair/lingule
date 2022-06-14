@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'language',
     'solution',
+    'i18n',
 ]
 
 MIDDLEWARE = [

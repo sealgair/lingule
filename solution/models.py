@@ -6,10 +6,11 @@ from django.conf import settings
 from django.db import models
 from fontTools.ttLib import TTFont
 
+from i18n.models import Translatable
 from language.models import Language
 
 
-class Solution(models.Model):
+class Solution(Translatable):
     word = models.TextField()
     romanization = models.TextField(blank=True)
     ipa = models.TextField()
