@@ -26,11 +26,17 @@ class WordView(ApiView):
             solution = Solution.objects.get(date=date)
         except Solution.DoesNotExist:
             raise Http404()
+
+        meaning = {'en': solution.english}
+        meaning.update({
+            trans.language: trans.value
+            for trans in solution.translations.all()
+        })
         data = {
             'id': solution.id,
             'word': solution.word,
             'ipa': solution.ipa,
-            'meaning': solution.english,
+            'meaning': meaning,
             'order': solution.order,
             'answer': solution.language.name,
             'victory_message': solution.victory_message,

@@ -4,6 +4,7 @@ import {withTranslation} from "react-i18next";
 class Word extends React.Component {
     render() {
         const t = this.props.t;
+        const i18n = this.props.i18n;
         let romanization = "";
         if (this.props.romanization) {
             romanization = <div id="romanization" className="ToolTip Side"
@@ -14,7 +15,9 @@ class Word extends React.Component {
                 <span id="word" className="ToolTip Side" title={t("tips.word")}>{this.props.word}</span>
                 {romanization}
                 <span id="ipa" className="ToolTip Side" title={t("tips.ipa")}>{this.props.ipa}</span>
-                <span id="meaning" className="ToolTip Side" title={t("tips.meaning")}>{this.props.meaning}</span>
+                <span id="meaning" className="ToolTip Side" title={t("tips.meaning")}>
+                    {this.props.meaning[i18n.resolvedLanguage]}
+                </span>
             </div>
         )
     }
