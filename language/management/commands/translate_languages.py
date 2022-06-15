@@ -37,18 +37,19 @@ class Command(BaseCommand):
         models = options.get('model') or MODELS.keys()
         target_langs = options.get('target_langs') or [lc for lc, _ in LANGUAGE_CHOICES]
         batch_size = options.get('batch_size')
-        limit = options.get('limit', None)
-        for model in models:
-            count = self.translate(MODELS[model], target_langs, batch_size, limit)
-            if limit is not None:
-                limit -= count
-                if limit <= 0:
-                    break
+        limit_orig = options.get('limit', None)
+        for target_lang in target_langs:
+            limit = limit_orig
+            for model in models:
+                count = self.translate(MODELS[model], target_lang, batch_size, limit)
+                if limit is not None:
+                    limit -= count
+                    if limit <= 0:
+                        break
 
-    def translate(self, Model, target_langs, batch_size, limit):
+    def translate(self, Model, target_lang, batch_size, limit):
         objects = Model.objects.all()
-        for target in target_langs:
-            objects = objects.exclude(translations__language=target)
+        objects = objects.exclude(translations__language=target_lang)
         if limit:
             objects = objects[:limit]
 
@@ -65,24 +66,23 @@ class Command(BaseCommand):
         }
 
         count = objects.count()
-        self.log(f'translating {count} {Model._meta.verbose_name_plural}')
+        self.log(f'translating {count} {Model._meta.verbose_name_plural} to {target_lang}')
         translate_client = translate.Client()
         for b, batch in enumerate(batcher(objects, batch_size)):
             self.log(f'batch {b+1}', 2)
             words = [context.format(obj.name) for obj in batch]
-            for lc in target_langs:
-                regex = target_regexes[lc]
-                results = translate_client.translate(words, target_language=lc, source_language='en')
-                bulk = []
-                for result, obj in zip(results, batch):
-                    match = regex.match(result['translatedText'])
-                    if match:
-                        value = match.group(1)
-                        self.log(f'{obj}->{lc}: {value}', 3)
-                    else:
-                        value = obj.name
-                        self.log(f"could not parse translation from {result['translatedText']}, falling back to {value}")
-                    bulk.append(Translation(object=obj, language=lc, value=value.lower()))
-                Translation.objects.bulk_create(bulk)
+            regex = target_regexes[target_lang]
+            results = translate_client.translate(words, target_language=target_lang, source_language='en')
+            bulk = []
+            for result, obj in zip(results, batch):
+                match = regex.match(result['translatedText'])
+                if match:
+                    value = match.group(1)
+                    self.log(f'{obj}->{target_lang}: {value}', 3)
+                else:
+                    value = obj.name
+                    self.log(f"could not parse translation from {result['translatedText']}, falling back to {value}")
+                bulk.append(Translation(object=obj, language=target_lang, value=value.lower()))
+            Translation.objects.bulk_create(bulk)
         return count
 
