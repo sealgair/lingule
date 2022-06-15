@@ -5,7 +5,12 @@ from django.core.management import BaseCommand
 from google.cloud import translate_v2 as translate
 
 from i18n.models import LANGUAGE_CHOICES, Translation
-from language.models import Language
+from language.models import Macroarea, Family, Subfamily, Genus, Language
+
+MODELS = {
+    m._meta.model_name: m
+    for m in [Macroarea, Family, Subfamily, Genus, Language]
+}
 
 
 def batcher(iterable, batch_size):
@@ -21,22 +26,25 @@ class Command(BaseCommand):
         parser.add_argument('--limit', '-l', dest='limit', type=int)
         parser.add_argument('--batch-size', '-b', dest='batch_size', type=int, default=100)
         parser.add_argument('--target-language', '-t', dest='target_langs', action='append')
+        parser.add_argument('--model', '-m', dest='model', choices=MODELS.keys(), default='language')
 
     def log(self, msg, level=1):
         if level <= self.verbosity:
             print(msg)
 
     def handle(self, *args, **options):
+        self.verbosity = options.get('verbosity')
         limit = options.get('limit', None)
         target_langs = options.get('target_langs', [lc for lc, _ in LANGUAGE_CHOICES])
         batch_size = options.get('batch_size')
-        self.verbosity = options.get('verbosity')
+        model = options.get('model')
+        Model = MODELS[model]
 
-        languages = Language.objects.all()
+        objects = Model.objects.all()
         for target in target_langs:
-            languages = languages.exclude(translations__language=target)
+            objects = objects.exclude(translations__language=target)
         if limit:
-            languages = languages[:limit]
+            objects = objects[:limit]
 
         context = "John speaks {}"
         target_regexes = {
@@ -51,9 +59,10 @@ class Command(BaseCommand):
             for k, regex in target_regexes.items()
         }
 
-        self.log(f'translating {languages.count()} languages')
+        self.log(f'translating {objects.count()} {Model._meta.verbose_name_plural}')
         translate_client = translate.Client()
-        for batch in batcher(languages, batch_size):
+        for b, batch in enumerate(batcher(objects, batch_size)):
+            self.log(f'batch {b+1}', 2)
             words = [context.format(obj.name) for obj in batch]
             for lc in target_langs:
                 regex = target_regexes[lc]
