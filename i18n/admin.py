@@ -9,7 +9,7 @@ class TranslatableFormMetaclass(ModelFormMetaclass):
     def __new__(mcs, name, bases, attrs):
         new_class = super().__new__(mcs, name, bases, attrs)
         trans_fields = {
-            lc: fields.CharField(max_length=256, required=True, label=lang)
+            lc: fields.CharField(max_length=256, required=False, label=lang)
             for lc, lang in LANGUAGE_CHOICES
         }
         new_class.translation_fields = tuple(trans_fields.keys())
@@ -36,4 +36,5 @@ class TranslatableForm(ModelForm, metaclass=TranslatableFormMetaclass):
             except Translation.DoesNotExist:
                 trans = Translation(object=self.instance, language=lc)
             trans.value = cleaned_data[lc]
-            trans.save()
+            if trans.value:
+                trans.save()

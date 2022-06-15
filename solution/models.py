@@ -26,6 +26,8 @@ class Solution(Translatable):
     victory_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
 
+    translate_field = 'english'
+
     @property
     def font_url(self):
         return os.path.join('/', settings.FONT_URL, os.path.relpath(self.font, settings.FONT_ROOT))

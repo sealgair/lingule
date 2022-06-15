@@ -9,7 +9,6 @@ from solution.models import Solution
 
 
 class WordView(ApiView):
-
     def get_date(self, request):
         tzoff = request.GET.get('tz', 0)
         tz = timezone(timedelta(minutes=-int(tzoff)))
@@ -31,7 +30,7 @@ class WordView(ApiView):
             'id': solution.id,
             'word': solution.word,
             'ipa': solution.ipa,
-            'meaning': solution.all_languages('english'),
+            'meaning': solution.all_languages,
             'order': solution.order,
             'answer': solution.language.name,
             'victory_message': solution.victory_message,
