@@ -5,11 +5,11 @@ from django.core.management import BaseCommand
 from google.cloud import translate_v2 as translate
 
 from i18n.models import LANGUAGE_CHOICES, Translation
-from language.models import Macroarea, Family, Subfamily, Genus, Language
+from language.models import Family, Subfamily, Genus, Language
 
 MODELS = {
     m._meta.model_name: m
-    for m in [Macroarea, Family, Subfamily, Genus, Language]
+    for m in [Family, Subfamily, Genus, Language]
 }
 
 
@@ -52,14 +52,13 @@ class Command(BaseCommand):
         if limit:
             objects = objects[:limit]
 
-        context = "John speaks {}"
+        context = "John speaks \"{}\""
         target_regexes = {
-            'es': r"(?:John|Juan)\s*(?:se)?\s*habla\s*(.*)",
-            'fr': r"(?:John|Jean)\s*parle\s*(.*)",
-            'ar': r"(?:John|جون|يوحنا)\s*(?:يتحدث|الناواتل)\s*(.*)",
-            'zh': r"(?:John|约翰)说\s*(.*)",
+            'es': r"(?:John|Juan)\s*(?:se)?\s*habla\s*\"?(.*)\"?",
+            'fr': r"(?:John|Jean)\s*parle\s*\"?(.*)\"?",
+            'ar': r"(?:John|جون|يوحنا)\s*(?:يتحدث|الناواتل)\s*\"?(.*)\"?",
+            'zh': r"(?:John|约翰)会?(?:说|讲)\s*\"?(.*)\"?",
         }
-        "جون يتكلم الناواتل (هواوتشينانغو)"
         target_regexes = {
             k: re.compile(regex, flags=re.IGNORECASE)
             for k, regex in target_regexes.items()
