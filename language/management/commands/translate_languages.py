@@ -26,7 +26,7 @@ class Command(BaseCommand):
         parser.add_argument('--limit', '-l', dest='limit', type=int)
         parser.add_argument('--batch-size', '-b', dest='batch_size', type=int, default=100)
         parser.add_argument('--target-language', '-t', dest='target_langs', action='append')
-        parser.add_argument('--model', '-m', dest='model', choices=MODELS.keys(), default='language')
+        parser.add_argument('--model', '-m', dest='model', choices=MODELS.keys(), action='append')
 
     def log(self, msg, level=1):
         if level <= self.verbosity:
@@ -34,12 +34,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.verbosity = options.get('verbosity')
-        limit = options.get('limit', None)
-        target_langs = options.get('target_langs', [lc for lc, _ in LANGUAGE_CHOICES])
+        models = options.get('model') or MODELS.keys()
+        target_langs = options.get('target_langs') or [lc for lc, _ in LANGUAGE_CHOICES]
         batch_size = options.get('batch_size')
-        model = options.get('model')
-        Model = MODELS[model]
+        limit = options.get('limit', None)
+        for model in models:
+            count = self.translate(MODELS[model], target_langs, batch_size, limit)
+            if limit is not None:
+                limit -= count
+                if limit <= 0:
+                    break
 
+    def translate(self, Model, target_langs, batch_size, limit):
         objects = Model.objects.all()
         for target in target_langs:
             objects = objects.exclude(translations__language=target)
@@ -59,7 +65,8 @@ class Command(BaseCommand):
             for k, regex in target_regexes.items()
         }
 
-        self.log(f'translating {objects.count()} {Model._meta.verbose_name_plural}')
+        count = objects.count()
+        self.log(f'translating {count} {Model._meta.verbose_name_plural}')
         translate_client = translate.Client()
         for b, batch in enumerate(batcher(objects, batch_size)):
             self.log(f'batch {b+1}', 2)
@@ -78,4 +85,5 @@ class Command(BaseCommand):
                         self.log(f"could not parse translation from {result['translatedText']}, falling back to {value}")
                     bulk.append(Translation(object=obj, language=lc, value=value.lower()))
                 Translation.objects.bulk_create(bulk)
+        return count
 
