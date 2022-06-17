@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'language',
     'solution',
     'i18n',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [

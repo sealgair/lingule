@@ -1,8 +1,7 @@
 import ServerComponent from "./ServerComponent";
-import {compare, escapeRegExp} from "./utils";
+import {compare, escapeRegExp, removeDiacritics} from "./utils";
 import {withTranslation} from "react-i18next";
 import React from "react";
-import {loadLanguages} from "i18next";
 
 class Lookup extends ServerComponent {
 
@@ -76,13 +75,15 @@ class Lookup extends ServerComponent {
     }
 
     filteredLangs() {
-        const patterns = this.state.value.split(" ").map(t => new RegExp('\\b' + escapeRegExp(t), 'gi'));
-        const narrowPattern = new RegExp(`\\b${escapeRegExp(this.state.value)}.*`, 'gi');
+        const rd = removeDiacritics;
+        const query = rd(this.state.value);
+        const patterns = query.split(" ").map(t => new RegExp('\\b' + escapeRegExp(t), 'gi'));
+        const narrowPattern = new RegExp(`\\b${escapeRegExp(query)}.*`, 'gi');
         return this.languages.filter(lang => patterns.reduce(
-            (p, pat) => p && lang.name.match(pat),
+            (p, pat) => p && rd(lang.name).match(pat),
             true
         ) || lang.other_names.reduce(
-            (n, name) => n || name.match(narrowPattern),
+            (n, name) => n || rd(name).match(narrowPattern),
             false
         ));
     }

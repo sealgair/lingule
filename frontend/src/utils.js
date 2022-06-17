@@ -57,6 +57,10 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
+function removeDiacritics(text) {
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 function setData(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
 }
@@ -107,6 +111,7 @@ export {
     isTouchOnly,
     isLightMode,
     escapeRegExp,
+    removeDiacritics,
     setData,
     getData,
     inClass

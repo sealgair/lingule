@@ -7,3 +7,4 @@ dj-database-url
 django-bmemcached
 fonttools
 google-cloud-translate==2.0.1
+django-extensions
