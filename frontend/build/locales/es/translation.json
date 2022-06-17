@@ -1,0 +1,145 @@
+{
+  "titles": {
+    "how-to": "Cómo Jugar",
+    "credits": "Créditos",
+    "settings": "Ajustes",
+    "score": "Datos de Puntuación",
+    "stats": "Estadísticas",
+    "info": "Información"
+  },
+  "tips": {
+    "romanization": "romanization",
+    "word": "palabra misteriosa",
+    "ipa": "pronunciación de IPA",
+    "meaning": "traducción Española",
+    "mapPrompt_tap": "Toca las flechas para ver un mapa",
+    "mapPrompt_click": "Haga clic en las flechas para ver un mapa",
+    "macro-area": "Macro-Área",
+    "family": "Familia Lingüística",
+    "sub-family": "Subfamilia",
+    "genus": "Género",
+    "language": "Idioma",
+    "direction": "Dirección en el Mapa"
+  },
+  "buttons": {
+    "guess": "Adivinar",
+    "close": "Cerrar",
+    "share": "Compartir",
+    "copyAlt": "Copiar Texto Alternativo"
+  },
+  "lookup": {
+    "description": "Buscar idioma",
+    "prompt": "¿Que idioma es?"
+  },
+  "guess": {
+    "correct": "correcto",
+    "incorrect": "incorrecto",
+    "description": "conjetura {{guessNum}} de 6: {{language}} fue {{correct}}",
+    "titles": {
+      "result": "Tesultado de la Conjetura",
+      "macro-area": "Macro-Área del idioma adivinado",
+      "family": "Familia de idiomas del idioma adivinado",
+      "sub-family": "Sub-Familia del idioma adivinado",
+      "genus": "Género del idioma adivinado",
+      "name": "Nombre del idioma adivinado",
+      "direction": "Dirección de la brújula desde el idioma adivinado hasta el idioma de destino"
+    }
+  },
+  "share": {
+    "instructions_tap": "Toque y mantenga presionado para copiar la imagen a continuación, toque \"$t(buttons.copyAlt)\" para copiar la descripción del texto",
+    "instructions_click": "Haga clic derecho para copiar la imagen de abajo, haga clic en \"$t(buttons.copyAlt)\" para copiar la descripción del texto",
+    "description": "tarjeta de puntuación de lingule basada en emoji para esta ronda",
+    "styleChoice": "elige el estilo de compartir",
+    "textStyle": "Texto",
+    "spoilerStyle": "Spoiler",
+    "imageStyle": "Imagen",
+    "options": "Opciones <1/> para compartir",
+    "alt": {
+      "title": "Tarjeta de puntuación para Lingule #{{num}}",
+      "word": "La palabra misteriosa era {{word}}",
+      "score_normal": "Lo obtuve en {{score}} intentos",
+      "score_hard": "Lo obtuve en {{score}} intentos (en modo difícil)",
+      "miss_normal": "No lo obtuve",
+      "miss_hard": "No lo obtuve (en modo difícil)",
+      "guessTitle": "Intento #{{num}}: ",
+      "guessRight": "¡Idioma correcto!",
+      "macroArea_right": "macro-área correcta, ",
+      "macroArea_wrong": "macro-área incorrecta, ",
+      "gotGenus": "género lingüístico correcto, ",
+      "gotSubFamily": "subfamilia lingüística correcta, ",
+      "gotFamily": "familia lingüística correcta, ",
+      "missedFamily": "familia lingüística incorrecta, ",
+      "direction": "la solución está al {{direction}} de adivinar.",
+      "link": "Jugado en {{url}}"
+    }
+  },
+  "directions": {
+    "north":  "norte",
+    "north-northeast":  "norte-noreste",
+    "northeast":  "noreste",
+    "east-northeast":  "este-noreste",
+    "east":  "este",
+    "east-southeast":  "este-sureste",
+    "southeast":  "sureste",
+    "south-southeast":  "sur-sureste",
+    "south":  "sur",
+    "south-southwest":  "sur-suroeste",
+    "southwest":  "suroeste",
+    "west-southwest":  "oeste-suroeste",
+    "west":  "oeste",
+    "west-northwest":  "oeste-noroeste",
+    "northwest":  "noroeste",
+    "north-northwest":  "norte-noroeste",
+    "success": "¡lo entendiste!"
+  },
+  "stats": {
+    "empty": "No Hay Datos",
+    "graphLabelA_one": "{{count}} juego en ",
+    "graphLabelA_other": "{{count}} juegos en ",
+    "graphLabelB_one": "{{count}} intento",
+    "graphLabelB_other": "{{count}} intentos",
+    "distribution": "Distribución de Intentos",
+    "games": "Juegos",
+    "wins": "Victorias",
+    "hardWins": "Victorias Difíciles",
+    "thisStreak": "Racha Actual",
+    "maxStreak": "Racha Máxima"
+  },
+  "info": {
+    "credit": "Este juego fue creado por Chase Caster",
+    "code": "Ver el código",
+    "tweet": "Twittearame",
+    "toot": "Tootearme",
+    "bugs": "¡Lo único que me gusta más que los cumplidos son los informes de errores!"
+  },
+  "settings": {
+    "difficulty": "Dificultad",
+    "allowMaps_on": "Permitir Mapas (deshabilitar para modo difícil)",
+    "allowMaps_off": "Permitir mapas (no se puede cambiar a mitad del juego)",
+    "sharing": "Opciones para Compartir",
+    "shareHint": "(usa \"opciones para compartir\" en la parte inferior derecha para cambiar)",
+    "shareText": "Texto de Emoji",
+    "shareSpoilers": "Texto de emoji con spoilers de estilo discordia",
+    "shareImage": "Imagen y texto alternativo",
+    "language": "Idioma",
+    "languageDisclaimer": "Todas las traducciones son del inglés y completamente amateur. Todas las correcciones son bienvenidas."
+  },
+  "howto": {
+    "intro": "Todos los días obtendrás un nuevo <1>Lingule</1>. Obtendrá seis conjeturas para averiguar el idioma de la palabra misteriosa.",
+    "target": "palabra objetivo",
+    "romanization": "romanization",
+    "ipa": "/pronunciación de ipa/",
+    "meaning": "traducción Española",
+    "afterGuess": "Después de cada suposición, verá qué tan cerca estuvo en 6 columnas:",
+    "macroArea": "Macroárea (p. ej. , \"América del Norte\" o \"Eurasia\")",
+    "family": "Familia lingüística (p. ej. , \"indoeuropeo\" o \"afroasiático\")",
+    "subFamily": "Subfamilia lingüística (p. ej., \"malayo-polinesio oriental\" o \"benue-congo\")",
+    "genus": "Género lingüística (p. ej., \"semítico\" o \"romance\")",
+    "language": "Idioma (Solo será verde en la respuesta correcta)",
+    "direction": "Dirección geográfica desde el intento hasta el idioma de destino",
+    "isolates": "Tenga en cuenta que los idiomas aislados o casi aislados (p. ej., japonés, georgiano, euskera) no coincidirán con los demás idiomas, excepto en el área macro.",
+    "multiMatch": "Algunas palabras pueden existir en varios idiomas estrechamente relacionados. En esos casos, cualquiera de esos idiomas se aceptará como la respuesta correcta, pero solo si la palabra tiene la misma ortografía y significado (incluso si se pronuncia de manera diferente).",
+    "directionMeans": "La dirección se basa en el punto geográfico (aproximado) de origen de un idioma, incluso si se habla ampliamente. Por ejemplo, la ubicación para inglés es Inglaterra y para español es España.",
+    "dataSource": "Todos los datos lingüísticos son proporcionados por <1>The World Atlas of Language Structures</1>"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "titles": {
+    "how-to": "Comment jouer",
+    "credits": "Crédits",
+    "settings": "Réglages",
+    "score": "Données de score",
+    "stats": "Statistiques",
+    "info": "Info"
+  },
+  "tips": {
+    "romanization": "romanisation",
+    "word": "mot mystère",
+    "ipa": "prononciation de l'IPA",
+    "meaning": "traduction français",
+    "mapPrompt_tap": "Appuyez sur les flèches pour voir une carte",
+    "mapPrompt_click": "Cliquez sur les flèches pour voir une carte",
+    "macro-area": "Macro-zone",
+    "family": "Famille de langues",
+    "sub-family": "Sous-famille",
+    "genus": "Genre",
+    "language": "Langue",
+    "direction": "Orientation de la carte"
+  },
+  "buttons": {
+    "guess": "Deviner",
+    "close": "Fermer",
+    "share": "Partager",
+    "copyAlt": "Copier le texte alternatif"
+  },
+  "lookup": {
+    "description": "Rechercher la langue",
+    "prompt": "De quelle langue s'agit-il?"
+  },
+  "guess": {
+    "correct": "correct",
+    "incorrect": "incorrect",
+    "description": "devinez {{guessNum}} sur 6: {{language}} était {{correct}}",
+    "titles": {
+      "result": "Devinez le résultat",
+      "macro-area": "Macro-zone de langage deviné",
+      "family": "Langue Famille de langue devinée",
+      "sub-family": "Sous-famille du langage deviné",
+      "genus": "Genre de langage deviné",
+      "name": "Nom de la langue devinée",
+      "direction": "Direction de la boussole de la langue devinée à la langue cible"
+    }
+  },
+  "share": {
+    "instructions_tap": "Appuyez et maintenez enfoncé pour copier l'image ci-dessous, appuyez sur \"$t(buttons.copyAlt)\" pour copier la description du texte",
+    "instructions_click": "Faites un clic droit pour copier l'image ci-dessous, cliquez sur \"$t(buttons.copyAlt)\" pour copier la description du texte",
+    "description": "tableau de bord lingule à base d'emoji pour ce tour",
+    "styleChoice": "choisir le style de partage",
+    "textStyle": "Texte",
+    "spoilerStyle": "Divulgacher",
+    "imageStyle": "Image",
+    "options": "Options de partage <1>",
+    "alt": {
+      "title": "Tableau de bord pour le lingule #{{num}}",
+      "word": "Le mot mystère était {{word}}",
+      "score_normal": "Je l'ai obtenu en {{score}} suppositions",
+      "score_hard": "Je l'ai obtenu en {{score}} suppositions (en mode difficile)",
+      "miss_normal": "Je n'ai pas compris",
+      "miss_hard": "Je n'ai pas compris (en mode difficile)",
+      "guessTitle": "Devinez #{{num}}:",
+      "guessRight": "langue correcte!",
+      "macroArea_right": "corriger la macro-zone,",
+      "macroArea_wrong": "macro-zone incorrecte,",
+      "gotGenus": "genre de langue correct,",
+      "gotSubFamily": "sous-famille de la langue correcte,",
+      "gotFamily": "famille de langue correcte,",
+      "missedFamily": "famille de langue incorrecte,",
+      "direction": "la solution est au {{direction}} de supposition.",
+      "link": "Joué sur {{url}}"
+    }
+  },
+  "directions": {
+    "north": "nord",
+    "north-northeast": "nord-nord-est",
+    "northeast": "nord-est",
+    "east-northeast": "est-nord-est",
+    "east": "est",
+    "east-southeast": "est-sud-est",
+    "southeast": "sud-est",
+    "south-southeast": "sud-sud-est",
+    "south": "sud",
+    "south-southwest": "sud-sud-ouest",
+    "southwest": "sud-ouest",
+    "west-southwest": "ouest-sud-ouest",
+    "west": "ouest",
+    "west-northwest": "ouest-nord-ouest",
+    "northwest": "nord ouest",
+    "north-northwest": "nord-nord-ouest",
+    "success": "tu l'as eu!"
+  },
+  "stats": {
+    "empty": "Pas de données",
+    "graphLabelA_one": "{{count}} jeu en",
+    "graphLabelA_other": "{{count}} jeux dans",
+    "graphLabelB_one": "{{count}} supposition",
+    "graphLabelB_other": "{{count}} suppositions",
+    "distribution": "Répartition devinée",
+    "games": "Jeux",
+    "wins": "Gagne",
+    "hardWins": "Victoires difficiles",
+    "thisStreak": "Série actuelle",
+    "maxStreak": "Série maximale"
+  },
+  "info": {
+    "credit": "Ce jeu a été créé par Chase Caster",
+    "code": "Voir le code",
+    "tweet": "Tweetez-moi",
+    "toot": "Tootez-moi",
+    "bugs": "La seule chose que j'aime plus que les compliments, ce sont les rapports de bugs!"
+  },
+  "settings": {
+    "difficulty": "Difficulté",
+    "allowMaps_on": "Autoriser les cartes (désactiver pour le mode difficile)",
+    "allowMaps_off": "Autoriser les cartes (impossible de changer en cours de partie)",
+    "sharing": "Options de partage",
+    "shareHint": "(utilisez \"options de partage\" en bas à droite pour changer)",
+    "shareText": "Texte émoji",
+    "shareSpoilers": "Texte Emoji avec spoilers de style discord",
+    "shareImage": "Image et texte alternatif",
+    "language": "Langue",
+    "languageDisclaimer": "Toutes les traductions sont de l'anglais, par des amateurs et des ordinateurs. Toutes les corrections sont les bienvenues."
+  },
+  "howto": {
+    "intro": "Chaque jour, vous recevrez un nouveau <1>Lingule</1>. Vous obtenez six suppositions pour déterminer la langue du mot mystère.",
+    "target": "mot cible",
+    "romanization": "romanisation",
+    "ipa": "/prononciation de l'ipa/",
+    "meaning": "traduction français",
+    "afterGuess": "Après chaque supposition, vous verrez à quel point vous vous êtes rapproché dans 6 colonnes:",
+    "macroArea": "Macro-zone (par exemple \"Amérique du Nord\" ou \"Eurasie\")",
+    "family": "Famille de langues (par exemple \"indo-européen\" ou \"afro-asiatique\")",
+    "subFamily": "Sous-famille de langues (par exemple \"malayo-polynésien oriental\" ou \"benue-Congo\")",
+    "genus": "Genre de langue (par exemple \"sémitique\" ou \"roman\")",
+    "language": "Langue (Ne sera vert que sur la bonne réponse)",
+    "direction": "Direction géographique de la langue devinée à la langue cible",
+    "isolates": "Notez que les langues isolées ou quasi-isolées (par exemple, le japonais, le géorgien, le basque) ne correspondront pas aux autres langues, sauf dans la macro-zone.",
+    "multiMatch": "Certains mots peuvent exister dans plusieurs langues étroitement liées. Dans ces cas, n'importe laquelle de ces langues sera acceptée comme réponse correcte, mais seulement si le mot a la même orthographe et la même signification (même s'il est prononcé différemment).",
+    "directionMeans": "La direction est basée sur le point d'origine géographique (approximatif) d'une langue, même si elle est largement parlée. Par exemple, l'emplacement pour l'anglais est l'Angleterre et l'espagnol est l'Espagne.",
+    "dataSource": "Toutes les données linguistiques sont fournies par <1>The World Atlas of Language Structures</1>"
+  }
+}
