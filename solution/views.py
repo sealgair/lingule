@@ -32,7 +32,7 @@ class WordView(ApiView):
             'ipa': solution.ipa,
             'meaning': solution.all_languages,
             'order': solution.order,
-            'answer': solution.language.name,
+            'answer': solution.language.all_languages,
             'victory_message': solution.victory_message,
             'failure_message': solution.failure_message,
             'hidden_options': [
@@ -58,13 +58,22 @@ class GuessView(ApiView):
         hint = guess.compare(solution.language)
         if guess in solution.alternates.all():
             hint = guess.compare(guess)
+
+        none = {
+            'en': "(None)",
+            'es': "(ninguna)",
+            'fr': "(rien)",
+            'zh': "(毫无)",
+            'ar': "(لا أحد)",
+        }
+
         return {
             'success': hint['language'],
-            'language': guess.name,
-            'macroarea': guess.macroarea.name,
-            'family': guess.family.name,
-            'subfamily': guess.subfamily.name if guess.subfamily else "(None)",
-            'genus': guess.genus.name if guess.genus else "(None)",
+            'language': guess.all_languages,
+            'macroarea': guess.macroarea.all_languages,
+            'family': guess.family.all_languages,
+            'subfamily': guess.subfamily.all_languages if guess.subfamily else none,
+            'genus': guess.genus.all_languages if guess.genus else none,
             'hint': hint,
             'latitude': guess.latitude,
             'longitude': guess.longitude,

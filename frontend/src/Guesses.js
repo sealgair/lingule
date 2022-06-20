@@ -105,6 +105,7 @@ class Guesses extends ServerComponent {
 
     render() {
         const t = this.props.t;
+        const lang = this.props.i18n.resolvedLanguage;
         const ariaHints = {
             [true]: t('guess.correct'),
             [false]: t('guess.incorrect'),
@@ -131,22 +132,22 @@ class Guesses extends ServerComponent {
                                 correct: ariaHints[guess.hint.language],
                             })}
                         </td>
-                        <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea}>
+                        <td className="ToolTip" data-value={guess.hint.macroarea} title={guess.macroarea[lang] || guess.macroarea}>
                             <span className="Description">
                                 {ariaHints[guess.hint.macroarea]}
                             </span>
                         </td>
-                        <td className="ToolTip" data-value={guess.hint.family} title={guess.family}>
+                        <td className="ToolTip" data-value={guess.hint.family} title={guess.family[lang] || guess.family}>
                             <span className="Description">{ariaHints[guess.hint.family]}</span>
                         </td>
-                        <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily}>
+                        <td className="ToolTip" data-value={guess.hint.subfamily} title={guess.subfamily[lang] || guess.subfamily}>
                             <span className="Description">{ariaHints[guess.hint.subfamily]}</span>
                         </td>
-                        <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus}>
+                        <td className="ToolTip" data-value={guess.hint.genus} title={guess.genus[lang] || guess.genus}>
                             <span className="Description">{ariaHints[guess.hint.genus]}</span>
                         </td>
                         <td className="Language" data-value={guess.hint.language}>
-                            {guess.language}
+                            {guess.language[lang] || guess.language}
                             <span className="Description">{`(${ariaHints[guess.hint.language]})`}</span>
                         </td>
                         <td className="Direction ToolTip" data-value={guess.hint.language} title={t('directions.'+direction)}
@@ -176,7 +177,7 @@ class Guesses extends ServerComponent {
             if (this.state.success) {
                 message = this.props.word.victory_message;
             } else {
-                lookup = <Solution answer={this.props.word.answer}/>
+                lookup = <Solution answer={this.props.word.answer[lang] || this.props.word.answer}/>
                 message = this.props.word.failure_message;
             }
             button = <Share success={this.state.success} guesses={this.state.guesses}
