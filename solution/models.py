@@ -26,7 +26,7 @@ class Solution(Translatable):
     victory_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
 
-    translate_field = 'english'
+    translated_field = 'english'
 
     @property
     def font_url(self):

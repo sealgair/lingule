@@ -5,7 +5,6 @@ from django.db import models
 from django.forms import TextInput, Textarea
 from django.utils.html import format_html
 
-from i18n.admin import TranslatableForm
 from solution.models import Solution
 
 
@@ -44,7 +43,7 @@ class SolutionAdmin(admin.ModelAdmin):
         (None, {
             'fields': (
                 ('word', 'romanization', 'ipa'),
-                ('english',) + TranslatableForm.translation_fields,
+                ('english',) + Solution.translation_fields,
                 'language',
                 'alternates',
                 'hidden_options',
@@ -62,7 +61,6 @@ class SolutionAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': TextInput},
     }
-    form = TranslatableForm
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name.endswith('_message'):

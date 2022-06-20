@@ -29,7 +29,10 @@ class Translation(models.Model):
 
 class Translatable(models.Model):
     translations = GenericRelation(Translation)
-    translate_field = 'name'
+    translated_field = 'name'
+    translation_fields = ('es', 'fr')
+    es = models.TextField(verbose_name="spanish")
+    fr = models.TextField(verbose_name="french")
 
     class Meta:
         abstract = True
@@ -40,33 +43,28 @@ class Translatable(models.Model):
 
     @property
     def all_languages(self):
-        data = {'en': getattr(self, self.translate_field)}
+        data = {'en': getattr(self, self.translated_field)}
         data.update({
-            trans.language: trans.value
-            for trans in self.translations.all()
+            lang: getattr(self, lang)
+            for lang in self.translation_fields
         })
         return data
 
-    def translate(self, languages=None, overwrite=False):
+    def translate(self, languages=None, overwrite=False, commit=True):
         if languages is None:
-            languages = [lc for lc, _ in LANGUAGE_CHOICES]
+            languages = self.translation_fields
         translate_client = translate.Client()
 
-        text = getattr(self, self.translate_field)
-        known = {
-            t.language: t
-            for t in self.translations.all()
-        }
-
+        text = getattr(self, self.translated_field)
         for lc in languages:
-            translation = known.get(lc, Translation(object=self, language=lc))
-            if translation.value and not overwrite:
+            translation = getattr(self, lc)
+            if translation and not overwrite:
                 break
             result = translate_client.translate(text, target_language=lc, source_language='en')
-            translation.value = result['translatedText']
-            translation.save()
+            setattr(self, lc, result['translatedText'])
+        self.save()
 
     def save(self, *args, **kwargs):
+        self.translate(overwrite=False, commit=False)
         super().save(*args, **kwargs)
-        self.translate(overwrite=False)
 
