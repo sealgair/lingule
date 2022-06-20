@@ -1,34 +1,9 @@
-from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from google.cloud import translate_v2 as translate
 
-LANGUAGE_CHOICES = (
-    ('es', 'Spanish'),
-    ('fr', 'French'),
-    # ('zh', 'Chinese'),
-    # ('ar', 'Arabic'),
-)
-
-
-class Translation(models.Model):
-    language = models.CharField(max_length=3, choices=LANGUAGE_CHOICES)
-    value = models.TextField()
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    object = GenericForeignKey('content_type', 'object_id')
-
-    translate_field = 'name'
-
-    class Meta:
-        unique_together = ['language', 'object_id', 'content_type']
-
-    def __str__(self):
-        return f'{self.value} ({self.language})'
-
 
 class Translatable(models.Model):
-    translations = GenericRelation(Translation)
     translated_field = 'name'
     translation_fields = ('es', 'fr')
     es = models.TextField(verbose_name="spanish")
@@ -62,7 +37,8 @@ class Translatable(models.Model):
                 break
             result = translate_client.translate(text, target_language=lc, source_language='en')
             setattr(self, lc, result['translatedText'])
-        self.save()
+        if commit:
+            self.save()
 
     def save(self, *args, **kwargs):
         self.translate(overwrite=False, commit=False)

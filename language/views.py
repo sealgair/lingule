@@ -19,5 +19,5 @@ class LanguagesView(ApiView):
                 'id': l.id,
                 'other_names': l.all_names
             }
-            for l in Language.objects.exclude(hidden=True).prefetch_related('translations')
+            for l in Language.objects.exclude(hidden=True)
         ]

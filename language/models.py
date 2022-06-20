@@ -110,9 +110,7 @@ class Language(Translatable):
 
     @property
     def all_names(self):
-        return [self.name] + self.other_names + [
-            t.value for t in self.translations.all()
-        ]
+        return [self.name] + self.other_names + list(self.all_languages.values())
 
     @property
     def subfamily_cmp(self):
