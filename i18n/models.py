@@ -40,7 +40,12 @@ class Translatable(models.Model):
         if commit:
             self.save()
 
-    def save(self, *args, **kwargs):
-        self.translate(overwrite=False, commit=False)
-        super().save(*args, **kwargs)
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        languages = self.translation_fields
+        if update_fields:
+            languages = [l for l in languages if l in update_fields]
+        self.translate(languages=languages, overwrite=False, commit=False)
+        super().save(force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
