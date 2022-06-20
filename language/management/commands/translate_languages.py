@@ -57,11 +57,12 @@ class Command(BaseCommand):
             objects = objects[:limit]
 
         context = "John speaks \"{}\""
+        q = "[\"\'«»\s]*"
         target_regexes = {
-            'es': r"(?:John|Juan)\s*(?:se)?\s*habla\s*\"?(.*)\"?",
-            'fr': r"(?:John|Jean)\s*parle\s*\"?(.*)\"?",
-            'ar': r"(?:John|جون|يوحنا)\s*(?:يتحدث|الناواتل)\s*\"?(.*)\"?",
-            'zh': r"(?:John|约翰)会?(?:说|讲)\s*\"?(.*)\"?",
+            'es': rf"(?:John|Juan)\s*(?:se)?\s*habla\s*{q}(.*?){q}\W$",
+            'fr': rf"(?:John|Jean)\s*parle\s*(?:la|le)?\s*{q}(.*?){q}\W$",
+            'ar': rf"(?:John|جون|يوحنا)\s*(?:يتحدث|الناواتل)\s*{q}(.*?){q}\W$",
+            'zh': rf"(?:John|约翰)会?(?:说|讲)\s*{q}(.*?){q}\W$",
         }
         target_regexes = {
             k: re.compile(regex, flags=re.IGNORECASE)
@@ -75,7 +76,8 @@ class Command(BaseCommand):
             self.log(f'batch {b+1}', 2)
             words = [context.format(obj.name) for obj in batch]
             regex = target_regexes[target_lang]
-            results = translate_client.translate(words, target_language=target_lang, source_language='en')
+            results = translate_client.translate(words, format_='text',
+                                                 target_language=target_lang, source_language='en')
             for result, obj in zip(results, batch):
                 match = regex.match(result['translatedText'])
                 if match:
