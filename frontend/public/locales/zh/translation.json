@@ -1,0 +1,144 @@
+{
+  "titles": {
+    "how-to": "怎么玩",
+    "credits": "学分",
+    "settings": "设置",
+    "score": "分数数据",
+    "stats": "统计数据",
+    "info": "信息"
+  },
+  "tips": {
+    "romanization": "罗马化",
+    "word": "不认识的词",
+    "ipa": "国际音标发音",
+    "meaning": "中文翻译",
+    "mapPrompt_tap": "点击箭头查看地图",
+    "mapPrompt_click": "点击箭头查看地图",
+    "macro-area": "宏观区域",
+    "family": "语系",
+    "sub-family": "语言子族",
+    "genus": "语言属",
+    "language": "语",
+    "direction": "地图上的方向"
+  },
+  "buttons": {
+    "guess": "猜测",
+    "close": "关",
+    "share": "分享",
+    "copyAlt": "复制替代文字"
+  },
+  "lookup": {
+    "description": "查找语言",
+    "prompt": "它是什么语言？"
+  },
+  "guess": {
+    "correct": "是正确的",
+    "incorrect": "不正确",
+    "description": "6分之{{guessNum}}的猜测：英语{{correct}}",
+    "titles": {
+      "result": "猜测的结果",
+      "classification": "猜测的语言的  分类",
+      "macro-area": "猜测的语言的宏观区域",
+      "family": "猜测的语言的语系",
+      "sub-family": "猜测的语言的语言亚科",
+      "genus": "猜测的语言的语言属",
+      "name": "猜测的语言的名称",
+      "direction": "从猜测语言到目标语言的指南针方向"
+    }
+  },
+  "share": {
+    "instructions_tap": "长按复制下图，点击“$t(buttons.copyAlt)”复制文字说明",
+    "instructions_click": "右击复制下图，点击“$t(buttons.copyAlt)”复制文字说明",
+    "description": "本轮Lingule的表情记分卡",
+    "styleChoice": "选择分享方式",
+    "textStyle": "文本",
+    "spoilerStyle": "扰流板",
+    "imageStyle": "图片",
+    "options": "共享选项",
+    "alt": {
+      "title": "Lingule {{num}} 记分卡",
+      "word": "未知的词是 \"{{word}}\"",
+      "score_normal": "猜了{{score}}次",
+      "score_hard": "猜了{{score}}次 （难的模式）",
+      "miss_normal": "没有成功",
+      "miss_hard": "没有成功 （难的模式）",
+      "guessTitle": "第 #{{num}} 次猜测: ",
+      "guessRight": "语言正确！",
+      "macroArea_right": "正确的宏观区域, ",
+      "macroArea_wrong": "不正确的宏观区域, ",
+      "gotGenus": "正确的语言属, ",
+      "gotSubFamily": "正确的语言亚科, ",
+      "gotFamily": "正确的语系, ",
+      "missedFamily": "不正确的语系, ",
+      "direction": "解决方案是猜测的{{direction}}部.",
+      "link": "在 {{url}} 播放"
+    }
+  },
+  "directions": {
+    "north":  "北",
+    "north-northeast":  "东北偏北",
+    "northeast":  "东北",
+    "east-northeast":  "东北偏东",
+    "east":  "东",
+    "east-southeast":  "东南偏东",
+    "southeast":  "东南",
+    "south-southeast":  "东南偏南",
+    "south":  "南",
+    "south-southwest":  "西南偏南",
+    "southwest":  "西南",
+    "west-southwest":  "西南偏西",
+    "west":  "西",
+    "west-northwest":  "西北偏西",
+    "northwest":  "西北",
+    "north-northwest":  "西北偏北",
+    "success": "你说对了！"
+  },
+  "stats": {
+    "empty": "没有数据",
+    "graphLabelA": "{{count}} 场比赛",
+    "graphLabelB": " {{count}} 次猜测",
+    "distribution": "猜测分布",
+    "games": "场比赛",
+    "wins": "胜利",
+    "hardWins": "艰难的胜利",
+    "thisStreak": "当前连续",
+    "maxStreak": "最大连续"
+  },
+  "info": {
+    "credit": "此游戏由 Chase Caster 创建",
+    "code": "查看代码",
+    "tweet": "对我发推文",
+    "toot": "嘟嘟我",
+    "bugs": "我唯一比赞美更喜欢的是错误报告！"
+  },
+  "settings": {
+    "difficulty": "困难",
+    "allowMaps_on": "允许地图 (困难时禁用)",
+    "allowMaps_off": "允许地图 (不能在游戏中改变)",
+    "sharing": "共享选项",
+    "shareHint": "(使用右下角的 \"共享选项\" 进行更改)",
+    "shareText": "表情符号文本",
+    "shareSpoilers": "带有 Discord 风格剧透的表情符号文本",
+    "shareImage": "图片和替代文字",
+    "language": "语",
+    "languageDisclaimer": "由英文翻译，主要由电脑翻译。 鼓励更正。"
+  },
+  "howto": {
+    "intro": "每天您都会获得一个新的<1>Lingule</1>。 你有六次猜测来找出未知单词是什么语言。",
+    "target": "目标词",
+    "romanization": "罗马化",
+    "ipa": "/国际音标的发音/",
+    "meaning": "中文翻译",
+    "afterGuess": "每次猜测后，您会在 6 列中看到您的亲密度：",
+    "macroArea": "宏观区域（例如“北美”或“欧亚大陆”）",
+    "family": "语系（例如“印欧语系”或“亚非语系”）",
+    "subFamily": "语言亚科（例如“Eastern Malayo-Polynesian”或“Benue-Congo”）",
+    "genus": "语言属（例如“闪米特语”或“罗曼”）",
+    "language": "语言（仅在正确答案上为绿色）",
+    "direction": "从猜测到目标语言的地理方向",
+    "isolates": "请注意，具有语言隔离或接近隔离的语言（例如日语、格鲁吉亚语、巴斯克语）与其他语言不匹配，但宏观区域除外",
+    "multiMatch": "有些词可能存在于多种密切相关的语言中。 在这些情况下，这些语言中的任何一种都将被接受为正确答案，但前提是该单词具有相同的拼写和含义（即使它的发音不同）。",
+    "directionMeans": "方向基于语言的（近似）地理起源点，即使它被广泛使用。 例如，英语的位置是英格兰，西班牙语是西班牙。",
+    "dataSource": "所有语言数据均由 <1>The World Atlas of Language Structures</1> 提供"
+  }
+}
