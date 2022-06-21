@@ -6,9 +6,9 @@ from google.cloud import translate_v2 as translate
 class Translatable(models.Model):
     translated_field = 'name'
     translation_fields = ('es', 'fr', 'zh')
-    es = models.TextField(verbose_name="spanish")
-    fr = models.TextField(verbose_name="french")
-    zh = models.TextField(verbose_name="chinese")
+    es = models.TextField(verbose_name="spanish", blank=True)
+    fr = models.TextField(verbose_name="french", blank=True)
+    zh = models.TextField(verbose_name="chinese", blank=True)
 
     class Meta:
         abstract = True
@@ -35,7 +35,7 @@ class Translatable(models.Model):
         for lc in languages:
             translation = getattr(self, lc)
             if translation and not overwrite:
-                break
+                continue
             result = translate_client.translate(text, target_language=lc, source_language='en')
             setattr(self, lc, result['translatedText'])
         if commit:
