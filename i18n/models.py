@@ -5,9 +5,10 @@ from google.cloud import translate_v2 as translate
 
 class Translatable(models.Model):
     translated_field = 'name'
-    translation_fields = ('es', 'fr')
+    translation_fields = ('es', 'fr', 'zh')
     es = models.TextField(verbose_name="spanish")
     fr = models.TextField(verbose_name="french")
+    zh = models.TextField(verbose_name="chinese")
 
     class Meta:
         abstract = True

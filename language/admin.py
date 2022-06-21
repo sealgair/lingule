@@ -7,25 +7,27 @@ from language.models import Macroarea, Family, Subfamily, Genus, Language
 
 @admin.register(Macroarea)
 @admin.register(Family)
-class NamedTaxonAdmin(admin.ModelAdmin):
+class LinguisticAdmin(admin.ModelAdmin):
+    search_fields = ['name']
     list_display = ['name']
     exclude = []
+    formfield_overrides = {
+        models.TextField: {'widget': TextInput},
+    }
 
 
 @admin.register(Subfamily)
-class SubfamilyAdmin(admin.ModelAdmin):
+class SubfamilyAdmin(LinguisticAdmin):
     list_display = ['name', 'family']
-    exclude = []
 
 
 @admin.register(Genus)
-class GenusAdmin(admin.ModelAdmin):
+class GenusAdmin(LinguisticAdmin):
     list_display = ['name', 'family', 'subfamily']
-    exclude = []
 
 
 @admin.register(Language)
-class LanguageAdmin(admin.ModelAdmin):
+class LanguageAdmin(LinguisticAdmin):
     fieldsets = (
         (None, {
             'fields': (
@@ -56,6 +58,3 @@ class LanguageAdmin(admin.ModelAdmin):
         'subfamily__name',
         'genus__name',
     ]
-    formfield_overrides = {
-        models.TextField: {'widget': TextInput},
-    }

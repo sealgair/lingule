@@ -57,7 +57,7 @@ class Command(BaseCommand):
             objects = objects[:limit]
 
         context = "John speaks \"{}\""
-        q = "[\"\'«»\s]*"
+        q = "[“”\"\'«»\s]*"
         target_regexes = {
             'es': rf"(?:John|Juan)\s*(?:se)?\s*habla\s*{q}(.*?){q}\W$",
             'fr': rf"(?:John|Jean)\s*parle\s*(?:la|le)?\s*{q}(.*?){q}\W$",

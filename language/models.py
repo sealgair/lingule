@@ -77,7 +77,7 @@ class Subfamily(Translatable):
 class Genus(Translatable):
     name = models.TextField()
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
-    subfamily = models.ForeignKey(Subfamily, null=True, on_delete=models.CASCADE)
+    subfamily = models.ForeignKey(Subfamily, null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name_plural = 'Genera'
