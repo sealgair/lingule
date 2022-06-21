@@ -6,7 +6,8 @@ import ModalComponent from "./ModalComponent";
 const siteLanguages = {
   en: { endonym: 'English' },
   es: { endonym: 'Español' },
-  fr: { endonym: 'Français' }
+  fr: { endonym: 'Français' },
+  zh: { endonym: '中文' }
 };
 
 class Settings extends ModalComponent {
