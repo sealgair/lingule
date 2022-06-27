@@ -179,6 +179,7 @@ class Share extends React.Component {
     }
 
     makeScore() {
+        const lc = this.props.i18n.resolvedLanguage;
         const style = this.state.style;
         const [score, hard] = this.getScore();
         const title = "#Lingule #" + this.props.word.order + " \"" + this.wordText() + "\": " + score + "/6" + hard;
@@ -203,7 +204,7 @@ class Share extends React.Component {
                 hint.push(arrows[Math.round(guess.hint.bearing / 45)]);
             }
             if (style === "spoiler") {
-                let lang = guess.language.substring(0, 12);
+                let lang = guess.language[lc].substring(0, 12);
                 while (lang.length < 12) {
                     lang += " ";
                 }
