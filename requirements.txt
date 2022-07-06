@@ -2,7 +2,7 @@ Django<5
 psycopg2
 gunicorn
 django-cors-headers
-whitenoise
+whitenoise==6.0.0
 dj-database-url
 django-bmemcached
 fonttools
