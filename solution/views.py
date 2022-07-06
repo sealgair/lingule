@@ -42,6 +42,8 @@ class WordView(ApiView):
         if solution.romanization:
             data['romanization'] = solution.romanization
             data['font'] = solution.font_url
+        if solution.vertical:
+            data['vertical'] = True
         return data
 
 

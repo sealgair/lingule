@@ -10,9 +10,10 @@ class Word extends React.Component {
             romanization = <div id="romanization" className="ToolTip Side"
                                 title={t("tips.romanization")}>{this.props.romanization}</div>;
         }
+        let vert = this.props.vertical ? "vertical" : "";
         return (
             <div className="WordContainer">
-                <span id="word" className="ToolTip Side" title={t("tips.word")}>{this.props.word}</span>
+                <span id="word" className={`ToolTip Side ${vert}`} title={t("tips.word")}>{this.props.word}</span>
                 {romanization}
                 <span id="ipa" className="ToolTip Side" title={t("tips.ipa")}>{this.props.ipa}</span>
                 <span id="meaning" className="ToolTip Side" title={t("tips.meaning")}>

@@ -17,6 +17,7 @@ class Solution(Translatable):
     english = models.TextField()
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     font = models.FilePathField(path=settings.FONT_ROOT, recursive=True, blank=True)
+    vertical = models.BooleanField(default=False)
     alternates = models.ManyToManyField(Language, blank=True, related_name='alternate_solutions')
     hidden_options = models.ManyToManyField(Language, blank=True, related_name='hidden_solutions',
                                             limit_choices_to={'hidden': True})

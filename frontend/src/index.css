@@ -161,6 +161,9 @@ h1, h2, h3, h4 {
     line-height: 60px;
     margin-top: 10px;
 }
+.WordContainer #word.vertical {
+    writing-mode: vertical-lr;
+}
 
 .WordContainer #romanization {
     font-size: 35px;

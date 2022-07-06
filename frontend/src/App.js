@@ -88,6 +88,7 @@ class App extends ServerComponent {
                             </span>
                         </header>
                         <Word word={this.state.word.word} romanization={this.state.word.romanization}
+                              vertical={this.state.word.vertical}
                               ipa={this.state.word.ipa} meaning={this.state.word.meaning}/>
                         <div className="Body">
                             <Guesses key={this.state.word.order}

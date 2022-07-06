@@ -72,8 +72,8 @@ class SolutionAdmin(admin.ModelAdmin):
                 'alternates',
                 'hidden_options',
                 ('victory_message', 'failure_message'),
-                'font',
-                ('date', 'freeze_date', 'order',),
+                ('font', 'vertical'),
+                ('date', 'freeze_date', 'order'),
             )
         }),
     )
