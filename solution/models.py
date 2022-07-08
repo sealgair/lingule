@@ -1,5 +1,5 @@
 import os.path
-from datetime import date, timedelta
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 
 from django.conf import settings
@@ -8,6 +8,42 @@ from fontTools.ttLib import TTFont
 
 from i18n.models import Translatable
 from language.models import Language
+
+
+def today():
+    tz = timezone(timedelta(hours=14))
+    return datetime.now(tz).date()
+
+
+class SolutionQueryset(models.QuerySet):
+    def shuffle(self):
+        self.filter(date__gt=today(), freeze_date=False).update(date=None)
+        queryset = self.filter(date=None)
+        new_date = today()
+        known_dates = set(Solution.objects.exclude(date=None).filter(date__gte=new_date).values_list('date', flat=True))
+
+        # randomize dates
+        for solution in queryset.order_by('?'):
+            while new_date in known_dates:
+                new_date += timedelta(days=1)
+            queryset.filter(id=solution.id).update(date=new_date)
+            known_dates.add(new_date)
+
+        # re-order
+        todays = Solution.objects.get(date=today())
+        if not todays.order:
+            Solution.objects.filter(id=todays.id).update(order=1)
+            todays.refresh_from_db()
+        for o, solution in enumerate(Solution.objects.filter(date__gte=today()).order_by('date')):
+            Solution.objects.filter(id=solution.id).update(order=o+todays.order+1)
+
+        return queryset
+
+
+class SolutionManager(models.Manager):
+
+    def get_queryset(self):
+        return SolutionQueryset(self.model, using=self._db)
 
 
 class Solution(Translatable):
@@ -26,6 +62,8 @@ class Solution(Translatable):
     order = models.PositiveIntegerField(null=True)
     victory_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
+
+    objects = SolutionManager()
 
     translated_field = 'english'
 

@@ -1,0 +1,47 @@
+{% extends "admin/change_form.html" %}
+
+{% block title %}Upload Solutions CSV{% endblock %}
+
+{% block content %}
+<div id="content-main">
+{% if solutions %}
+    <table>
+        <tr>
+            <th>language</th>
+            <th>word</th>
+            <th>romanization</th>
+            <th>ipa</th>
+            <th>english</th>
+            <th>french</th>
+            <th>spanish</th>
+            <th>chinese</th>
+        </tr>
+    {% for solution in solutions %}
+        <tr>
+        <td>{{ solution.language }}</td>
+        <td><a href="{% url "admin:solution_solution_change" solution.id %}">{{ solution.word }}</a></td>
+        <td>{{ solution.romanization }}</td>
+        <td>{{ solution.ipa }}</td>
+        <td>{{ solution.english }}</td>
+        <td>{{ solution.french }}</td>
+        <td>{{ solution.spanish }}</td>
+        <td>{{ solution.chinese }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            {{ form.as_ul }}
+            <li>
+                <button type="submit">Upload</button>
+            </li>
+        </ul>
+    </form>
+{% endif %}
+</div>
+{% endblock %}
