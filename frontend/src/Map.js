@@ -5,7 +5,7 @@ class Map extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.geoUrl = "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-50m.json";
+        this.geoUrl = "/maps/ne_50m_admin_0_countries.geojson";
     }
 
     render() {
