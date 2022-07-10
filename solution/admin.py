@@ -1,8 +1,10 @@
 import codecs
 import csv
+import os.path
 from functools import reduce, update_wrapper
 
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
@@ -144,7 +146,7 @@ class ImportCsv(FormView):
                 lang = val.language.lang_id
                 word = val.word
             else:
-                lang = val['language']
+                lang = val['language'].split(',')[0].strip()
                 word = val['word']
             return f'{lang}:{word}'
 
@@ -178,11 +180,14 @@ class ImportCsv(FormView):
                 word=row['word'],
                 romanization=row['romanization'],
                 ipa=row['ipa'],
-                english=row['english'],
-                es=row['spanish'],
-                fr=row['french'],
+                english=row['english'].lower(),
+                es=row['spanish'].lower(),
+                fr=row['french'].lower(),
                 zh=row['chinese'],
             )
+            if solution.romanization:
+                solution.font = solution.detect_font()
+                solution.vertical = os.path.basename(solution.font) in settings.VERTICAL_FONTS
             solutions.append(solution)
             if len(languages) > 1:
                 alternates[skey(solution)] = languages[1:]

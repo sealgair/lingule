@@ -171,3 +171,10 @@ FONT_URL = "fonts/"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+VERTICAL_FONTS = [
+    'NotoSansMongolian-Regular.ttf',
+    'NotoSansOgham-Regular.ttf',
+]
+if os.environ.get('VERTICAL_FONTS'):
+    VERTICAL_FONTS = os.environ.get('VERTICAL_FONTS').split(',')

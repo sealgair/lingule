@@ -8,7 +8,7 @@ def populate_translations(apps, schema_editor):
     ContentType = apps.get_model('contenttypes', 'ContentType')
 
     for name in ['Language', 'Genus', 'Subfamily', 'Family', 'Macroarea']:
-        ct = ContentType.objects.get(app_label='language', model=name.lower())
+        ct, _ = ContentType.objects.get_or_create(app_label='language', model=name.lower())
         translations = Translation.objects.filter(content_type=ct)
         Model = apps.get_model('language', name)
         for obj in Model.objects.all():

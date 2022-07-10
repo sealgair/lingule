@@ -7,6 +7,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('i18n', '0001_initial'),
+        ('language', '0010_family_es_family_fr_genus_es_genus_fr_language_es_and_more'),
+        ('solution', '0009_solution_es_solution_fr'),
     ]
 
     operations = [

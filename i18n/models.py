@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import translate_v2 as translate
 
 
@@ -29,17 +30,20 @@ class Translatable(models.Model):
     def translate(self, languages=None, overwrite=False, commit=True):
         if languages is None:
             languages = self.translation_fields
-        translate_client = translate.Client()
+        try:
+            translate_client = translate.Client()
 
-        text = getattr(self, self.translated_field)
-        for lc in languages:
-            translation = getattr(self, lc)
-            if translation and not overwrite:
-                continue
-            result = translate_client.translate(text, target_language=lc, source_language='en')
-            setattr(self, lc, result['translatedText'])
-        if commit:
-            self.save()
+            text = getattr(self, self.translated_field)
+            for lc in languages:
+                translation = getattr(self, lc)
+                if translation and not overwrite:
+                    continue
+                result = translate_client.translate(text, target_language=lc, source_language='en')
+                setattr(self, lc, result['translatedText'])
+            if commit:
+                self.save()
+        except DefaultCredentialsError:
+            pass
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None

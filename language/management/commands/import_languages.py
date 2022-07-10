@@ -52,6 +52,8 @@ class Command(BaseCommand):
                         genus = None
                     languages.append(Language(
                         name=row['Name'],
+                        other_names=[],
+                        lang_id=row['ID'],
                         latitude=row['Latitude'],
                         longitude=row['Longitude'],
                         macroarea=macroarea,

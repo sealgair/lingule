@@ -2,6 +2,16 @@
 
 {% block title %}Upload Solutions CSV{% endblock %}
 
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+    .error {
+        color: #600606;
+        background-color: #ecc1ba;
+    }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div id="content-main">
 {% if solutions %}
@@ -17,7 +27,7 @@
             <th>chinese</th>
         </tr>
     {% for solution in solutions %}
-        <tr>
+        <tr class="newlang">
         <td>{{ solution.language }}</td>
         <td><a href="{% url "admin:solution_solution_change" solution.id %}">{{ solution.word }}</a></td>
         <td>{{ solution.romanization }}</td>
@@ -32,9 +42,9 @@
 {% else %}
     <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
-        <ul>
+        <ul id="fields">
             {% for error in errors %}
-                <li>{{ error }}</li>
+                <li class="error">{{ error }}</li>
             {% endfor %}
             {{ form.as_ul }}
             <li>
