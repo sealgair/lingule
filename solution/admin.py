@@ -66,7 +66,7 @@ class LanguageFilter(admin.SimpleListFilter):
     def lookups(self, request, model_admin):
         return [
             (l.id, l.name)
-            for l in Language.objects.filter(solution__isnull=False).distinct()
+            for l in Language.objects.filter(solution__isnull=False).distinct().order_by('name')
         ]
 
     def queryset(self, request, queryset):
