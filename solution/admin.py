@@ -59,6 +59,21 @@ class UpcomingListFilter(admin.SimpleListFilter):
             return queryset.filter(date__lte=today())
 
 
+class LanguageFilter(admin.SimpleListFilter):
+    title = "Language"
+    parameter_name = "language"
+
+    def lookups(self, request, model_admin):
+        return [
+            (l.id, l.name)
+            for l in Language.objects.filter(solution__isnull=False).distinct()
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(language_id=self.value())
+
+
 @admin.register(Solution)
 class SolutionAdmin(admin.ModelAdmin):
     readonly_fields = ['order']
@@ -79,8 +94,9 @@ class SolutionAdmin(admin.ModelAdmin):
     filter_horizontal = ['alternates', 'hidden_options']
     list_display = ['font_word', 'ipa', 'english', 'language', 'date', 'freeze_date', 'order']
     list_editable = ['date', 'freeze_date']
-    list_filter = [UpcomingListFilter, TranslationMissingListFilter]
-    actions = [shuffle_solutions]
+    search_fields = ['word', 'romanization', 'english', 'es', 'fr', 'zh']
+    list_filter = [UpcomingListFilter, TranslationMissingListFilter, LanguageFilter]
+    # actions = [shuffle_solutions] TODO: fix for specific subsets
     formfield_overrides = {
         models.TextField: {'widget': TextInput},
     }
