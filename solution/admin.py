@@ -93,6 +93,7 @@ class SolutionAdmin(admin.ModelAdmin):
     )
     filter_horizontal = ['alternates', 'hidden_options']
     list_display = ['font_word', 'english', 'language', 'date', 'freeze_date', 'order']
+    date_hierarchy = 'date'
     list_editable = ['date', 'freeze_date']
     search_fields = ['word', 'romanization', 'english', 'es', 'fr', 'zh']
     list_filter = [UpcomingListFilter, TranslationMissingListFilter, LanguageFilter]
