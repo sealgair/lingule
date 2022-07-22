@@ -82,12 +82,19 @@ class Solution(Translatable):
                     return True
         return False
 
-    def detect_font(self, serif="Sans", weight="Regular"):
-        files = list(Path(settings.FONT_ROOT).rglob(f"*{serif}*-{weight}.[to]tf"))
-        for file in files:
-            font = TTFont(file)
-            if all([self.font_has_char(font, c) for c in self.word]):
-                return file
+    def detect_font(self, serif=None, weight="Regular"):
+        if serif is None:
+            serifs = ['Sans', 'Serif']
+        elif isinstance(serif, list):
+            serifs = serif
+        else:
+            serifs = [serif]
+        for serif in serifs:
+            files = list(Path(settings.FONT_ROOT).rglob(f"*{serif}*-{weight}.[to]tf"))
+            for file in files:
+                font = TTFont(file)
+                if all([self.font_has_char(font, c) for c in self.word]):
+                    return file
         return ""
 
     def save(self, *args, **kwargs):

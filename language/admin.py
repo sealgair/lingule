@@ -53,6 +53,7 @@ class LanguageAdmin(LinguisticAdmin):
     list_filter = ['hidden', 'macroarea', 'family']
     search_fields = [
         'name',
+        'lang_id',
         'other_names',
         'family__name',
         'subfamily__name',
