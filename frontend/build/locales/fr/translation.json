@@ -140,6 +140,7 @@
     "isolates": "Notez que les langues isolées ou quasi-isolées (par exemple, le japonais, le géorgien, le basque) ne correspondront pas aux autres langues, sauf dans la macro-zone.",
     "multiMatch": "Certains mots peuvent exister dans plusieurs langues étroitement liées. Dans ces cas, n'importe laquelle de ces langues sera acceptée comme réponse correcte, mais seulement si le mot a la même orthographe et la même signification (même s'il est prononcé différemment).",
     "directionMeans": "La direction est basée sur le point d'origine géographique (approximatif) d'une langue, même si elle est largement parlée. Par exemple, l'emplacement pour l'anglais est l'Angleterre et l'espagnol est l'Espagne.",
-    "dataSource": "Toutes les données linguistiques sont fournies par <1>The World Atlas of Language Structures</1>"
+    "dataSource": "Toutes les données linguistiques sont fournies par <1>The World Atlas of Language Structures</1>",
+    "hardMode": "Si vous voulez un défi supplémentaire, vous pouvez désactiver les cartes dans les réglages (<1></1>) pour activer le mode difficile. Vous obtiendrez un astérisque* à côté de vos scores pour montrer à tout le monde que vous êtes sérieux."
   }
 }

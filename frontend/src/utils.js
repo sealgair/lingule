@@ -100,6 +100,16 @@ function drawArrow(ctx, s) {
     ctx.stroke();
 }
 
+function getTextProportion(text, fontFamily) {
+  // re-use canvas object for better performance
+  const canvas = getTextProportion.canvas || (getTextProportion.canvas = document.createElement("canvas"));
+  const context = canvas.getContext("2d");
+  context.font = `10px ${fontFamily}`;
+  const metrics = context.measureText(text);
+  const letters = metrics.width / 10;
+  return `calc(80vw / ${letters})`;
+}
+
 export {
     directions,
     drawArrow,
@@ -114,5 +124,6 @@ export {
     removeDiacritics,
     setData,
     getData,
-    inClass
+    inClass,
+    getTextProportion
 }

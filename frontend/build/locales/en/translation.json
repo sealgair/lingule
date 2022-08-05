@@ -140,6 +140,7 @@
     "isolates": "Note that language isolates or near-isolates (e.g. Japanese, Georgian, Basque) will not match the other languages except in macro-area.",
     "multiMatch": "Some words may exist in multiple closely-related languages. In those cases, any of those languages will be accepted as the correct answer, but only if the word has the same spelling and meaning (even if it is pronounced differently).",
     "directionMeans": "Direction is based on the (approximate) geographical point of origin of a language, even if it is widely spoken. For example, the location for English is England, and Spanish is Spain.",
-    "dataSource": "All language data is supplied by <1>The World Atlas of Language Structures</1>"
+    "dataSource": "All language data is supplied by <1>The World Atlas of Language Structures</1>",
+    "hardMode": "If you want an extra challenge, you can disable maps under settings (<1></1>) to turn on hard mode. You'll get an asterisk* next to your scores to show everybody you're serious."
   }
 }
