@@ -54,6 +54,11 @@ class HowTo extends ModalComponent {
                         Atlas of Language Structures</a>
                     </Trans>
                 </p>
+                <p>
+                    <Trans i18nKey="howto.hardMode">
+                        Hard mode verbiage (<i className="fa-solid fa-gear"></i>)
+                    </Trans>
+                </p>
             </div>
         )
     }

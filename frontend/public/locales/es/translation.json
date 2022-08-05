@@ -140,6 +140,7 @@
     "isolates": "Tenga en cuenta que los idiomas aislados o casi aislados (p. ej., japonés, georgiano, euskera) no coincidirán con los demás idiomas, excepto en el área macro.",
     "multiMatch": "Algunas palabras pueden existir en varios idiomas estrechamente relacionados. En esos casos, cualquiera de esos idiomas se aceptará como la respuesta correcta, pero solo si la palabra tiene la misma ortografía y significado (incluso si se pronuncia de manera diferente).",
     "directionMeans": "La dirección se basa en el punto geográfico (aproximado) de origen de un idioma, incluso si se habla ampliamente. Por ejemplo, la ubicación para inglés es Inglaterra y para español es España.",
-    "dataSource": "Todos los datos lingüísticos son proporcionados por <1>The World Atlas of Language Structures</1>"
+    "dataSource": "Todos los datos lingüísticos son proporcionados por <1>The World Atlas of Language Structures</1>",
+    "hardMode": "Si desea un desafío adicional, puede deshabilitar los mapas en los ajustes (<1></1>) para activar el modo difícil. Obtendrá un asterisco* junto a sus puntajes para mostrarles a todos que habla en serio."
   }
 }
