@@ -110,7 +110,9 @@
     "code": "See the code",
     "tweet": "Tweet at me",
     "toot": "Toot at me",
-    "bugs": "The only thing I like more than compliments is bug reports!"
+    "bugs": "The only thing I like more than compliments is bug reports!",
+    "links": "I also made this:",
+    "novle": "Guess the book from the opening lines"
   },
   "settings": {
     "difficulty": "Difficulty",

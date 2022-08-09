@@ -610,6 +610,14 @@ button.ToggleShareOptions {
     margin-right: .5em;
 }
 
+.InfoContent .links .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+.InfoContent .links .description {
+    margin-left: 10px;
+}
+
 .HelpList {
     padding: 0;
 }

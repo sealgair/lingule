@@ -110,7 +110,9 @@
     "code": "Voir le code",
     "tweet": "Tweetez-moi",
     "toot": "Tootez-moi",
-    "bugs": "La seule chose que j'aime plus que les compliments, ce sont les rapports de bugs!"
+    "bugs": "La seule chose que j'aime plus que les compliments, ce sont les rapports de bugs!",
+    "links": "J'ai aussi fait ça:",
+    "novle": "Devinez le livre à partir des premières lignes."
   },
   "settings": {
     "difficulty": "Difficulté",

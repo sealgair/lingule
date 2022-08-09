@@ -110,7 +110,9 @@
     "code": "Ver el código",
     "tweet": "Twittearame",
     "toot": "Tootearme",
-    "bugs": "¡Lo único que me gusta más que los cumplidos son los informes de errores!"
+    "bugs": "¡Lo único que me gusta más que los cumplidos son los informes de errores!",
+    "links": "También hice esto:",
+    "novle": "Adivina el libro a partir de las primeras líneas."
   },
   "settings": {
     "difficulty": "Dificultad",
