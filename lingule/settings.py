@@ -109,7 +109,7 @@ CACHES = {
     },
 }
 if os.environ.get('MEMCACHEDCLOUD_SERVERS'):
-    CACHES['DEFAULT'] = {
+    CACHES['default'] = {
         'BACKEND': 'django_bmemcached.memcached.BMemcached',
         'LOCATION': os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
         'OPTIONS': {
