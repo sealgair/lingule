@@ -18,13 +18,19 @@ class Info extends ModalComponent {
                 </a>
             </p>
             <p>
+                <a href="https://bsky.app/profile/chase.caster.quest" target="_new">
+                    <i className="fa-solid fa-square Icon"></i>
+                    {t("info.skeet")}
+                </a>
+            </p>
+            <p>
                 <a href="https://twitter.com/ChaseCaster" target="_new">
                     <i className="fa-brands fa-twitter Icon"></i>
                     {t("info.tweet")}
                 </a>
             </p>
             <p>
-                <a rel="me" href="https://weirder.earth/@chase" target="_new">
+                <a rel="me" href="https://peoplemaking.games/@chase" target="_new">
                     <i className="fa-brands fa-mastodon Icon"></i>
                     {t("info.toot")}
                 </a>
