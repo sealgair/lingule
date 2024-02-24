@@ -31,9 +31,21 @@ class Guesses extends ServerComponent {
             mapGuess: null,
             knowsMaps: getData("knowsMaps", false),
         };
+        this.mapRef = React.createRef();
         this.onSelect = this.onSelect.bind(this);
         this.handleKey = this.handleKey.bind(this);
         this.makeGuess = this.makeGuess.bind(this);
+        this.onClick = this.onClick.bind(this);
+
+        document.addEventListener("click", this.onClick);
+    }
+
+    onClick(event) {
+        if (this.state.mapGuess) {
+            if (!this.mapRef.current.contains(event.target)) {
+                this.setState({mapGuess: null})
+            }
+        }
     }
 
     onSelect(guess) {
@@ -151,12 +163,12 @@ class Guesses extends ServerComponent {
                             <span className="Description">{`(${ariaHints[guess.hint.language]})`}</span>
                         </td>
                         <td className="Direction ToolTip" data-value={guess.hint.language} title={t('directions.'+direction)}
-                            onClick={event => (
-                                mapAllowed &&
-                                !self.state.done &&
-                                !guess.hint.language &&
-                                self.setState({mapGuess: guess})
-                            )}>
+                            onClick={event => {
+                                if (mapAllowed && !self.state.done && !guess.hint.language) {
+                                    self.setState({mapGuess: guess});
+                                    event.stopPropagation();
+                                }
+                            }}>
                             <span className="Description">{guess.hint.language ? "trophy" : "arrow"}</span>
                             {arrow}
                         </td>
@@ -192,6 +204,7 @@ class Guesses extends ServerComponent {
         if (this.state.mapGuess) {
             let guess = this.state.mapGuess;
             map = <div className="MapWrapper" role="image" aria-hidden={this.state.mapGuess ? "false" : "true"}
+                       ref={this.mapRef}
                        style={{
                            height: this.state.mapGuess ? 300 : 0
                        }}>
