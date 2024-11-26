@@ -10,6 +10,10 @@ import Info from "./Info";
 import HowTo from "./HowTo";
 import Settings from "./Settings";
 import Statistics from "./Statistics";
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import HelpIcon from '@mui/icons-material/Help';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 class App extends ServerComponent {
     constructor(props) {
@@ -71,19 +75,19 @@ class App extends ServerComponent {
                         <header className="Header">
                             <span className="IconSet Left">
                                 <a className="Help Icon TipBelow" title={t("titles.how-to")} onClick={this.openHelp}>
-                                    <i className="fa-solid fa-circle-question"></i>
+                                    <HelpIcon/>
                                 </a>
                                 <a className="Info Icon TipBelow" title={t("titles.credits")} onClick={this.openInfo}>
-                                    <i className="fa-solid fa-circle-info"></i>
+                                    <InfoIcon/>
                                 </a>
                             </span>
                             <h1>Lingule</h1>
                             <span className="IconSet Right">
                                 <a className="Settings Icon TipBelow" title={t("titles.settings")} onClick={this.openSettings}>
-                                    <i className="fa-solid fa-gear"></i>
+                                    <SettingsIcon/>
                                 </a>
                                 <a className="Stats Icon TipBelow" title={t("titles.score")} onClick={this.openStats}>
-                                    <i className="fa-solid fa-square-poll-horizontal"></i>
+                                    <BarChartIcon/>
                                 </a>
                             </span>
                         </header>

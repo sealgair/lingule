@@ -6,3 +6,4 @@ media/*
 /fonts/Subset/fonts/*
 /node_modules
 .DS_Store
+pyenv/*

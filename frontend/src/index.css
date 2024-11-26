@@ -606,8 +606,10 @@ button.ToggleShareOptions {
 .InfoContent {
     text-align: center;
 }
-.InfoContent .Icon {
-    margin-right: .5em;
+.InfoContent a {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 }
 
 .InfoContent .links .title {

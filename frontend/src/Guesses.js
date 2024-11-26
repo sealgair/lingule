@@ -6,6 +6,15 @@ import ReactMarkdown from "react-markdown";
 import React from "react";
 import Lookup from "./Lookup";
 import {withTranslation} from "react-i18next";
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import NorthIcon from '@mui/icons-material/North';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import PublicIcon from '@mui/icons-material/Public';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PeopleIcon from '@mui/icons-material/People';
+import ExploreIcon from '@mui/icons-material/Explore';
+import PersonIcon from '@mui/icons-material/Person';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 
 class Guesses extends ServerComponent {
 
@@ -128,12 +137,11 @@ class Guesses extends ServerComponent {
         const self = this;
         const data = guesses.map(function (guess, n) {
             if (guess) {
-                let arrow = <i className="fa-solid fa-trophy">trophy</i>;
+                let arrow = <EmojiEventsIcon/>;
                 let direction = "success";
                 if (!guess.hint.language) {
                     direction = directions[Math.round(guess.hint.bearing / 22.5)];
-                    arrow = <i className="fa-solid fa-arrow-up"
-                               style={{transform: `rotate(${guess.hint.bearing}deg)`}}>arrow</i>
+                    arrow = <NorthIcon style={{transform: `rotate(${guess.hint.bearing}deg)`}}/>
                 }
                 return (
                     <tr className="Guess Hints" key={n} aria-live="polite">
@@ -210,7 +218,7 @@ class Guesses extends ServerComponent {
                        }}>
                 <span className="MapClose" onClick={e => this.setState({mapGuess: null})} key="close">
                     <span className="Description">{t('buttons.close')}</span>
-                    <i className="fa-solid fa-circle-xmark"></i>
+                    <HighlightOffIcon/>
                 </span>
                 <Map key="map" latitude={guess.latitude} longitude={guess.longitude} bearing={guess.hint.bearing}
                      width={300} height={300}/>
@@ -234,30 +242,30 @@ class Guesses extends ServerComponent {
                         <th className="Description">{t("guess.titles.result")}</th>
                         <th className="HintIcon ToolTip" data-title={t("tips.macro-area")}>
                             <span className="Description">{t("guess.titles.macro-area")}</span>
-                            <i className="fa-solid fa-earth-asia"></i>
+                            <PublicIcon/>
                         </th>
                         <th className="HintIcon ToolTip" data-title={t("tips.family")}>
                             <span className="Description">{t("guess.titles.family")}</span>
-                            <i className="fa-solid fa-mountain-sun"></i>
+                            <GroupsIcon/>
                         </th>
                         <th className="HintIcon ToolTip" data-title={t("tips.sub-family")}>
                             <span className="Description">{t("guess.titles.sub-family")}</span>
-                            <i className="fa-solid fa-mountain"></i>
+                            <PeopleIcon/>
                         </th>
                         <th className="HintIcon ToolTip" data-title={t("tips.genus")}>
                             <span className="Description">{t("guess.titles.genus")}</span>
-                            <i className="fa-solid fa-mound"></i>
+                            <PersonIcon/>
                         </th>
                         <th className="HintIcon Language ToolTip" data-title={t("tips.language")}>
                             <span className="Description">{t("guess.titles.name")}</span>
-                            <i className="fa-regular fa-comments"></i>
+                            <RecordVoiceOverIcon/>
                         </th>
                         <th className="HintIcon ToolTip" data-title={t("tips.direction")}>
                             {mapTip}
                             <span className="Description">
                                 {t("guess.titles.direction")}
                             </span>
-                            <i className="fa-regular fa-compass"></i>
+                            <ExploreIcon/>
                         </th>
                     </tr>
                     </thead>
