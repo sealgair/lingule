@@ -24,7 +24,9 @@ class WordView(ApiView):
         try:
             solution = Solution.objects.get(date=date)
         except Solution.DoesNotExist:
-            raise Http404()
+            # create a new one (TODO: lock?)
+            solution = Solution.objects.random_for(date)
+            solution.save()
 
         data = {
             'id': solution.id,
@@ -48,7 +50,7 @@ class WordView(ApiView):
             try:
                 data['font'] = solution.font_url
             except ValueError:
-                pass  #whoops -- some problem with the font
+                pass  # whoops -- some problem with the font
         if solution.vertical:
             data['vertical'] = True
         return data

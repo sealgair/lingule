@@ -4,6 +4,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Max
 from fontTools.ttLib import TTFont
 
 from i18n.models import Translatable
@@ -35,7 +36,7 @@ class SolutionQueryset(models.QuerySet):
             Solution.objects.filter(id=todays.id).update(order=1)
             todays.refresh_from_db()
         for o, solution in enumerate(Solution.objects.filter(date__gte=today()).order_by('date')):
-            Solution.objects.filter(id=solution.id).update(order=o+todays.order+1)
+            Solution.objects.filter(id=solution.id).update(order=o + todays.order + 1)
 
         return queryset
 
@@ -45,6 +46,17 @@ class SolutionManager(models.Manager):
     def get_queryset(self):
         return SolutionQueryset(self.model, using=self._db)
 
+    def random_for(self, date):
+        options = self.filter(
+            date__gte="2022-05-09",
+            date__lte=date - timedelta(days=365),
+            freeze_date=False,
+        )
+        # filter out last 5 languages
+        latest_languages = Language.objects.order_by("-solution__date")[:5]
+        options.exclude(language__in=latest_languages)
+        return options.order_by("?").first().make_copy(date)
+    
 
 class Solution(Translatable):
     word = models.TextField()
@@ -62,6 +74,8 @@ class Solution(Translatable):
     order = models.PositiveIntegerField(null=True)
     victory_message = models.TextField(blank=True)
     failure_message = models.TextField(blank=True)
+    copy_of = models.ForeignKey("Solution", blank=True, null=True, on_delete=models.SET_NULL,
+                                related_name='copied_from')
 
     objects = SolutionManager()
 
@@ -74,6 +88,14 @@ class Solution(Translatable):
     class Meta:
         ordering = ['-order']
         db_table = 'solution'
+
+    def make_copy(self, date):
+        copy = Solution.objects.get(pk=self.pk)
+        copy.pk = None
+        copy.id = None
+        copy.date = date
+        copy.copy_of = self
+        return copy
 
     def font_has_char(self, font, unicode_char):
         for cmap in font['cmap'].tables:
