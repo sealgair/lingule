@@ -29,6 +29,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = [
     'lingule.herokuapp.com',
     'lingule.xyz',
+    'lingule-heroku-24-8a526ff22759.herokuapp.com'
 ]
 RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 if RUNNING_DEVSERVER:
