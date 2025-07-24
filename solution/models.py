@@ -56,7 +56,7 @@ class SolutionManager(models.Manager):
         latest_languages = Language.objects.order_by("-solution__date")[:5]
         options.exclude(language__in=latest_languages)
         return options.order_by("?").first().make_copy(date)
-    
+
 
 class Solution(Translatable):
     word = models.TextField()
@@ -95,6 +95,7 @@ class Solution(Translatable):
         copy.id = None
         copy.date = date
         copy.copy_of = self
+        copy.order = None
         return copy
 
     def font_has_char(self, font, unicode_char):
