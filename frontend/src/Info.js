@@ -44,7 +44,7 @@ class Info extends ModalComponent {
       <hr/>
       <div className="links">
         <div className="title">{t("info.links")}</div>
-        <a href="https://novle.xyz" target="_blank" rel="noopener noreferrer">Novle</a>
+        <a href="https://novle.ink" target="_blank" rel="noopener noreferrer">Novle</a>
         <span className="description">{t("info.novle")}</span>
       </div>
     </div>;
